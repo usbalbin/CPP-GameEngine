@@ -24,9 +24,7 @@ void OpenClContexts::initializeCpu(){
 
 
 void OpenClContexts::initializeInteropGpu() {
-	if (gpuContexts.size() > 0)
-		return;
-
+	gpuContexts.clear();
 	std::vector<cl::Platform> platforms;
 	cl::Platform::get(&platforms);
 
@@ -134,10 +132,21 @@ void OpenClContexts::initialize(int deviceType){
 	std::cout << "-------------------------------" << std::endl;
 	std::vector<cl::Device> platformDevices;
 	for(int i = 0; i < numPlatforms; i++){
-		platforms[i].getDevices(deviceType, &platformDevices);
-		for(auto device : platformDevices){
+		try{
+			std::cout << "Ska läsa in enhetslista" << std::endl;
+			std::cout << platforms[i].getInfo<CL_PLATFORM_NAME>() << std::endl;
+			platforms[i].getDevices(deviceType, &platformDevices);
+			std::cout << "Har lyckats läsa in enhetslista" << std::endl;
+		}
+		catch (cl::Error) {
+			std::cout << "Dessa enheter var inte av rätt typ" << std::endl;
+			continue;
+		}
+		for(auto& device : platformDevices){
+			std::cout << "Här är en enhet av rätt typ, sparar den" << std::endl;
 			devices->push_back(device);
 			
+			std::cout << "Skriver ut enhetens info" << std::endl;
 			std::cout << device.getInfo<CL_DEVICE_VENDOR>() << std::endl;
 			std::cout << device.getInfo<CL_DEVICE_NAME>() << std::endl;
 			std::cout << "-------------------------------" << std::endl;
@@ -152,7 +161,7 @@ void OpenClContexts::initialize(int deviceType){
 	}
 	
 	if(deviceType == CL_DEVICE_TYPE_GPU || deviceType == CL_DEVICE_TYPE_CPU){
-		for(auto device : *devices){
+		for(auto& device : *devices){
 			cl::Context context(device);
 			contexts->push_back(context);
 		}

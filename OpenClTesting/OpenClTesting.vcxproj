@@ -42,14 +42,14 @@
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -160,6 +160,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ArraySlice.hpp" />
+    <ClInclude Include="BvhTree.hpp" />
     <ClInclude Include="DebugRayTracer.hpp" />
     <ClInclude Include="intersection.hpp" />
     <ClInclude Include="kernels\containers.h" />
@@ -171,10 +172,12 @@
     <ClInclude Include="OpenClContexts.hpp" />
     <ClInclude Include="OpenGlShaders.hpp" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="StridingMesh.hpp" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Utils.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BvhTree.cpp" />
     <ClCompile Include="Containers.cpp" />
     <ClCompile Include="DebugRayTracer.cpp" />
     <ClCompile Include="intersection.cpp" />
@@ -189,6 +192,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="StridingMesh.cpp" />
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>

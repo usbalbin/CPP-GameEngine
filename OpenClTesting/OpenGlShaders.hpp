@@ -18,11 +18,12 @@ public:
 	GLuint setupScreen();
 	void draw();
 	GLFWwindow* getWindow() { return window; }
+	void writeToScreen(std::vector<float4>& colors);
+	void writeToScreen(float * colors);
 
 private:
 	void setupWindow(GLFWframebuffersizefun customResizeCallback);
 	void resizeWindow(int width, int height);
-	void writeToScreen(std::vector<float4> colors);
 	GLuint setupShaders(std::string vertexShaderPath, std::string fragmentShaderPath);
 	GLuint compileShader(std::string shaderPath, GLuint shaderType);
 

@@ -253,3 +253,9 @@ paket-files/
 /OpenClTesting/kernels/clang-oclxx-spirv
 /OpenClTesting/kernels/compile.bat
 /OpenClTesting/buildKernels.bat
+/GameEngine/content/copy.scene
+/GameEngine/content/cylinder.mtl
+/GameEngine/content/heightmap.bmp
+/GameEngine/content/heightmap.bmp
+/GameEngine/content/scene.scene
+/GameEngine/content/heightmap2.bmp

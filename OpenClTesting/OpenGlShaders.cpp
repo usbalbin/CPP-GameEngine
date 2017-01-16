@@ -86,8 +86,19 @@ void OpenGlShaders::resizeWindow(int width, int height) {
 	glFinish();
 }
 
-void OpenGlShaders::writeToScreen(std::vector<float4> colors) {
-	glTexSubImage2D(textureBufferID, 0, 0, 0, width, height, GL_RGBA, GL_FLOAT, colors.data());
+void OpenGlShaders::writeToScreen(std::vector<float4>& colors) {
+	writeToScreen((float*)colors.data() );
+}
+
+void OpenGlShaders::writeToScreen(float* colors) {
+	//glTexSubImage2D(textureBufferID, 0, 0, 0, width, height, GL_RGBA, GL_FLOAT, colors);
+
+
+	glBindTexture(GL_TEXTURE_2D, textureBufferID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, colors);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+
 	glFinish();
 }
 

@@ -9,6 +9,8 @@
 #include <algorithm>
 #include <vector>
 
+//#define BVH
+
 //Always use largest type first in structs shared by openCL device, also make sure they are defined AND aligned the same
 
 typedef glm::mat4 float16;
@@ -151,6 +153,12 @@ struct AABB {
 	}
 	AABB(float3 min, float3 max) : min(min), max(max) {}
 	float3 center() { return float3((max.x + min.x)  * 0.5f, (max.y + min.y)  * 0.5f, (max.z + min.z) * 0.5f); }
+	bool isInside(float3 point) {
+		if (max.x < point.x || min.x > point.x) return false;
+		if (max.y < point.y || min.y > point.y) return false;
+		
+		return !(max.z < point.z || min.z > point.z);
+	}
 	__declspec(align(4 * sizeof(float))) float3 min;
 	__declspec(align(4 * sizeof(float))) float3 max;
 };
@@ -162,6 +170,11 @@ struct Object {
 	int startVertex;
 	int numTriangles;
 	int numVertices;
+
+#ifdef BVH
+	int bvhRootNodeIndex;
+	int bvhTreeSize;
+#endif
 };
 
 struct InstanceBuilder : public Object {
@@ -185,8 +198,9 @@ struct MultiInstanceBuilder {
 };
 
 struct Instance {//TODO make sure aligment is same in C++ and OpenCL -version of struct
-	Instance() {};
+	Instance() : meshType(-1){};
 	Instance(float16 modelMatrix, InstanceBuilder builder) : modelMatrix(modelMatrix), meshType(builder.meshType) {};
+	bool isInitialized() { return meshType != -1; }
 
 	float16 modelMatrix;
 	int meshType;
@@ -195,11 +209,18 @@ struct Instance {//TODO make sure aligment is same in C++ and OpenCL -version of
 };
 
 struct MultiInstance {
-	MultiInstance(float16 modelMatrix, MultiInstanceBuilder builder) {
+	MultiInstance() {}
+	MultiInstance(float16& modelMatrix, MultiInstanceBuilder builder) {
 		for (auto& instanceBuilder : builder.instanceBuilders)
 			instances.emplace_back(modelMatrix, instanceBuilder);
 	}
 	std::vector<Instance> instances;
+	bool isInitialized() { return instances[0].isInitialized(); }
+	float16 getMatrix() { return instances[0].modelMatrix; }
+	void setMatrix(float16& matrix) {
+		for (auto& instance : instances)
+			instance.modelMatrix = matrix;
+	}
 };
 
 struct Hit {

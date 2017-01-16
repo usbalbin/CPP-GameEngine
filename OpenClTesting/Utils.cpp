@@ -59,7 +59,7 @@ void writeSourcesToFile(cl::Program::Sources sources, std::string path) {
 	std::ofstream file;
 	file.open(path);
 	for (auto source : sources) {
-		file << source.first;
+		file << source;
 	}
 	
 	file.close();
@@ -92,9 +92,92 @@ void calculateNormals(std::vector<Vertex>& vertices, const std::vector<TriangleI
 	}
 }
 
+std::vector<ubyte3> readBmpPixels(std::string& filePath, int* widthOut, int* heightOut) {
+	std::ifstream bmpFile(filePath, std::ios_base::binary);
+	if (!bmpFile)
+		throw filePath + " not found!";
+	
+
+	unsigned char header[54];
+	bmpFile.read((char*)header, 54);
+
+	int width = *widthOut   = *(int*)&header[18];
+	int height = *heightOut = *(int*)&header[22];
+
+	std::vector<ubyte3> pixels(width * height);
+	/*while (bmpFile) {
+		ubyte3 pixel;
+		bmpFile >> pixel.b;
+		bmpFile >> pixel.g;
+		bmpFile >> pixel.r;
+		pixels.push_back(pixel);
+	}*/
+	bmpFile.read((char*)pixels.data(), sizeof(ubyte3) * pixels.size());
+
+	for (auto& pixel : pixels)//pixel are stored (B,G,R) therefore B and R are swapped
+		std::swap(pixel.r, pixel.b);
+
+	return pixels;
+}
+
+void pixelsToMesh(int width, int length, std::vector<ubyte3> colors, std::vector<Vertex>& vertices, std::vector<TriangleIndices>& indices) {
+	float highest = colors[0].r;//Use red value as height
+	float lowest = colors[0].r;
+
+	float reflectFactor = 0.0f;
+	glm::vec4 vertexColor(0.5f, 0.5f, 0.5f, 0);
+
+
+	for (int i = 1; i < colors.size(); i++) {//Find max and min height
+		highest = std::max(highest, (float)colors[i].r);
+		lowest = std::min(lowest, (float)colors[i].r);
+	}
+
+	//Vertices
+	for (int i = 0; i < length; i++) {
+		for (int j = 0; j < width; j++) {
+			float z = mapToRange((float)i, 0.0f, length - 1.0f, -length / 2.0f, +length / 2.0f);
+			float x = mapToRange((float)j, 0.0f, width - 1.0f, -width / 2.0f, +width / 2.0f);
+
+			auto& color = colors[i * width + j];
+
+			vertices.emplace_back(
+				glm::vec3(x, mapToRange((float)color.r, lowest, highest, -1.0f, +1.0f), z),
+				vertexColor,
+				glm::vec3(0.0f),
+				reflectFactor,
+				0.0f
+			);
+		}
+	}
+
+
+	//Indices
+	for (int z = 0; z < length - 1; z++) {
+		for (int x = 0; x < width - 1; x++) {
+			int bottomLeft = (x + 0) + (z + 0) * width;
+			int bottomRight = (x + 1) + (z + 0) * width;
+			int topLeft = (x + 0) + (z + 1) * width;
+			int topRight = (x + 1) + (z + 1) * width;
+
+			indices.emplace_back(//Bottom left triangle
+				topLeft, bottomRight, bottomLeft
+			);
+
+			indices.emplace_back(//Top right triangle
+				topLeft, topRight, bottomRight
+			);
+		}
+	}
+
+	calculateNormals(vertices, indices);
+}
+
 void readObjFile(std::vector<Vertex>& vertices, std::vector<TriangleIndices>& indices, std::string& filePath, float reflection, float refraction) {
 	std::ifstream objFile;
 	objFile.open(filePath);
+	if (!objFile)
+		throw "Failed to open file " + filePath;
 
 	std::string line;
 
