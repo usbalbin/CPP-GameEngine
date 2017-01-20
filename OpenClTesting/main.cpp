@@ -9,7 +9,7 @@
 #include <iostream>
 #include <chrono>
 #include <algorithm>
-
+//MAJS!
 #include "OpenClRayTracer.hpp"
 #include "OpenClContexts.hpp"
 #include "OpenGlShaders.hpp"
