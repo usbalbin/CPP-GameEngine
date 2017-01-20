@@ -7,7 +7,7 @@
 
 
 Car::Car(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float yaw, float pitch, float roll) : 
-	Entity(renderer, physics) 
+	Vehicle(renderer, physics)
 {
 
 	glm::vec3 bodyHalfExtents(1.0f, 0.25f, 2.0f);

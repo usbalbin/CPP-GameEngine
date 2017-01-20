@@ -55,3 +55,9 @@ void Entity::draw(){
 	for (auto& part : parts)
 		part->draw();
 }
+
+float Entity::distance2(Entity * other)
+{
+	return glm::distance2(this->getPosition(), other->getPosition());
+
+}

@@ -26,7 +26,7 @@
 #include "Tank.hpp"
 #include "Box.hpp"
 #include "Ball.hpp"
-#include "Character.hpp"
+#include "Player.hpp"
 #include "Terrain.hpp"
 #include "Cannon.hpp"
 #include "RifleTester.hpp"
@@ -72,6 +72,9 @@ void GameEngine::initialize() {
 	initializeBuilders(Cube(), Cylinder(), Sphere());
 
 	openScene(std::string("content/scene.scene"), gameEntities, player);
+	gameEntities.push_back(
+		new Terrain(&renderer, physics)
+	);
 }
 
 void GameEngine::openScene(std::string & scenePath, std::vector<Entity*>& gameEntities, Entity *& player) {
@@ -114,7 +117,7 @@ void GameEngine::openScene(std::string & scenePath, std::vector<Entity*>& gameEn
 			line >> yaw;
 
 			if (objectType == "character")
-				entity = new Character(&renderer, physics, glm::vec3(x, y, z), yaw);
+				entity = new Player(gameEntities, &renderer, physics, glm::vec3(x, y, z), yaw);
 
 
 			else if (objectType == "tank")

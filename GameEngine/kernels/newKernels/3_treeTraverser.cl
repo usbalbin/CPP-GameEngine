@@ -7,7 +7,7 @@
 
 void kernel treeTraverser(
 	global RayTree* rayTrees,
-	global read_only RayTree* childRayTrees
+	global RayTree* childRayTrees
 ){
 	int reflectIndex = rayTrees[gid].reflectIndex;
 	int refractIndex = rayTrees[gid].refractIndex;

@@ -9,7 +9,7 @@ Character::Character(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics
 	Entity(renderer, physics)
 {
 	const float PI_HALF = 1.57079632679;
-	glm::vec3 bodyHalfExtents(0.2f, 1.25f, 0.1f);
+	
 
 	Cube* body = new Cube(renderer, physics, position, bodyHalfExtents, 70);
 	body->physicsObject->setActivationState(DISABLE_DEACTIVATION);
@@ -17,9 +17,8 @@ Character::Character(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics
 
 
 	float wheelMass = 10;
-	float rideHeight = 0.2f;
 	float wheelRadius = 0.5f;
-	glm::vec3 wheelPos(0, -bodyHalfExtents.y - rideHeight, 0);
+	
 	Sphere* wheel = new Sphere(renderer, physics, position + wheelPos, wheelRadius, wheelMass, 0, 0, PI_HALF);
 	wheel->physicsObject->setActivationState(DISABLE_DEACTIVATION);
 	wheel->physicsObject->setFriction(4.0f);
@@ -122,17 +121,34 @@ void Character::mouseInput(float deltaTime) {
 	static double lastPosX = 0, lastPosY = 0;
 	double posX = 0, posY = 0;
 	glfwGetCursorPos(renderer->getWindow(), &posX, &posY);
-	float yaw = 0;
 
 	if (glfwGetMouseButton(renderer->getWindow(), GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
-		yaw = (posX - lastPosX) * deltaTime;
-		pitch = (posY - lastPosY) * deltaTime;
+		yaw += (posX - lastPosX) * deltaTime;
+		pitch += (posY - lastPosY) * deltaTime;
 	}
 	lastPosX = posX;
 	lastPosY = posY;
 
 
-	btTransform rotation(btQuaternion(yaw, 0, 0));
-	btTransform& transform = parts[0]->physicsObject->getWorldTransform();
-	transform *= rotation;
+	parts[0]->physicsObject->getWorldTransform().setRotation(btQuaternion(yaw, 0, 0));
+}
+
+void Character::moveTo(glm::vec3 position, float yaw)
+{
+	
+
+
+	//Move body
+	parts[0]->physicsObject->getWorldTransform().setOrigin(toVector3(position));
+	parts[0]->physicsObject->getWorldTransform().setRotation(btQuaternion(yaw, 0, 0));
+
+	//Move wheel
+	parts[1]->physicsObject->getWorldTransform().setOrigin(toVector3(position + wheelPos));
+	parts[1]->physicsObject->getWorldTransform().setRotation(btQuaternion(yaw, 0, 0));
+
+
+	
+	//constraints[0]
+	//*constraints[0] = btHinge2Constraint(*parts[0]->physicsObject, *parts[1]->physicsObject, toVector3(position + wheelPos), btVector3(0, 1, 0), btVector3(1, 0, 0));
+	//btHinge2Constraint* connection = new btHinge2Constraint(*parts[0]->physicsObject, *parts[1]->physicsObject, toVector3(position + wheelPos), btVector3(0, 1, 0), btVector3(1, 0, 0));
 }

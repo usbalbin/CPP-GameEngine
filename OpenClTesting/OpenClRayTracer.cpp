@@ -283,7 +283,6 @@ void OpenClRayTracer::clear() {
 }
 
 void OpenClRayTracer::push_back(Instance instance) {
-
 #ifdef BVH
 	instance.modelMatrix = glm::inverse(instance.modelMatrix);
 #endif // BVH
@@ -324,9 +323,9 @@ InstanceBuilder OpenClRayTracer::push_backObjectType(std::vector<TriangleIndices
 
 	objectType.bvhRootNodeIndex = this->objectTypeTriangleBvhNodes.size();
 	objectType.bvhTreeSize = bvhTree.getCurNodeIndex();
-	auto& t = bvhTree.getNodes();
+	//auto& t = bvhTree.getNodes();
 	btOptimizedBvhNode currentNode;
-	auto s = (char*)(&currentNode.m_triangleIndex) - (char*)&currentNode;
+	//auto s = (char*)(&currentNode.m_triangleIndex) - (char*)&currentNode;
 	bvhTree.appendNodesToVector(objectTypeTriangleBvhNodes);
 #endif
 	
@@ -488,7 +487,6 @@ void OpenClRayTracer::computeOnCPU()
 
 //Also writes to instanceBuffer
 cl::Event OpenClRayTracer::vertexShaderNonBlocking() {
-	writeToInstanceBuffer();
 
 	if (vertexShaderKernel.setArg(0, objectTypeBuffer) != CL_SUCCESS) {
 		std::cout << "Failed to set argument" << std::endl;
@@ -548,10 +546,9 @@ cl::Event OpenClRayTracer::aabbNonBlocking() {
 
 //Give me a better name
 cl::Event OpenClRayTracer::prepRayTraceNonBlocking() {
+	return vertexShaderNonBlocking();// .wait();
 
-	vertexShaderNonBlocking().wait();
-
-	return aabbNonBlocking();
+	//return aabbNonBlocking();
 }
 
 cl::Event OpenClRayTracer::rayTraceNonBlocking(float16 matrix) {
@@ -677,11 +674,12 @@ void OpenClRayTracer::initializeAdvancedRender() {
 }
 
 void OpenClRayTracer::render(float16 matrix) {
+	writeToInstanceBuffer();
 
 	queue.finish();
-
+#ifndef BVH
 	cl::Event prepRaytracingEvent = prepRayTraceNonBlocking();//Is allowed to run in parallel to perspectiveRayGeneratorKernel
-
+#endif
 
 	auto startTime = std::chrono::high_resolution_clock::now();
 
@@ -690,7 +688,11 @@ void OpenClRayTracer::render(float16 matrix) {
 	perspectiveRayGeneratorKernel.setArg(1, rayBuffers[0]);
 	queue.enqueueNDRangeKernel(perspectiveRayGeneratorKernel, cl::NullRange, cl::NDRange(width, height));
 
+#ifndef BVH
 	prepRaytracingEvent.wait();
+#endif
+
+	
 	queue.finish();
 
 	
@@ -702,7 +704,7 @@ void OpenClRayTracer::render(float16 matrix) {
 	rayTraceAdvancedKernel.setArg(0, sizeof(instanceCount), &instanceCount);
 	
 #ifdef BVH
-	int argumentOffset = 2;
+	int argumentOffset = 1;
 	rayTraceAdvancedKernel.setArg(1, objectInstanceBuffer);
 	rayTraceAdvancedKernel.setArg(2, objectTypeBuffer);
 	rayTraceAdvancedKernel.setArg(3, objectTypeTriangleBvhNodesBuffer);
@@ -713,12 +715,24 @@ void OpenClRayTracer::render(float16 matrix) {
 	rayTraceAdvancedKernel.setArg(8, rayTreeBuffers[0]);
 #else
 	int argumentOffset = 0;
-	rayTraceAdvancedKernel.setArg(1, transformedObjectBuffer);
-	rayTraceAdvancedKernel.setArg(2, objectTypeIndexBuffer);
-	rayTraceAdvancedKernel.setArg(3, transformedVertexBuffer);
-	rayTraceAdvancedKernel.setArg(4, rayBuffers[0]);
-	rayTraceAdvancedKernel.setArg(5, hitBuffers[0]);
-	rayTraceAdvancedKernel.setArg(6, rayTreeBuffers[0]);
+	/*rayTraceAdvancedKernel.setArg(1, objectInstanceBuffer);
+	rayTraceAdvancedKernel.setArg(2, objectTypeBuffer);
+
+	rayTraceAdvancedKernel.setArg(3, objectTypeIndexBuffer);
+	rayTraceAdvancedKernel.setArg(4, objectTypeVertexBuffer);
+	rayTraceAdvancedKernel.setArg(5, rayBuffers[0]);
+	rayTraceAdvancedKernel.setArg(6, hitBuffers[0]);
+	rayTraceAdvancedKernel.setArg(7, rayTreeBuffers[0]);
+	*/
+	
+	rayTraceAdvancedKernel.setArg(1, objectInstanceBuffer);
+	rayTraceAdvancedKernel.setArg(2, transformedObjectBuffer);
+
+	rayTraceAdvancedKernel.setArg(3, objectTypeIndexBuffer);
+	rayTraceAdvancedKernel.setArg(4, transformedVertexBuffer);
+	rayTraceAdvancedKernel.setArg(5, rayBuffers[0]);
+	rayTraceAdvancedKernel.setArg(6, hitBuffers[0]);
+	rayTraceAdvancedKernel.setArg(7, rayTreeBuffers[0]);
 #endif
 	queue.enqueueNDRangeKernel(rayTraceAdvancedKernel, cl::NullRange, cl::NDRange(width * height));
 	queue.finish();
@@ -762,9 +776,9 @@ void OpenClRayTracer::render(float16 matrix) {
 		rayTracerStartTimes.push_back(std::chrono::high_resolution_clock::now());
 
 
-		rayTraceAdvancedKernel.setArg(4 + argumentOffset, rayBuffers[i + 1]);
-		rayTraceAdvancedKernel.setArg(5 + argumentOffset, hitBuffers[i + 1]);
-		rayTraceAdvancedKernel.setArg(6 + argumentOffset, rayTreeBuffers[i + 1]);
+		rayTraceAdvancedKernel.setArg(5 + argumentOffset, rayBuffers[i + 1]);
+		rayTraceAdvancedKernel.setArg(6 + argumentOffset, hitBuffers[i + 1]);
+		rayTraceAdvancedKernel.setArg(7 + argumentOffset, rayTreeBuffers[i + 1]);
 		queue.enqueueNDRangeKernel(rayTraceAdvancedKernel, cl::NullRange, cl::NDRange(rayCount));
 		queue.finish();
 

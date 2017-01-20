@@ -9,7 +9,9 @@
 #include <algorithm>
 #include <vector>
 
-//#define BVH
+#define BVH
+
+
 
 //Always use largest type first in structs shared by openCL device, also make sure they are defined AND aligned the same
 
@@ -180,8 +182,8 @@ struct Object {
 struct InstanceBuilder : public Object {
 	InstanceBuilder() {};
 	InstanceBuilder(Object object, int meshType) {
-		if (object.numTriangles > 640 || object.numVertices > 320)
-			throw "Too many triangles or vertices in mesh";
+		//if (object.numTriangles > MAX_INDICES_PER_OBJECT || object.numVertices > MAX_VERTICES_PER_OBJECT)
+		//	throw "Too many triangles or vertices in mesh";
 
 		this->boundingBox = object.boundingBox;
 		this->startTriangle = object.startTriangle;

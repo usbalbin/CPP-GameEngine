@@ -27,8 +27,8 @@ bool intersectsBox(const Ray ray, const AABB boundingBox, float* tmin, float* tm
 	*tmin = maxComponent(min(minCornerDists, maxCornerDists));
 	*tmax = minComponent(max(minCornerDists, maxCornerDists));
 
-	return *tmin < *tmax &&	//Is Hit
-		*tmax > 0;			//Is infront of ray
+	return *tmin <= *tmax &&	//Is Hit
+		*tmax >= 0;			//Is infront of ray
 }
 
 //https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm

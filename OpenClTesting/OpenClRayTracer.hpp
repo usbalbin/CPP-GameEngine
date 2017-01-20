@@ -13,12 +13,12 @@
 #include "BulletCollision\CollisionShapes\btOptimizedBvh.h"
 
 #define ADVANCED_RENDERER
-#define MAX_VERTICES_PER_OBJECT 320
-#define MAX_INDICES_PER_OBJECT 640
+#define MAX_VERTICES_PER_OBJECT 300000//320
+#define MAX_INDICES_PER_OBJECT 600000//640
 #define MAX_OBJECTS_IN_RAY 16
 
-//#define FORCE_CPU
-//#define BVH
+#define FORCE_CPU
+
 #define RAY_DEPTH 2
 typedef std::chrono::high_resolution_clock::time_point TimePoint;
 typedef std::chrono::high_resolution_clock::duration Duration;

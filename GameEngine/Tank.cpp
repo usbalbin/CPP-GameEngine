@@ -6,7 +6,7 @@
 #include "Utils.hpp"
 
 Tank::Tank(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float yaw, float pitch, float roll)
-	: Entity(renderer, physics)
+	: Vehicle(renderer, physics)
 {
 	glm::vec3 bodyHalfExtents(1.83f, 0.4f, 3.96f);
 	float bodyMass = 60000;
@@ -206,6 +206,8 @@ void Tank::handleInput(float deltaTime) {
 }
 
 void Tank::handleTurretInput(float deltaTime) {
+	cannon->updateBarrel(GLFW_KEY_SPACE);
+
 	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_UP) == GLFW_PRESS)
 		turretPitch -= 0.1f * deltaTime;
 	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_DOWN) == GLFW_PRESS)
@@ -234,7 +236,6 @@ void Tank::handleTurretInput(float deltaTime) {
 
 void Tank::update(float deltaTime) {
 	Entity::update(deltaTime);
-	cannon->updateBarrel(GLFW_KEY_SPACE);
 }
 
 Tank::~Tank()

@@ -1,9 +1,9 @@
 #pragma once
-#include "Entity.hpp"
+#include "Vehicle.hpp"
 
 
 class Car :
-	public Entity
+	public Vehicle
 {
 public:
 	Car(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float yaw = 0, float pitch = 0, float roll = 0);

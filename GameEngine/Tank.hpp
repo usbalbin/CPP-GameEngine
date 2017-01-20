@@ -1,10 +1,10 @@
 #pragma once
-#include "Entity.hpp"
+#include "Vehicle.hpp"
 #include "Cube.hpp"
 #include "Barrel.hpp"
 
 class Tank :
-	public Entity
+	public Vehicle
 {
 public:
 	Tank(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float yaw = 0, float pitch = 0, float roll = 0);

@@ -18,6 +18,7 @@ public:
 	virtual void update(float deltaTime);
 	virtual void draw();
 	virtual bool isVehicle() { return false; }
+	float distance2(Entity* other);
 protected:
 	std::vector<Shape*> parts;
 	btDiscreteDynamicsWorld* physics;
