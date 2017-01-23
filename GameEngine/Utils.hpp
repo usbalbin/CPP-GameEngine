@@ -21,7 +21,7 @@ btTransform toTransform(glm::vec3& position, float yaw = 0, float pitch = 0, flo
 glm::mat4 toMatrix(btTransform transform);
 glm::mat4 toMatrix(glm::vec3 position);
 
-
+bool readGamingWheel(float* wheel, float* throttle, float* brake);
 
 float angleDiff(float a, float b);
 

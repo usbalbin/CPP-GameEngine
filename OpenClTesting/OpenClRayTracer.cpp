@@ -215,7 +215,7 @@ void OpenClRayTracer::initialize() {
 		colors = std::vector<float4>(width * height);
 	}
 
-	push_backTexture("content/ground.bmp");
+
 	
 
 
@@ -283,6 +283,11 @@ void OpenClRayTracer::clear() {
 }
 
 void OpenClRayTracer::push_back(Instance instance) {
+#ifdef BVH
+	instance.modelMatrix = glm::inverse(instance.modelMatrix);
+#endif // BVH
+
+
 	instance.startVertex = this->transformedVertexCount;
 
 	Object objectType = this->objectTypes[instance.meshType];
@@ -295,13 +300,6 @@ void OpenClRayTracer::push_back(MultiInstance& multiInstance)
 {
 	for (auto& instance : multiInstance.instances)
 		push_back(instance);
-}
-
-void OpenClRayTracer::push_backTexture(std::string path){
-	int width, height;
-	std::vector<ubyte4> pixels = readBmpPixels4(path, &width, &height);
-
-	textures.emplace_back(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, cl::ImageFormat(CL_RGBA, CL_UNORM_INT8), width, height, 0, pixels.data());
 }
 
 Instance OpenClRayTracer::pop_instance() {
@@ -715,9 +713,6 @@ void OpenClRayTracer::render(float16 matrix) {
 	rayTraceAdvancedKernel.setArg(6, rayBuffers[0]);
 	rayTraceAdvancedKernel.setArg(7, hitBuffers[0]);
 	rayTraceAdvancedKernel.setArg(8, rayTreeBuffers[0]);
-
-	for(int i = 0; i < textures.size(); i++)
-		rayTraceAdvancedKernel.setArg(9 + i, textures[i]);
 #else
 	int argumentOffset = 0;
 	/*rayTraceAdvancedKernel.setArg(1, objectInstanceBuffer);

@@ -12,8 +12,6 @@ public:
 	~Rifle();
 	void update(float deltaTime);
 
-	void handleInput(float deltaTime);
-
 private:
 	CompoundShapeChild* barrel;
 };

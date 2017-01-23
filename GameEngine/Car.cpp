@@ -115,8 +115,8 @@ void Car::handleInput(float deltaTime) {
 	float steering = 0;
 
 	{
-		float brake = 0;
-		//readGamingWheel(&steering, &speed, &brake);
+		float brake;
+		readGamingWheel(&steering, &speed, &brake);
 		speed -= brake;
 	}
 

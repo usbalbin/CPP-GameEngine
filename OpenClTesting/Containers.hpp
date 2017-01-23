@@ -199,34 +199,29 @@ struct MultiInstanceBuilder {
 	std::vector<InstanceBuilder> instanceBuilders;
 };
 
-struct Instance {
+struct Instance {//TODO make sure aligment is same in C++ and OpenCL -version of struct
 	Instance() : meshType(-1){};
-	Instance(float16 modelMatrix, float16 invModelMatrix, InstanceBuilder builder) : modelMatrix(modelMatrix), invModelMatrix(invModelMatrix), meshType(builder.meshType) {};
+	Instance(float16 modelMatrix, InstanceBuilder builder) : modelMatrix(modelMatrix), meshType(builder.meshType) {};
 	bool isInitialized() { return meshType != -1; }
 
 	float16 modelMatrix;
-	float16 invModelMatrix;
 	int meshType;
 	int startVertex;
-	
-	unsigned short texture[28] = { 0 };
+	int padding[14];//TODO: try to find better solution to alignment issue
 };
 
 struct MultiInstance {
 	MultiInstance() {}
-	MultiInstance(float16& modelMatrix, MultiInstanceBuilder& builder) {
+	MultiInstance(float16& modelMatrix, MultiInstanceBuilder builder) {
 		for (auto& instanceBuilder : builder.instanceBuilders)
-			instances.emplace_back(modelMatrix, glm::inverse(modelMatrix), instanceBuilder);
+			instances.emplace_back(modelMatrix, instanceBuilder);
 	}
 	std::vector<Instance> instances;
 	bool isInitialized() { return instances[0].isInitialized(); }
 	float16 getMatrix() { return instances[0].modelMatrix; }
 	void setMatrix(float16& matrix) {
-		float16 invMatrix = glm::inverse(matrix);
-		for (auto& instance : instances) {
+		for (auto& instance : instances)
 			instance.modelMatrix = matrix;
-			instance.invModelMatrix = invMatrix;
-		}
 	}
 };
 

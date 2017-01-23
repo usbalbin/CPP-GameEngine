@@ -120,31 +120,6 @@ std::vector<ubyte3> readBmpPixels(std::string& filePath, int* widthOut, int* hei
 	return pixels;
 }
 
-std::vector<ubyte4> readBmpPixels4(std::string& filePath, int* widthOut, int* heightOut) {
-	std::ifstream bmpFile(filePath, std::ios_base::binary);
-	if (!bmpFile)
-		throw filePath + " not found!";
-
-
-	unsigned char header[54];
-	bmpFile.read((char*)header, 54);
-
-	int width = *widthOut = *(int*)&header[18];
-	int height = *heightOut = *(int*)&header[22];
-
-	std::vector<ubyte4> pixels(width * height);
-	for (int i = 0; i < width * height; i++) {
-		ubyte4 pixel;
-		bmpFile.get((char&)pixel.b);
-		bmpFile.get((char&)pixel.g);
-		bmpFile.get((char&)pixel.r);
-		pixel.a = 255;
-		pixels[i] = pixel;
-	}
-
-	return pixels;
-}
-
 void pixelsToMesh(int width, int length, std::vector<ubyte3> colors, std::vector<Vertex>& vertices, std::vector<TriangleIndices>& indices) {
 	float highest = colors[0].r;//Use red value as height
 	float lowest = colors[0].r;

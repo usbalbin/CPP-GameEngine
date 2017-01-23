@@ -92,8 +92,7 @@ typedef struct {
 
 typedef struct {
 	float16 modelMatrix;
-	float16 invModelMatrix;
 	int meshType;
 	int startVertex;
-	unsigned short texture[28];
+	int padding0, padding1;
 } Instance;

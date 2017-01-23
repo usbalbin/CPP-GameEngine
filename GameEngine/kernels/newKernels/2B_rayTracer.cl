@@ -1,23 +1,6 @@
 #include "kernels/containers.h"
 #include "kernels/intersection.h"
 
-
-
-
-
-
-constant sampler_t sampler = CLK_NORMALIZED_COORDS_TRUE | CLK_ADDRESS_MIRRORED_REPEAT | CLK_FILTER_LINEAR;//CLK_NORMALIZED_COORDS_TRUE  | CLK_FILTER_LINEAR | CLK_ADDRESS_MIRRORED_REPEAT;
-
-
-
-
-
-
-
-
-
-
-
 typedef struct{
 	int objectIndex;
 	float nearDistance, farDistance;
@@ -82,110 +65,40 @@ Ray genPerspectiveRay(float16 matrix);
 float4 testColor();
 
 void kernel rayTraceAdvanced(
-	int instanceCount,
+	int objectCount,
 
 	global const Instance* instances,
 
-	global const Object* objectTypes,
+	global const Object* objects,
 	
+#ifdef BVH
 	global const BvhNode* triangleBvhNodes,
-
+#endif
 	
-	global const TriangleIndices* allTriangles,
-	global const Vertex* allVertices,
+	global const TriangleIndices* triangles,
+	global const Vertex* vertices,
 	global const Ray* rays,
 	global Hit* hits,
-	global RayTree* rayTrees,
-	
-	read_only image2d_t texture0
+	global RayTree* rayTrees 
 ){
 	Vertex intersectionPoint;
 	Ray ray = rays[gid];
 	Hit hit;
 	
-	Instance closestInstance;
-	float closestTriangleDist = FLT_MAX;
-	Triangle closestTriangle;
-	float2 closestUv;
-	
-	Instance instance;
-	for (int instanceIndex = 0; instanceIndex < instanceCount; instanceIndex++) {
-		
-		instance = instances[instanceIndex];
-		Object objectType = objectTypes[instance.meshType];
-		
-		const global TriangleIndices* triangles = getTrianglesIndices(allTriangles, objectType);
-		const global Vertex* vertices = getVertices(allVertices, objectType);
-		
-		float nearDistance, farDistance;
-		
-		Ray transformedRay = transformRay(instance.invModelMatrix, ray);
-		
-		
-		for (int index = objectType.bvhRootNodeIndex; index < objectType.bvhRootNodeIndex + objectType.bvhTreeSize; ) {
-			BvhNode currentNode = triangleBvhNodes[index];
-			
-			bool isHit = intersectsBox(transformedRay, currentNode.aabb, &nearDistance, &farDistance) && (nearDistance < closestTriangleDist);
-			bool isLeaf = (currentNode.escapeIndex == -1);
-			
-			if(isHit && isLeaf){
-				Triangle triangle = getTriangle(triangles, vertices, objectType, currentNode.index);
+#ifdef BVH	
+	bool wasHit = traceBvhColor(objectCount, instances, objects, triangleBvhNodes, triangles, vertices, ray, &intersectionPoint);
+#else
+	bool wasHit = traceBruteForceColorNew(objectCount, instances, objects, triangles, vertices, ray, &intersectionPoint);
+#endif
 
-				float distance;// = 1;
-				float2 uv;// = (float2)(0.5f, 0.5f);
-				if (intersectsTriangle(transformedRay, triangle, &distance, &uv) && distance < closestTriangleDist) {
-					closestTriangleDist = distance;
-					closestTriangle = triangle;
-					closestUv = uv;
-					closestInstance = instance;
-				}
-				
-			}
-			
-			if(isHit || isLeaf){//Proceed to left child if was hit and has child, if is leaf then sibling will be at same index as left child would've been
-				index++;
-			}else{
-				index += currentNode.escapeIndex;
-			}
-			
-		}
-		
-	}
-	
-	
-	if(closestTriangleDist == FLT_MAX){
-		hit = sky(ray);
-	}else{
-
-		intersectionPoint = transformVertex(closestInstance.modelMatrix, interpolateTriangle(closestTriangle, closestUv));
-		
-		
-		
-		float2 textureCoords = intersectionPoint.position.xz * 0.02f;
-		
-		float blendWidth = 5;
-		float blendDistance = 10;
-	
-		if(closestInstance.texture[0] > 0){
-			intersectionPoint.color += mix(
-				((float)closestInstance.texture[0] / SHRT_MAX) * read_imagef(texture0, sampler, textureCoords * 8).xyzw,
-				((float)closestInstance.texture[0] / SHRT_MAX) * read_imagef(texture0, sampler, textureCoords).xyzw,
-				(float4)(clamp((closestTriangleDist - blendDistance) / blendWidth,0.0f, 1.0f))
-			);
-		}
-		
-		
-		
-		float3 lightDir = normalize((float3)(-0.9f, -0.5f, 0.2f));
-		float dotProduct = dot(normalize(intersectionPoint.normal), -lightDir);
-		intersectionPoint.color *= dotProduct * 0.5f + 0.5f;									//Diffuse
-		intersectionPoint.color += (float4)(1.0f) * max(pow(dotProduct, 51), 0.0f) * 0.25f;	//Specular
-	
-	
+	if(wasHit){
 		hit.vertex = intersectionPoint;
 		hit.ray = ray;
 	}
-
+	else{
+		hit = sky(ray);
+	}
+	
 	hits[gid] = hit;
 	
 	RayTree rayTree;
@@ -207,25 +120,251 @@ Hit sky(Ray ray){
 
 
 
+#ifdef BVH
+bool traceBvhColor(
+	int instanceCount,
+	global const Instance* instances,
+	global const Object* objectTypes,
+	
+	global const BvhNode* triangleBvhNodes,
+	global const TriangleIndices* allTriangles,
+	global const Vertex* allVertices,
+	Ray ray,
+	Vertex* intersectionPoint
+	
+	) {
+		
+		
+	float closestTriangleDist = FLT_MAX;
+	Triangle closestTriangle;
+	float2 closestUv;
+	
+	for (int instanceIndex = 0; instanceIndex < instanceCount; instanceIndex++) {
+		
+		Instance instance = instances[instanceIndex];
+		Object objectType = objectTypes[instance.meshType];
+		
+		const global TriangleIndices* triangles = getTrianglesIndices(allTriangles, objectType);
+		const global Vertex* vertices = getVertices(allVertices, objectType);
+		
+		float nearDistance, farDistance;
+		
+		Ray transformedRay = transformRay(instance.modelMatrix, ray);
+		
+		
+		for (int index = objectType.bvhRootNodeIndex; index < objectType.bvhRootNodeIndex + objectType.bvhTreeSize; ) {
+			BvhNode currentNode = triangleBvhNodes[index];
+			
+			bool isHit = intersectsBox(transformedRay, currentNode.aabb, &nearDistance, &farDistance) && (nearDistance < closestTriangleDist);
+			bool isLeaf = (currentNode.escapeIndex == -1);
+			
+			if(isHit && isLeaf){
+				Triangle triangle = getTriangle(triangles, vertices, objectType, currentNode.index);
+
+				float distance;// = 1;
+				float2 uv;// = (float2)(0.5f, 0.5f);
+				if (intersectsTriangle(transformedRay, triangle, &distance, &uv) && distance < closestTriangleDist) {
+					closestTriangleDist = distance;
+					closestTriangle = triangle;
+					closestUv = uv;
+					//printf("Current index: %d, escIndex: %d, objectType.bvhTreeSize: %d, objectType.bvhRootNodeIndex: %d, currentNode.index: %d\n", index, currentNode.escapeIndex, objectType.bvhTreeSize, objectType.bvhRootNodeIndex, currentNode.index);
+				}
+				
+			}
+			//if(isLeaf)
+			//	printf("Current index: %d, escIndex: %d, objectType.bvhTreeSize: %d, objectType.bvhRootNodeIndex: %d, currentNode.index: %d\n", index, currentNode.escapeIndex, objectType.bvhTreeSize, objectType.bvhRootNodeIndex, currentNode.index);
+			//if(isHit)
+			//	printf("Current index: %d, escIndex: %d, objectType.bvhTreeSize: %d, objectType.bvhRootNodeIndex: %d\n", index, currentNode.escapeIndex, objectType.bvhTreeSize, objectType.bvhRootNodeIndex);
+			
+			if(isHit || isLeaf){//Proceed to left child if was hit and has child, if is leaf then sibling will be at same index as left child would've been
+				index++;
+			}else{
+				index += currentNode.escapeIndex;
+			}
+			
+		}
+		
+	}
+	
+	
+	if(closestTriangleDist == FLT_MAX){
+		//printf("Ray did not hit anything!!!");
+		return false;
+	}
+
+	*intersectionPoint = interpolateTriangle(closestTriangle, closestUv);
+	
+	
+	float3 lightDir = normalize((float3)(-0.9f, -0.5f, 0.2f));
+	float dotProduct = dot(normalize((*intersectionPoint).normal), -lightDir);
+	(*intersectionPoint).color *= dotProduct * 0.5f + 0.5f;									//Diffuse
+	(*intersectionPoint).color += (float4)(1.0f) * max(pow(dotProduct, 51), 0.0f) * 0.25f;	//Specular
+	
+	//printf(" - Ray actually hit something!!!");
+	return true;//(float4)((float)(int)closestTriangleDist);
+}
+#endif
 
 
 
+#if 0
+bool traceBruteForceColor(
+	int instanceCount,
+	global const Instance* instances,
+	global const Object* objectTypes,
+	
+	global const TriangleIndices* allTriangles,
+	global const Vertex* allVertices,
+	Ray ray,
+	Vertex* intersectionPoint
+	) {
+		
+	float closestTriangleDist = FLT_MAX;
+	Triangle closestTriangle;
+	float2 closestUv;
+	
 
+
+	for (int objectIndex = 0; objectIndex < instanceCount; objectIndex++) {
+
+		const global TriangleIndices* triangles;
+		const global Vertex* vertices;
+
+		
+		Object object = objectTypes[objectIndex];
+		
+		float nearDistacnce, farDistance;
+		
+		
+
+		if (!intersectsBox(ray, object.boundingBox, &nearDistacnce, &farDistance) || !(nearDistacnce < closestTriangleDist))
+			continue;
+
+		
+
+
+		triangles = getTrianglesIndices(allTriangles, object);
+		vertices = getVertices(allVertices, object);
+
+		
+		
+		
+		for (int triangleIndex = 0; triangleIndex < object.numTriangles; triangleIndex++) {
+			Triangle triangle = getTriangle(triangles, vertices, object, triangleIndex);
+
+			float distance;
+			float2 uv;
+			if (intersectsTriangle(ray, triangle, &distance, &uv) && distance < closestTriangleDist) {
+				closestTriangleDist = distance;
+				closestTriangle = triangle;
+				closestUv = uv;
+			}
+		}
+	}
+	
+	if(closestTriangleDist == FLT_MAX){
+		//printf("Ray did not hit anything!!!");
+		return false;
+	}
+
+	*intersectionPoint = interpolateTriangle(closestTriangle, closestUv);
+	
+	
+	float3 lightDir = normalize((float3)(-0.9f, -0.5f, 0.2f));
+	float dotProduct = dot(normalize((*intersectionPoint).normal), -lightDir);
+	(*intersectionPoint).color *= dotProduct * 0.5f + 0.5f;									//Diffuse
+	(*intersectionPoint).color += (float4)(1.0f) * max(pow(dotProduct, 51), 0.0f) * 0.25f;	//Specular
+	
+	//printf(" - Ray actually hit something!!!");
+	return true;//(float4)((float)(int)closestTriangleDist);
+}
+#endif
+
+
+
+bool traceBruteForceColorNew(
+	int instanceCount,
+	global const Instance* instances,
+	global const Object* objectTypes,
+	
+	global const TriangleIndices* allTriangles,
+	global const Vertex* allVertices,
+	Ray ray,
+	Vertex* intersectionPoint
+	) {
+		
+	float closestTriangleDist = FLT_MAX;
+	Triangle closestTriangle;
+	float2 closestUv;
+	
+
+
+	for (int instanceIndex = 0; instanceIndex < instanceCount; instanceIndex++) {
+
+		const global TriangleIndices* triangles;
+		const global Vertex* vertices;
+
+		
+		//Instance instance = instances[instanceIndex];
+		Object objectType = objectTypes[/*instance.meshType*/instanceIndex];
+		
+		float nearDistacnce, farDistance;
+		
+		Ray transformedRay = ray;//transformRay(instance.modelMatrix, ray);
+
+		if (!intersectsBox(transformedRay, objectType.boundingBox, &nearDistacnce, &farDistance) || !(nearDistacnce < closestTriangleDist))
+			continue;
+
+		
+
+
+		triangles = getTrianglesIndices(allTriangles, objectType);
+		vertices = getVertices(allVertices, objectType);
+
+		
+		
+		
+		for (int triangleIndex = 0; triangleIndex < objectType.numTriangles; triangleIndex++) {
+			Triangle triangle = getTriangle(triangles, vertices, objectType, triangleIndex);
+
+			float distance;
+			float2 uv;
+			if (intersectsTriangle(transformedRay, triangle, &distance, &uv) && distance < closestTriangleDist) {
+				closestTriangleDist = distance;
+				closestTriangle = triangle;
+				closestUv = uv;
+			}
+		}
+	}
+	
+	if(closestTriangleDist == FLT_MAX){
+		//printf("Ray did not hit anything!!!");
+		return false;
+	}
+
+	*intersectionPoint = interpolateTriangle(closestTriangle, closestUv);
+	
+	
+	float3 lightDir = normalize((float3)(-0.9f, -0.5f, 0.2f));
+	float dotProduct = dot(normalize((*intersectionPoint).normal), -lightDir);
+	(*intersectionPoint).color *= dotProduct * 0.5f + 0.5f;									//Diffuse
+	(*intersectionPoint).color += (float4)(1.0f) * max(pow(dotProduct, 51), 0.0f) * 0.25f;	//Specular
+	
+	//printf(" - Ray actually hit something!!!");
+	return true;//(float4)((float)(int)closestTriangleDist);
+}
 
 
 Vertex interpolateTriangle(Triangle triangle, float2 uv){
 	Vertex result;
 	result.position = interpolate3(triangle.a.position, triangle.b.position, triangle.c.position, uv);
 	result.normal = interpolate3(triangle.a.normal, triangle.b.normal, triangle.c.normal, uv);
-	
 	result.color = interpolate4(triangle.a.color, triangle.b.color, triangle.c.color, uv);
-
 	result.reflectFactor = interpolate1(triangle.a.reflectFactor, triangle.b.reflectFactor, triangle.c.reflectFactor, uv);
 	result.refractFactor = interpolate1(triangle.a.refractFactor, triangle.b.refractFactor, triangle.c.refractFactor, uv);
 	
 	return result;
 }
-
 
 float4 interpolate4(float4 a, float4 b, float4 c, float2 uv){
 	float bFactor = uv.x;

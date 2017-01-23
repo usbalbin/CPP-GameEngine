@@ -36,7 +36,6 @@
 #include "Cylinder.hpp"
 #include "Sphere.hpp"
 
-#include "bullet\Bullet3Dynamics\ConstraintSolver\b3PgsJacobiSolver.h"
 
 GameEngine::GameEngine(int width, int height) : renderer(width, height) {
 	renderer.initializeAdvancedRender();
@@ -146,7 +145,7 @@ void GameEngine::update()
 	for (auto entity : gameEntities)
 		entity->update(deltaTime);
 
-	physics->stepSimulation(deltaTime / 1.0f);
+	physics->stepSimulation(deltaTime / 1.0f, 10);
 
 	
 }
@@ -176,10 +175,10 @@ void GameEngine::draw()
 
 	glm::vec3 relativeCameraPos(0, 1.3f, 0);
 	//Character fps camera
-	glm::mat4 cameraMatrix = toMatrix(glm::vec3(0, 0.1f, -0.1f)) * glm::rotate(glm::rotate(glm::mat4(1), pitch, glm::vec3(1, 0, 0)), yaw, glm::vec3(0, 1.0f, 0)) * toMatrix(relativeCameraPos) * player->getTranslationMatrix();
+	//glm::mat4 cameraMatrix = toMatrix(glm::vec3(0, 0.1f, -0.1f)) * glm::rotate(glm::rotate(glm::mat4(1), pitch, glm::vec3(1, 0, 0)), yaw, glm::vec3(0, 1.0f, 0)) * toMatrix(relativeCameraPos) * player->getTranslationMatrix();
 
 	//Tank 3ps camera
-	//glm::mat4 cameraMatrix = toMatrix(glm::vec3(0, 0, 15)) * glm::rotate(glm::rotate(glm::mat4(1), pitch + 1.1f * PI_HALF, glm::vec3(1, 0, 0)), yaw, glm::vec3(0, 1.0f, 0)) * player->getTranslationMatrix();
+	glm::mat4 cameraMatrix = toMatrix(glm::vec3(0, 0, 15)) * glm::rotate(glm::rotate(glm::mat4(1), pitch + 1.1f * PI_HALF, glm::vec3(1, 0, 0)), yaw, glm::vec3(0, 1.0f, 0)) * player->getTranslationMatrix();
 
 
 	//glm::mat4 cameraMatrix = toMatrix(glm::vec3(-0.5f, -0.2f, 1)) * glm::rotate(glm::rotate(glm::mat4(1), pitch + 1.0f * PI_HALF, glm::vec3(1, 0, 0)), yaw, glm::vec3(0, 1.0f, 0)) * player->getTranslationMatrix();

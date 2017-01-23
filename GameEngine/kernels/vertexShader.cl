@@ -40,3 +40,18 @@ void kernel vertexShader(
 			);
 	}
 }
+
+Vertex transformVertex(float16 matrix, Vertex vertex){
+	Vertex result = vertex;
+	
+	result.position = mulMatVec(
+		matrix,
+		(float4)(vertex.position, 1.0f)
+	).xyz;
+	
+	result.normal = mulMatVec(
+		matrix,
+		(float4)(vertex.normal, 0.0f)
+	).xyz;
+	return result;
+}

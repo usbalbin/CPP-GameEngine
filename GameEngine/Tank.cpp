@@ -35,8 +35,6 @@ Tank::Tank(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec
 	float stepX = 2.0f * (wheelHalfExtents.y) + wheelSpacingX;
 	float wheelRowOffsetZ = stepZ / wheelRowCount;
 
-	float wheelFriction = 2;
-
 	for (int rowX = 0; rowX < wheelRowCount; rowX++) {
 		for (int rowZ = 0; rowZ < axelCount - rowX / 2; rowZ++) {
 
@@ -56,7 +54,7 @@ Tank::Tank(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec
 			parts.push_back(leftWheel);
 
 			leftWheel->physicsObject->setActivationState(DISABLE_DEACTIVATION);
-			leftWheel->physicsObject->setFriction(wheelFriction);
+			leftWheel->physicsObject->setFriction(1);
 
 
 
@@ -69,7 +67,7 @@ Tank::Tank(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec
 			parts.push_back(rightWheel);
 
 			rightWheel->physicsObject->setActivationState(DISABLE_DEACTIVATION);
-			rightWheel->physicsObject->setFriction(wheelFriction);
+			rightWheel->physicsObject->setFriction(1);
 		}
 
 	}
@@ -167,8 +165,8 @@ void Tank::handleInput(float deltaTime) {
 	float steering = 0;
 
 	{
-		float brake = 0;
-		//readGamingWheel(&steering, &speed, &brake);
+		float brake;
+		readGamingWheel(&steering, &speed, &brake);
 		speed -= brake;
 	}
 

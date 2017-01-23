@@ -25,6 +25,9 @@ Character::Character(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics
 
 	btHinge2Constraint* connection = new btHinge2Constraint(*body->physicsObject, *wheel->physicsObject, toVector3(position + wheelPos), btVector3(0, 1, 0), btVector3(1, 0, 0));
 
+
+
+
 	connection->setLowerLimit(+PI_HALF * 1);
 	connection->setUpperLimit(-PI_HALF * 1);
 
@@ -51,51 +54,9 @@ Character::Character(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics
 	connection->setServoTarget(motorIndex, 0);
 
 
-
-
-
-
-
-	glm::vec3 riflePos = position + bodyHalfExtents + glm::vec3(0.05f, 0.05f, -0.5f);
-	rifle = new Rifle(renderer, physics, riflePos, 0, 0, 0);
-	btHinge2Constraint* rifleConnection = new btHinge2Constraint(*body->physicsObject, *rifle->physicsObject, toVector3(riflePos + glm::vec3(0, 0, 0.3f)), btVector3(0, 0, -1), btVector3(1, 0, 0));
-
-
-
-	motorIndex = 2;//Suspension
-	rifleConnection->enableSpring(motorIndex, true);
-	rifleConnection->setLimit(motorIndex, -0.05f, 0.05f);
-	rifleConnection->setStiffness(motorIndex, 60.0f);
-	rifleConnection->setDamping(motorIndex, 50.0f);
-	rifleConnection->setEquilibriumPoint(motorIndex, 1);
-
-
-	motorIndex = 3;//Engine
-	rifleConnection->enableSpring(motorIndex, true);
-	rifleConnection->setLimit(motorIndex, -0.1f, +0.1f);
-	rifleConnection->setStiffness(motorIndex, 200.0f);
-	rifleConnection->setDamping(motorIndex, 200.0f);
-	rifleConnection->setEquilibriumPoint(motorIndex, -0.1f);
-
-	motorIndex = 5;//Steering
-	rifleConnection->enableSpring(motorIndex, false);
-	rifleConnection->setLimit(motorIndex, 0, 0);
-
-
-
-
-
-
-
-
-
-
-
 	parts.push_back(body);
 	parts.push_back(wheel);
-	parts.push_back(rifle);
 	addConstraint(connection, true);
-	addConstraint(rifleConnection, true);
 }
 
 
@@ -104,8 +65,6 @@ Character::~Character()
 }
 
 void Character::handleInput(float deltaTime) {
-	rifle->handleInput(deltaTime);
-
 	btHinge2Constraint& constraint = *(btHinge2Constraint*)constraints[0];
 	
 	const float PI_HALF = 1.57079632679;

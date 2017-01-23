@@ -64,7 +64,7 @@ void Barrel::updateBarrel(int fireKey, btRigidBody* physicsObject, glm::vec3 rec
 	Sphere* projectile = new Sphere(renderer, physics, projectilePos, projectileRadius, projectileMass);
 
 	
-	
+	float recoilImpulse = 30000.0f;
 	glm::vec3 propellingVector(invBarrelTransMatrix * glm::vec4(0, -calcPropellingImpulse(), 0, 0));
 	glm::vec3 recoilVector(invBarrelTransMatrix * glm::vec4(0, +calcRecoilImpulse(), 0, 0));
 	projectile->physicsObject->applyCentralImpulse(toVector3(propellingVector));

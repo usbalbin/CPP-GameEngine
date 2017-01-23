@@ -37,10 +37,10 @@ Rifle::Rifle(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::v
 	);
 	addChild(base);
 
-	float bulletDiameter = 0.1f;//0.00782;
+	float bulletDiameter = 0.00782;
 	float bulletMass = 0.010;
-	auto fireRate = 60.0s / 800;
-	std::vector<FireMode> fireModes{ /*FireMode::SINGLE,*/ FireMode::FULL };
+	auto fireRate = 60.0s / 600;
+	std::vector<FireMode> fireModes{ FireMode::SINGLE, FireMode::FULL };
 
 
 	float barrelMass = 0.5f;
@@ -62,17 +62,7 @@ Rifle::Rifle(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::v
 	finalize(position, masses, yaw, pitch, roll);
 }
 
-Rifle::~Rifle()
-{
-}
-
 void Rifle::update(float deltaTime) {
 	Barrel* barrelPart = ((Barrel*)barrel->getShape());
-	barrelPart->update(deltaTime);
-}
-
-
-void Rifle::handleInput(float deltaTime) {
-	Barrel* barrelPart = ((Barrel*)barrel->getShape());
-	barrelPart->updateBarrel(GLFW_KEY_F, physicsObject, toVec3(barrel->getLocalTransform().getOrigin()), barrel->getWorldMatrix());
+	barrelPart->updateBarrel(GLFW_KEY_SPACE, physicsObject, toVec3(barrel->getLocalTransform().getOrigin()), barrel->getWorldMatrix());
 }
