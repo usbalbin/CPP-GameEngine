@@ -14,6 +14,12 @@ struct ubyte3 {
 	ubyte r, g, b;
 };
 
+struct ubyte4 {
+	ubyte4() {}
+	ubyte4(ubyte r, ubyte g, ubyte b, ubyte a) : r(r), g(g), b(b), a(a) {}
+	ubyte r, g, b, a;
+};
+
 //inline float3 max(float3 l, float3 r);
 //inline float3 min(float3 l, float3 r);
 std::string readFileToString(std::string filePath);
@@ -27,6 +33,8 @@ void calculateNormals(std::vector<Vertex>& vertices, const std::vector<TriangleI
 void readObjFile(std::vector<Vertex>& vertices, std::vector<TriangleIndices>& indices, std::string & filePath, float reflection = 0, float refraction = 0);
 
 std::vector<ubyte3> readBmpPixels(std::string& filePath, int* widthOut, int* heightOut);
+
+std::vector<ubyte4> readBmpPixels4(std::string& filePath, int* widthOut, int* heightOut);
 
 void pixelsToMesh(int width, int length, std::vector<ubyte3> colors, std::vector<Vertex>& vertices, std::vector<TriangleIndices>& indices);
 
