@@ -10,7 +10,7 @@
 
 
 int main() {
-	GameEngine game(1024, 768);
+	GameEngine game(640, 480);
 	game.initialize();
 	
 	while (!game.shouldExit()) {

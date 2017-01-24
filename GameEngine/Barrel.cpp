@@ -2,6 +2,7 @@
 #include "Barrel.hpp"
 
 #include "Utils.hpp"
+#include <fstream>
 
 Barrel::Barrel(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, glm::vec2 scale, float mass, float projectileRadius, float projectileMass, float yaw, float pitch, float roll, std::chrono::duration<double> fireRate, std::vector<FireMode> fireModes) :
 	Cylinder(renderer, physics, position, scale, mass, yaw, pitch, roll)
@@ -12,6 +13,10 @@ Barrel::Barrel(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm:
 	this->fireRate = fireRate;
 	this->fireModes = fireModes;
 	this->currentFireMode = fireModes[0];
+	
+	if (!firingSound.loadFromFile("TankShot.wav"))
+		throw "Sound did'nt get loaded correctly Content/TankShot.wav";
+	sound.setBuffer(firingSound);
 }
 
 
@@ -37,6 +42,7 @@ void Barrel::update(float deltaTime) {
 	auto now = std::chrono::system_clock::now();
 	while (projectiles.size() && projectiles.front().isTimeToDie(now))
 		projectiles.pop_front();
+	sound.setPosition(getPosition().x, getPosition().y, getPosition().z);
 }
 
 void Barrel::updateBarrel(int fireKey, btRigidBody* physicsObject, glm::vec3 recoilCenter, glm::mat4 barrelTransMatrix) {
@@ -54,7 +60,7 @@ void Barrel::updateBarrel(int fireKey, btRigidBody* physicsObject, glm::vec3 rec
 	if (currentFireMode == lastTriggerState)
 		return;
 	
-	
+	sound.play();
 	barrelTransMatrix = !physicsObject ? getTranslationMatrix() : barrelTransMatrix;
 	glm::mat4 invBarrelTransMatrix = glm::inverse(barrelTransMatrix);
 	auto a = glm::vec3(glm::vec4(0, scale.y + projectileRadius, 0, 0) * invBarrelTransMatrix);

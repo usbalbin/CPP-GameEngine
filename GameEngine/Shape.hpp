@@ -9,6 +9,7 @@
 #include "glm\gtc\matrix_transform.hpp"
 #include "glm\gtx\euler_angles.hpp"
 #include "glm\gtc\matrix_transform.hpp"
+#include "SFML/Audio.hpp"
 
 class Shape
 {
@@ -37,6 +38,7 @@ protected:
 	glm::vec3 scale;
 	static OpenClRayTracer* renderer;
 	static btDiscreteDynamicsWorld* physics;
+	sf::Sound sound;
 private:
 	MultiInstance graphicsObject;
 	btCollisionShape* physicsShape = nullptr;

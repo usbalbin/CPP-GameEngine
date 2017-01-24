@@ -66,5 +66,6 @@ private:
 	std::chrono::system_clock::time_point lastFired;
 	std::chrono::duration<double> fireRate;
 	TriggerState lastTriggerState = TriggerState::RELEASED;
+	sf::SoundBuffer firingSound;
 };
 

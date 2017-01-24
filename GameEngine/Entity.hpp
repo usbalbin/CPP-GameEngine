@@ -4,6 +4,7 @@
 
 #include "Shape.hpp"
 
+
 class Entity
 {
 public:
@@ -20,6 +21,7 @@ public:
 	virtual bool isVehicle() { return false; }
 	float distance2(Entity* other);
 protected:
+	
 	std::vector<Shape*> parts;
 	btDiscreteDynamicsWorld* physics;
 	OpenClRayTracer* renderer;
