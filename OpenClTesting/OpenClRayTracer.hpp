@@ -13,11 +13,11 @@
 #include "BulletCollision\CollisionShapes\btOptimizedBvh.h"
 
 #define ADVANCED_RENDERER
-#define MAX_VERTICES_PER_OBJECT 300000//320
-#define MAX_INDICES_PER_OBJECT 600000//640
+#define MAX_VERTICES_PER_OBJECT 5000000//320
+#define MAX_INDICES_PER_OBJECT 10000000//640
 #define MAX_OBJECTS_IN_RAY 16
 
-#define FORCE_CPU
+//#define FORCE_CPU
 
 #define RAY_DEPTH 2
 typedef std::chrono::high_resolution_clock::time_point TimePoint;
@@ -32,6 +32,9 @@ public:
 	void clear();
 	void push_back(Instance instance);
 	void push_back(MultiInstance& instance);
+
+	void push_backTexture(std::string path);
+
 	Instance pop_instance();
 
 	InstanceBuilder push_backObjectType(std::vector<TriangleIndices>& objectTypeIndices, std::vector<Vertex>& objectTypeVertices);
@@ -137,6 +140,8 @@ private:
 	std::vector<cl::Buffer> rayBuffers;
 	std::vector<cl::Buffer> rayTreeBuffers;
 	std::vector<cl::Buffer> hitBuffers;
+
+	std::vector<cl::Image2D> textures;
 
 
 	bool useInterop = true;

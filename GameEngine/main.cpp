@@ -6,9 +6,6 @@
 
 
 
-
-
-
 int main() {
 	GameEngine game(640, 480);
 	game.initialize();

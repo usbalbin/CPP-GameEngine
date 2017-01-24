@@ -34,6 +34,7 @@ private:
 
 
 	OpenClRayTracer renderer;
+	
 	btDiscreteDynamicsWorld* physics;
 	Entity* player = nullptr;
 	std::vector<Entity*> gameEntities;

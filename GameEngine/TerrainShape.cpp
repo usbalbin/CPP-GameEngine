@@ -21,7 +21,8 @@ TerrainShape::TerrainShape(OpenClRayTracer * renderer, btDiscreteDynamicsWorld *
 		renderer->writeToObjectTypeBuffers();
 	}
 	MultiInstance instance(matrix, graphicsObjectBuilder);
-
+	for(auto& ins : instance.instances)
+	ins.texture[0] = SHRT_MAX;
 	
 	
 	btDefaultMotionState* motionState = new btDefaultMotionState(btTransform::getIdentity());
@@ -40,7 +41,7 @@ void TerrainShape::initializeBuilder(OpenClRayTracer* renderer, btDiscreteDynami
 	
 	int imageWidth = 2, imageHeight = 2;
 
-	std::vector<ubyte3> pixels = readBmpPixels(std::string("content/heightmap2.bmp"), &imageWidth, &imageHeight);
+	std::vector<ubyte3> pixels = readBmpPixels(std::string("content/heightmap1k.bmp"), &imageWidth, &imageHeight);
 	/*{
 		ubyte3(0, 0, 0), ubyte3(0, 0, 0),
 		ubyte3(0, 0, 0), ubyte3(1, 0, 0),
