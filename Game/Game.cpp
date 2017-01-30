@@ -24,5 +24,5 @@ void playSingle() {
 }
 
 int main() {
-	playMulti();
+	playSingle();
 }
