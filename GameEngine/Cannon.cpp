@@ -22,6 +22,6 @@ Cannon::~Cannon()
 {
 }
 
-void Cannon::handleInput(float deltaTime) {
+void Cannon::handleInput(const Input&, float deltaTime) {
 	parts[0]->update(deltaTime);
 }

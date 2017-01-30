@@ -11,6 +11,7 @@
 class OpenGlShaders
 {
 public:
+	OpenGlShaders();
 	//OpenGlShaders();
 	OpenGlShaders::OpenGlShaders(int width, int height, std::string vertexShaderPath, std::string fragmentShaderPath, GLFWframebuffersizefun customResizeCallback);
 	~OpenGlShaders();

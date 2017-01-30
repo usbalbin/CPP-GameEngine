@@ -26,7 +26,7 @@ Entity::~Entity(){
 		delete part;
 }
 
-void Entity::handleInput(float deltaTime)
+void Entity::handleInput(const Input& input, float deltaTime)
 {
 }
 
@@ -51,7 +51,7 @@ void Entity::update(float deltaTime)
 		part->update(deltaTime);
 }
 
-void Entity::draw(){
+void Entity::draw() const{
 	for (auto& part : parts)
 		part->draw();
 }

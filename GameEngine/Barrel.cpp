@@ -14,9 +14,11 @@ Barrel::Barrel(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm:
 	this->fireModes = fireModes;
 	this->currentFireMode = fireModes[0];
 	
-	if (!firingSound.loadFromFile("TankShot.wav"))
-		throw "Sound did'nt get loaded correctly Content/TankShot.wav";
-	sound.setBuffer(firingSound);
+	if (renderer) {
+		if (!firingSound.loadFromFile("content/TankShot.wav"))
+			throw "Sound did'nt get loaded correctly Content/TankShot.wav";
+		sound.setBuffer(firingSound);
+	}
 }
 
 
@@ -42,11 +44,11 @@ void Barrel::update(float deltaTime) {
 	auto now = std::chrono::system_clock::now();
 	while (projectiles.size() && projectiles.front().isTimeToDie(now))
 		projectiles.pop_front();
-	sound.setPosition(getPosition().x, getPosition().y, getPosition().z);
+	//sound.setPosition(getPosition().x, getPosition().y, getPosition().z);
 }
 
-void Barrel::updateBarrel(int fireKey, btRigidBody* physicsObject, glm::vec3 recoilCenter, glm::mat4 barrelTransMatrix) {
-	TriggerState triggerState = (TriggerState)glfwGetKey(renderer->getWindow(), fireKey);
+void Barrel::updateBarrel(const Input& input, int fireKey, btRigidBody* physicsObject, glm::vec3 recoilCenter, glm::mat4 barrelTransMatrix) {
+	TriggerState triggerState = (TriggerState)(int)input.inputs[fireKey];
 	auto deltaTime = std::chrono::system_clock::now() - lastFired;
 	if (
 		currentFireMode == FireMode::SAFE ||
@@ -60,11 +62,11 @@ void Barrel::updateBarrel(int fireKey, btRigidBody* physicsObject, glm::vec3 rec
 	if (currentFireMode == lastTriggerState)
 		return;
 	
-	sound.play();
+	if(renderer)
+		sound.play();
 	barrelTransMatrix = !physicsObject ? getTranslationMatrix() : barrelTransMatrix;
 	glm::mat4 invBarrelTransMatrix = glm::inverse(barrelTransMatrix);
-	auto a = glm::vec3(glm::vec4(0, scale.y + projectileRadius, 0, 0) * invBarrelTransMatrix);
-	auto b = glm::vec3(glm::vec4(0, scale.y + projectileRadius, 0, 1) * invBarrelTransMatrix);
+
 
 	glm::vec3 projectilePos = /*toVec3(barrelTransMatrix) + */glm::vec3(glm::vec4(0, -scale.y - projectileRadius, 0, 1) * barrelTransMatrix);
 	Sphere* projectile = new Sphere(renderer, physics, projectilePos, projectileRadius, projectileMass);

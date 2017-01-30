@@ -21,17 +21,17 @@ void Player::draw()
 	Character::draw();
 }
 
-void Player::handleInput(float deltaTime)
+void Player::handleInput(const Input& input, float deltaTime)
 {
-	bool enterExitPressed = glfwGetKey(renderer->getWindow(), GLFW_KEY_ENTER);
+	bool enterExitPressed = input.buttonE;
 
 	if (isInVehicle()) {
-		vehicle->handleInput(deltaTime);
+		vehicle->handleInput(input, deltaTime);
 		if (enterExitPressed && !lastEnterVehicleKeyPressed)
 			exitVehicle();
 	}
 	else {
-		Character::handleInput(deltaTime);
+		Character::handleInput(input, deltaTime);
 		if (enterExitPressed && !lastEnterVehicleKeyPressed)
 			enterVehicle();
 	}
@@ -60,7 +60,7 @@ bool Player::isInVehicle()
 
 void Player::enterVehicle()
 {
-	const float distLimit = 5;
+	const float distLimit = 10;
 	const float distLimit2 = distLimit * distLimit;
 
 	float closestDistance2 = FLT_MAX;
@@ -81,6 +81,7 @@ void Player::enterVehicle()
 		for (auto& part : parts)
 			physics->removeRigidBody(part->physicsObject);
 		physics->removeConstraint(constraints[0]);
+		physics->removeConstraint(constraints[1]);
 	}
 	
 }
@@ -90,12 +91,16 @@ void Player::exitVehicle()
 	glm::vec3 playerPos = glm::vec3(glm::vec4(-100, 0, 0, 1));
 
 
-	for (auto& part : parts) {
+	/*for (auto& part : parts) {
 		physics->addRigidBody(part->physicsObject);
-	}
-	physics->addConstraint(constraints[0]);
+	}*/
+	physics->addRigidBody(parts[0]->physicsObject);
+	physics->addRigidBody(parts[1]->physicsObject);
 
-	float yaw = glm::yaw(glm::quat(vehicle->getTranslationMatrix()));
+	physics->addConstraint(constraints[0]);
+	
+
+	float yaw = 0;//
 	glm::vec3 position = glm::vec3(glm::vec4(8, 0, 0, 1) * vehicle->getTranslationMatrix());
 
 	moveTo(position, yaw);

@@ -39,13 +39,13 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -107,13 +107,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>SFML_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(AMDAPPSDKROOT)/include;../dependencies/includes;../</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(AMDAPPSDKROOT)/include;../dependencies/includes;../dependencies/includes/bullet;../</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../dependencies/libs/x64/bullet/Debug/;$(AMDAPPSDKROOT)\lib\x86_64;../dependencies/libs/x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>../dependencies/libs/x64/bullet/Debug/LinearMath.lib;../dependencies/libs/x64/bullet/Debug/BulletCollision.lib;../dependencies/libs/x64/bullet/Debug/BulletDynamics.lib;../dependencies/libs/x64/SFML/sfml-audio-d.lib;../x64/Debug/RayTracer.lib;opengl32.lib;../dependencies/libs/x64/glfw/glfw3.lib;../dependencies/libs/x64/glfw/glfw3dll.lib;../dependencies/libs/x64/glew/glew32s.lib;$(AMDAPPSDKROOT)\lib\x86_64\OpenCL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../dependencies/libs/x64/bullet/Debug/;$(AMDAPPSDKROOT)\lib\x86_64;../dependencies/libs/x64;../dependencies/libs/x64/SFML;../dependencies/libs/x64/bullet/Debug/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>LinearMath.lib;BulletCollision.lib;BulletDynamics.lib;sfml-audio-s-d.lib;sfml-system-s-d.lib;openal32.lib;flac.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;sfml-network-s-d.lib;ws2_32.lib;../x64/Debug/RayTracer.lib;../x64/Debug/Common.lib;opengl32.lib;../dependencies/libs/x64/glfw/glfw3.lib;../dependencies/libs/x64/glfw/glfw3dll.lib;../dependencies/libs/x64/glew/glew32s.lib;$(AMDAPPSDKROOT)\lib\x86_64\OpenCL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -141,17 +141,17 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SFML_STATIC;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(AMDAPPSDKROOT)/include;../dependencies/includes;../</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(AMDAPPSDKROOT)/include;../dependencies/includes;../dependencies/includes/bullet;../</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../dependencies/libs/x64/bullet/Release/;$(AMDAPPSDKROOT)\lib\x86_64;../dependencies/libs/x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>../dependencies/libs/x64/bullet/Release/LinearMath.lib;../dependencies/libs/x64/bullet/Release/BulletCollision.lib;../dependencies/libs/x64/bullet/Release/BulletDynamics.lib;../dependencies/libs/x64/SFML/sfml-audio.lib;../x64/Release/RayTracer.lib;opengl32.lib;../dependencies/libs/x64/glfw/glfw3.lib;../dependencies/libs/x64/glfw/glfw3dll.lib;../dependencies/libs/x64/glew/glew32s.lib;$(AMDAPPSDKROOT)\lib\x86_64\OpenCL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../dependencies/libs/x64/bullet/Release/;$(AMDAPPSDKROOT)\lib\x86_64;../dependencies/libs/x64;../dependencies/libs/x64/SFML;../dependencies/libs/x64/bullet/Release/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>LinearMath.lib;BulletCollision.lib;BulletDynamics.lib;sfml-audio-s.lib;sfml-system-s.lib;openal32.lib;flac.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;sfml-network-s.lib;ws2_32.lib;../x64/Release/RayTracer.lib;../x64/Release/Common.lib;opengl32.lib;../dependencies/libs/x64/glfw/glfw3.lib;../dependencies/libs/x64/glfw/glfw3dll.lib;../dependencies/libs/x64/glew/glew32s.lib;$(AMDAPPSDKROOT)\lib\x86_64\OpenCL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -165,12 +165,17 @@
     <ClInclude Include="Character.hpp" />
     <ClInclude Include="CompoundShape.hpp" />
     <ClInclude Include="CompoundShapeChild.hpp" />
+    <ClInclude Include="Containers.hpp" />
     <ClInclude Include="Cube.hpp" />
     <ClInclude Include="Car.hpp" />
     <ClInclude Include="Cylinder.hpp" />
+    <ClInclude Include="DebugTools.hpp" />
     <ClInclude Include="Entity.hpp" />
+    <ClInclude Include="GameBase.hpp" />
+    <ClInclude Include="GameMultiplayer.hpp" />
     <ClInclude Include="GenericShape.hpp" />
     <ClInclude Include="Input.hpp" />
+    <ClInclude Include="NetworkDiscreteDynamicsWorld.hpp" />
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="RifleTester.hpp" />
     <ClInclude Include="Shape.hpp" />
@@ -195,17 +200,20 @@
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="CompoundShape.cpp" />
     <ClCompile Include="CompoundShapeChild.cpp" />
+    <ClCompile Include="Containers.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Car.cpp" />
     <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="GameBase.cpp" />
+    <ClCompile Include="GameMultiplayer.cpp" />
     <ClCompile Include="GenericShape.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="NetworkDiscreteDynamicsWorld.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RifleTester.cpp" />
     <ClCompile Include="Shape.cpp" />
     <ClCompile Include="GameEngine.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="SimpleTerrain.cpp" />
     <ClCompile Include="Rifle.cpp" />
     <ClCompile Include="Sphere.cpp" />

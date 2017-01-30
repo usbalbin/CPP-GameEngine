@@ -5,6 +5,7 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "LinearMath\btTransform.h"
 #include "LinearMath\btTransformUtil.h"
+#include "SFML/System/Vector3.hpp"
 
 #include <vector>
 
@@ -12,6 +13,11 @@ const float PI_HALF = 1.57079632679;
 const float PI = 3.14159265359;
 
 btVector3 toVector3(glm::vec3 vector);
+sf::Vector3f toSfVector3(glm::vec3 vector);
+sf::Vector3f toSfVector3(glm::vec4 vector);
+sf::Vector3f toSfVector3(glm::mat4 matrix);
+
+
 glm::vec3 toVec3(btVector3 vector);
 glm::vec3 toVec3(glm::mat4 matrix);
 
@@ -20,8 +26,6 @@ btTransform toTransform(glm::vec3& position, float yaw = 0, float pitch = 0, flo
 
 glm::mat4 toMatrix(btTransform transform);
 glm::mat4 toMatrix(glm::vec3 position);
-
-
 
 float angleDiff(float a, float b);
 

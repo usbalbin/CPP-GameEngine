@@ -9,7 +9,7 @@ public:
 	RifleTester(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position);
 	~RifleTester();
 
-	void handleInput(float deltaTime);
+	void handleInput(const Input& input, float deltaTime) override;
 	Rifle* rifle = nullptr;
 };
 

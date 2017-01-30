@@ -3,7 +3,7 @@
 #include "OpenClTesting\Containers.hpp"
 #include "OpenClTesting\OpenClRayTracer.hpp"
 
-#include "btBulletDynamicsCommon.h"
+#include "bullet/btBulletDynamicsCommon.h"
 #include "glm/gtc/type_ptr.hpp"
 #include "OpenClTesting\Utils.hpp"
 #include "glm\gtc\matrix_transform.hpp"

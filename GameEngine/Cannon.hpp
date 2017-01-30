@@ -7,6 +7,6 @@ public:
 	Cannon(OpenClRayTracer * renderer, btDiscreteDynamicsWorld * physics, glm::vec3 position, float mass);
 	~Cannon();
 
-	void handleInput(float deltaTime);
+	void handleInput(const Input& input, float deltaTime) override;
 };
 

@@ -19,6 +19,10 @@
 #include <unistd.h>
 #endif // _WIN32
 
+OpenClRayTracer::OpenClRayTracer() {
+
+}
+
 OpenClRayTracer::OpenClRayTracer(int width, int height) : 
 	renderer(width, height, "shaders/vertexShader.glsl", "shaders/fragmentShader.glsl",
 		[](GLFWwindow* window, int width, int height) {
@@ -215,7 +219,7 @@ void OpenClRayTracer::initialize() {
 		colors = std::vector<float4>(width * height);
 	}
 
-	push_backTexture("content/ground.bmp");
+	push_backTexture("content/kamel.bmp");
 	
 
 
@@ -441,6 +445,9 @@ MultiInstanceBuilder OpenClRayTracer::push_backMultiToObjectTypeBuffers(std::vec
 }
 
 void OpenClRayTracer::writeToObjectTypeBuffers() {
+	if (objectTypes.empty())
+		return;
+
 	autoResizeObjectTypes();
 	if (queue.enqueueWriteBuffer(objectTypeBuffer, CL_TRUE, 0, sizeof(Object) * objectTypes.size(), objectTypes.data()) != CL_SUCCESS) {
 		std::cout << "Failed to write to buffer" << std::endl;
@@ -698,7 +705,7 @@ void OpenClRayTracer::render(float16 matrix) {
 	queue.finish();
 
 	
-	std::vector<TimePoint> rayTracerStartTimes;
+	std::vector<RtTimePoint> rayTracerStartTimes;
 	rayTracerStartTimes.push_back(std::chrono::high_resolution_clock::now());
 
 
@@ -752,7 +759,7 @@ void OpenClRayTracer::render(float16 matrix) {
 	std::vector<cl_int> rayCounts(RAY_DEPTH);
 
 
-	std::vector<TimePoint> rayGeneratorStartTimes;
+	std::vector<RtTimePoint> rayGeneratorStartTimes;
 
 	int i;
 	for (i = 0; i < RAY_DEPTH - 1; i++) {//Continue until maximum ray depth is reached or no more rays left to trace
@@ -790,7 +797,7 @@ void OpenClRayTracer::render(float16 matrix) {
 
 	}
 	
-	std::vector<TimePoint> treeTraverserStartTimes;
+	std::vector<RtTimePoint> treeTraverserStartTimes;
 
 	for (; i > 0; i--) {
 		rayCount = rayCounts[i - 1];
@@ -808,7 +815,7 @@ void OpenClRayTracer::render(float16 matrix) {
 
 	auto colorToPixelStartTime = std::chrono::high_resolution_clock::now();
 
-	TimePoint drawingStartTime;
+	RtTimePoint drawingStartTime;
 
 
 	if (useInterop) {
@@ -858,13 +865,13 @@ void OpenClRayTracer::render(float16 matrix) {
 }
 
 void OpenClRayTracer::profileAdvancedRender(
-	TimePoint startTime,
-	std::vector<TimePoint> rayTracerStartTimes,
-	std::vector<TimePoint> rayGeneratorStartTimes,
-	std::vector<TimePoint> treeTraverserStartTimes,
-	TimePoint colorToPixelStartTime,
-	TimePoint drawingStartTime,
-	TimePoint doneTime
+	RtTimePoint startTime,
+	std::vector<RtTimePoint> rayTracerStartTimes,
+	std::vector<RtTimePoint> rayGeneratorStartTimes,
+	std::vector<RtTimePoint> treeTraverserStartTimes,
+	RtTimePoint colorToPixelStartTime,
+	RtTimePoint drawingStartTime,
+	RtTimePoint doneTime
 ) {
 	static auto lastTimeOfReport = std::chrono::high_resolution_clock::now();
 	auto deltaTime = doneTime - lastTimeOfReport;
@@ -912,7 +919,7 @@ void OpenClRayTracer::profileAdvancedRender(
 		std::cout << std::endl;
 }
 
-double OpenClRayTracer::durationToMs(Duration duration) {
+double OpenClRayTracer::durationToMs(RtDuration duration) {
 	return std::chrono::duration<double, std::milli>(duration).count();
 }
 

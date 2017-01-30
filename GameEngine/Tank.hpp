@@ -11,8 +11,8 @@ public:
 
 	
 	
-	void handleInput(float deltaTime);
-	void handleTurretInput(float deltaTime);
+	void handleInput(const Input& input, float deltaTime) override;
+	void handleTurretInput(const Input & input, float deltaTime);
 	void update(float deltaTime);
 	~Tank();
 private:

@@ -16,7 +16,7 @@ TerrainShape::TerrainShape(OpenClRayTracer * renderer, btDiscreteDynamicsWorld *
 		)
 		;
 
-	if (!builderInitialized) {
+	if (!builderInitialized && renderer) {
 		initializeBuilder(renderer, physics);
 		renderer->writeToObjectTypeBuffers();
 	}
@@ -41,7 +41,7 @@ void TerrainShape::initializeBuilder(OpenClRayTracer* renderer, btDiscreteDynami
 	
 	int imageWidth = 2, imageHeight = 2;
 
-	std::vector<ubyte3> pixels = readBmpPixels(std::string("content/heightmap1k.bmp"), &imageWidth, &imageHeight);
+	std::vector<ubyte3> pixels = readBmpPixels(std::string("content/heightmap2.bmp"), &imageWidth, &imageHeight);
 	/*{
 		ubyte3(0, 0, 0), ubyte3(0, 0, 0),
 		ubyte3(0, 0, 0), ubyte3(1, 0, 0),

@@ -3,6 +3,8 @@
 #include "Cylinder.hpp"
 #include "Sphere.hpp"
 
+#include "Input.hpp"
+
 #include <queue>
 #include <chrono>
 
@@ -53,7 +55,7 @@ public:
 
 
 	//Default to its own physics object if none is specified
-	void updateBarrel(int fireKey, btRigidBody * physicsObject = nullptr, glm::vec3 recoilCenter = glm::vec3(0), glm::mat4 barrelTransMatrix = glm::mat4(1));
+	void updateBarrel(const Input& input, int fireKey, btRigidBody * physicsObject = nullptr, glm::vec3 recoilCenter = glm::vec3(0), glm::mat4 barrelTransMatrix = glm::mat4(1));
 private:
 	float calcPropellingImpulse();
 	float calcRecoilImpulse();

@@ -11,7 +11,7 @@ public:
 	~Player();
 
 	void draw();
-	void handleInput(float deltaTime);
+	void handleInput(const Input& input, float deltaTime) override;
 private:
 
 	glm::mat4 getMatrix();

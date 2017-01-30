@@ -28,7 +28,7 @@ Sphere::Sphere(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm:
 
 	this->scale = glm::vec3(scale);
 
-	if (!builderInitialized) {
+	if (!builderInitialized && renderer) {
 		initializeBuilder(renderer, physics);
 		renderer->writeToObjectTypeBuffers();
 	}

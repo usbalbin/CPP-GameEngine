@@ -103,42 +103,37 @@ Character::~Character()
 {
 }
 
-void Character::handleInput(float deltaTime) {
-	rifle->handleInput(deltaTime);
+void Character::handleInput(const Input& input, float deltaTime) {
+	rifle->handleInput(input, deltaTime);
 
 	btHinge2Constraint& constraint = *(btHinge2Constraint*)constraints[0];
 	
 	const float PI_HALF = 1.57079632679;
 
-	float forward = 0;
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_W) == GLFW_PRESS)
-		forward += 20;
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_S) == GLFW_PRESS)
-		forward -= 20;
+	float forward = input.leftStick.y * 10;
 
-	float right = 0;
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_D) == GLFW_PRESS)
-		right += 20;
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_A) == GLFW_PRESS)
-		right -= 20;
+	float right = input.leftStick.x * 5;
+	
 
 	int motorIndex = 3;
 	
 	float steering = atan2(right, forward);
 	float speed = 0;
 	if (forward || right)
-		speed = 5;
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+		speed = sqrt(forward * forward + right * right);
+	if (input.buttonShift)
 		speed *= 2;
+	if (speed > 1)
+		std::cout << "" << std::endl;
 
 	static float stanceHeight = -0.9f;
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+	if (input.buttonCtrl)
 		stanceHeight += 1.0f * deltaTime;
 	else
 		stanceHeight -= 1.0f * deltaTime;
 	btClamp(stanceHeight, -0.8f, -0.4f);
 
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_SPACE) == GLFW_PRESS)
+	if (input.buttonSpace)
 		stanceHeight = -1.2f;
 
 	constraint.setLimit(2, -0.9, stanceHeight + 0.2f);
@@ -148,17 +143,11 @@ void Character::handleInput(float deltaTime) {
 	motorIndex = 5;
 	constraint.setServoTarget(motorIndex, steering);
 
-	float yaw = 0;
-
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_RIGHT) == GLFW_PRESS)
-		yaw += 1 * deltaTime;
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_LEFT) == GLFW_PRESS)
-		yaw -= 1 * deltaTime;
-	
-	mouseInput(deltaTime);
+	yaw += input.rightStick.x * deltaTime;
+	parts[0]->physicsObject->getWorldTransform().setRotation(btQuaternion(yaw, 0, 0));
 }
 
-void Character::mouseInput(float deltaTime) {
+/*void Character::mouseInput(const Input& input, float deltaTime) {
 	static double lastPosX = 0, lastPosY = 0;
 	double posX = 0, posY = 0;
 	glfwGetCursorPos(renderer->getWindow(), &posX, &posY);
@@ -172,20 +161,22 @@ void Character::mouseInput(float deltaTime) {
 
 
 	parts[0]->physicsObject->getWorldTransform().setRotation(btQuaternion(yaw, 0, 0));
-}
+}*/
 
 void Character::moveTo(glm::vec3 position, float yaw)
 {
 	
 
-
+	
 	//Move body
-	parts[0]->physicsObject->getWorldTransform().setOrigin(toVector3(position));
-	parts[0]->physicsObject->getWorldTransform().setRotation(btQuaternion(yaw, 0, 0));
+	parts[0]->physicsObject->proceedToTransform(btTransform(btQuaternion(yaw, 0, 0), toVector3(position)));
+	//parts[0]->physicsObject->getWorldTransform().setOrigin(toVector3(position));
+	//parts[0]->physicsObject->getWorldTransform().setRotation(btQuaternion(yaw, 0, 0));
 
 	//Move wheel
-	parts[1]->physicsObject->getWorldTransform().setOrigin(toVector3(position + wheelPos));
-	parts[1]->physicsObject->getWorldTransform().setRotation(btQuaternion(yaw, 0, 0));
+	parts[1]->physicsObject->proceedToTransform(btTransform(btQuaternion(yaw, 0, PI_HALF), toVector3(position + wheelPos)));
+	//parts[1]->physicsObject->getWorldTransform().setOrigin(toVector3(position + wheelPos));
+	//parts[1]->physicsObject->getWorldTransform().setRotation(btQuaternion(yaw, 0, 0));
 
 
 	

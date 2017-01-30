@@ -10,6 +10,10 @@
 #include <fstream>
 #include <vector>
 
+OpenGlShaders::OpenGlShaders() {
+
+}
+
 OpenGlShaders::OpenGlShaders(int width, int height, std::string vertexShaderPath, std::string fragmentShaderPath, GLFWframebuffersizefun customResizeCallback) {
 	this->width = width;
 	this->height = height;

@@ -109,7 +109,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>NOMINMAX_DEBUG;_CONSOLE;%(PreprocessorDefinitions);GLM_SWIZZLE;__CL_ENABLE_EXCEPTIONS</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>$(AMDAPPSDKROOT)/include;../dependencies/includes</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(AMDAPPSDKROOT)/include;../dependencies/includes;../dependencies/includes/bullet</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,7 +147,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NOMINMAXNDEBUG;_CONSOLE;%(PreprocessorDefinitions);__CL_ENABLE_EXCEPTIONS</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>$(AMDAPPSDKROOT)/include;../dependencies/includes</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(AMDAPPSDKROOT)/include;../dependencies/includes;../dependencies/includes/bullet</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

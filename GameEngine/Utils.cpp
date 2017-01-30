@@ -9,6 +9,21 @@ btVector3 toVector3(glm::vec3 vector) {
 	return btVector3(vector.x, vector.y, vector.z);
 }
 
+sf::Vector3f toSfVector3(glm::vec3 vector)
+{
+	return sf::Vector3f(vector.x, vector.y, vector.z);
+}
+
+sf::Vector3f toSfVector3(glm::vec4 vector)
+{
+	return sf::Vector3f(vector.x, vector.y, vector.z);
+}
+
+sf::Vector3f toSfVector3(glm::mat4 matrix)
+{
+	return toSfVector3(toVec3(matrix));
+}
+
 glm::vec3 toVec3(btVector3 vector) {
 	return glm::vec3(vector.x(), vector.y(), vector.z());
 }
@@ -17,6 +32,8 @@ glm::vec3 toVec3(glm::mat4 matrix)
 {
 	return glm::vec3(matrix[3][0], matrix[3][1], matrix[3][2]);
 }
+
+
 
 btTransform toTransform(glm::mat4 matrix) {
 	btTransform transform;
