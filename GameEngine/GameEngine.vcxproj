@@ -105,15 +105,15 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>SFML_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(AMDAPPSDKROOT)/include;../dependencies/includes;../</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../dependencies/libs/x64/bullet/Debug/;$(AMDAPPSDKROOT)\lib\x86_64;../dependencies/libs/x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>../dependencies/libs/x64/bullet/Debug/LinearMath.lib;../dependencies/libs/x64/bullet/Debug/BulletCollision.lib;../dependencies/libs/x64/bullet/Debug/BulletDynamics.lib;../dependencies/libs/x64/SFML/sfml-audio-d.lib;../x64/Debug/RayTracer.lib;opengl32.lib;../dependencies/libs/x64/glfw/glfw3.lib;../dependencies/libs/x64/glfw/glfw3dll.lib;../dependencies/libs/x64/glew/glew32s.lib;$(AMDAPPSDKROOT)\lib\x86_64\OpenCL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../dependencies/libs/x64/bullet/Debug/;$(AMDAPPSDKROOT)\lib\x86_64;../dependencies/libs/x64;../dependencies/libs/x64/SFML</AdditionalLibraryDirectories>
+      <AdditionalDependencies>../dependencies/libs/x64/bullet/Debug/LinearMath.lib;../dependencies/libs/x64/bullet/Debug/BulletCollision.lib;../dependencies/libs/x64/bullet/Debug/BulletDynamics.lib;sfml-audio-s-d.lib;sfml-system-s-d.lib;openal32.lib;flac.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;../x64/Debug/RayTracer.lib;opengl32.lib;../dependencies/libs/x64/glfw/glfw3.lib;../dependencies/libs/x64/glfw/glfw3dll.lib;../dependencies/libs/x64/glew/glew32s.lib;$(AMDAPPSDKROOT)\lib\x86_64\OpenCL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

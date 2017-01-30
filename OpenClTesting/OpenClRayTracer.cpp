@@ -48,8 +48,8 @@ void OpenClRayTracer::initialize() {
 	if (useInterop) {
 		try {
 			openClContexts.initializeInteropGpu();
-			device = openClContexts.getGpuDevice(0);
-			this->context = openClContexts.getGpuContext(0);
+			device = openClContexts.getGpuDevice(GPU_DEVICE_ID);
+			this->context = openClContexts.getGpuContext(GPU_CONTEXT_ID);
 		}
 		catch (cl::Error e) {
 			useInterop = false;
@@ -58,8 +58,8 @@ void OpenClRayTracer::initialize() {
 	if (!useInterop) {
 		try {
 			openClContexts.initializeGpu();
-			openClContexts.getGpuDevice(0);
-			this->context = openClContexts.getGpuContext(0);
+			openClContexts.getGpuDevice(GPU_DEVICE_ID);						
+			this->context = openClContexts.getGpuContext(GPU_CONTEXT_ID);
 		}
 		catch (cl::Error e) {
 			openClContexts.initializeCpu();
@@ -215,7 +215,7 @@ void OpenClRayTracer::initialize() {
 		colors = std::vector<float4>(width * height);
 	}
 
-	push_backTexture("content/ground.bmp");
+	push_backTexture("content/kamel.bmp");
 	
 
 

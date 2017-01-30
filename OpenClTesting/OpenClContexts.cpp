@@ -144,7 +144,7 @@ void OpenClContexts::initialize(int deviceType){
 		}
 		for(auto& device : platformDevices){
 			std::cout << "Här är en enhet av rätt typ, sparar den" << std::endl;
-			devices->push_back(device);
+			devices->emplace_back(device(), true);
 			
 			std::cout << "Skriver ut enhetens info" << std::endl;
 			std::cout << device.getInfo<CL_DEVICE_VENDOR>() << std::endl;
@@ -152,6 +152,7 @@ void OpenClContexts::initialize(int deviceType){
 			std::cout << "-------------------------------" << std::endl;
 		}
 		platformDevices.clear();
+		
 	}
 	std::cout << std::endl;
 	

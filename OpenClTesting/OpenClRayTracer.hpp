@@ -19,6 +19,9 @@
 
 //#define FORCE_CPU
 
+#define GPU_CONTEXT_ID 0			//GPU ID
+#define GPU_DEVICE_ID 0
+
 #define RAY_DEPTH 2
 typedef std::chrono::high_resolution_clock::time_point TimePoint;
 typedef std::chrono::high_resolution_clock::duration Duration;
