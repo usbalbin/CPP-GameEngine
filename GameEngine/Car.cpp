@@ -108,33 +108,14 @@ Car::Car(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 
 
 }
 
-void Car::handleInput(float deltaTime) {
+void Car::handleInput(const Input& input, float deltaTime) {
 	const float PI_HALF = 1.57079632679;
 
-	float speed = 0;
-	float steering = 0;
-
-	{
-		float brake = 0;
-		//readGamingWheel(&steering, &speed, &brake);
-		speed -= brake;
-	}
-
-	
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_W) == GLFW_PRESS)
-		speed += 1;
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_S) == GLFW_PRESS)
-		speed -= 1;
-
-	
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_D) == GLFW_PRESS)
-		steering += 1;
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_A) == GLFW_PRESS)
-		steering -= 1;
-
+	float speed = input.leftStick.y - input.leftTrigger + input.rightTrigger;
+	float steering = input.leftStick.x;
 
 	btClamp(speed, -1.0f, +1.0f);
-	btClamp(steering, -1.0f, +1.0f);
+
 	int motorIndex = 3;
 	for (auto& constraint : constraints) {
 		((btHinge2Constraint*)constraint)->setTargetVelocity(motorIndex, -speed * 140);
@@ -148,7 +129,7 @@ void Car::handleInput(float deltaTime) {
 	}
 
 	motorIndex = 3;
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_SPACE) == GLFW_PRESS) {
+	if (input.buttonSpace) {
 		for (auto& constraint : { constraints[2], constraints[3] }) {
 			((btHinge2Constraint*)constraint)->setTargetVelocity(motorIndex, 0);
 			((btHinge2Constraint*)constraint)->setMaxMotorForce(motorIndex, 200);

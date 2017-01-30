@@ -127,20 +127,11 @@ ApcTank::ApcTank(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, gl
 
 }
 
-void ApcTank::handleInput(float deltaTime) {
+void ApcTank::handleInput(const Input& input, float deltaTime) {
 	const float PI_HALF = 1.57079632679;
 
-	float targetVelocity = 0;
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_W) == GLFW_PRESS)
-		targetVelocity += 20;
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_S) == GLFW_PRESS)
-		targetVelocity -= 20;
-
-	float steering = 0;
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_D) == GLFW_PRESS)
-		steering += PI_HALF * 0.5;
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_A) == GLFW_PRESS)
-		steering -= PI_HALF * 0.5;
+	float targetVelocity = 20 * input.leftStick.y;
+	float steering = PI_HALF * 0.5 * input.leftStick.x;
 
 	int motorIndex = 3;
 	for (auto& constraint : constraints) {

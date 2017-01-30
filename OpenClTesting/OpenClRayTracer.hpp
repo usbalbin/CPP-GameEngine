@@ -10,25 +10,25 @@
 #include "GL\glew.h"
 #include "GLFW\glfw3.h"
 #include <chrono>
-#include "BulletCollision\CollisionShapes\btOptimizedBvh.h"
+#include "bullet\BulletCollision\CollisionShapes\btOptimizedBvh.h"
 
 #define ADVANCED_RENDERER
 #define MAX_VERTICES_PER_OBJECT 5000000//320
 #define MAX_INDICES_PER_OBJECT 10000000//640
 #define MAX_OBJECTS_IN_RAY 16
 
-//#define FORCE_CPU
 
 #define GPU_CONTEXT_ID 0			//GPU ID
 #define GPU_DEVICE_ID 0
 
 #define RAY_DEPTH 2
-typedef std::chrono::high_resolution_clock::time_point TimePoint;
-typedef std::chrono::high_resolution_clock::duration Duration;
+typedef std::chrono::high_resolution_clock::time_point RtTimePoint;
+typedef std::chrono::high_resolution_clock::duration RtDuration;
 
 class OpenClRayTracer
 {
 public:
+	OpenClRayTracer();
 	OpenClRayTracer(int width, int height);
 	~OpenClRayTracer();
 
@@ -85,8 +85,8 @@ private:
 	void reserveArrays(int maxInstanceCount);
 	void reserveObjectTypeBuffers(int maxObjectTypeCount, int maxObjectTypeTriangleCount, int maxObjectTypeVertexCount);
 	void reserveBuffers(int maxObjectCount, int maxVertexCount);
-	void profileAdvancedRender(TimePoint startTime, std::vector<TimePoint> rayTracerStartTimes, std::vector<TimePoint> rayGeneratorStartTimes, std::vector<TimePoint> treeTraverserStartTimes, TimePoint colorToPixelStartTime, TimePoint drawingStartTime, TimePoint doneTime);
-	double OpenClRayTracer::durationToMs(Duration duration);
+	void profileAdvancedRender(RtTimePoint startTime, std::vector<RtTimePoint> rayTracerStartTimes, std::vector<RtTimePoint> rayGeneratorStartTimes, std::vector<RtTimePoint> treeTraverserStartTimes, RtTimePoint colorToPixelStartTime, RtTimePoint drawingStartTime, RtTimePoint doneTime);
+	double OpenClRayTracer::durationToMs(RtDuration duration);
 
 	std::vector<Object> objectTypes;
 #ifdef BVH

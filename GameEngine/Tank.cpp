@@ -160,31 +160,13 @@ void Tank::setupTurret(glm::vec3 position, float yaw, float pitch, float roll, C
 	cannonConnection->setMaxMotorForce(motorIndex, 2000);
 }
 
-void Tank::handleInput(float deltaTime) {
+void Tank::handleInput(const Input& input, float deltaTime) {
 	const float PI_HALF = 1.57079632679;
 
-	float speed = 0;
-	float steering = 0;
+	float speed = input.rightTrigger - input.leftTrigger;
+	float steering = input.leftStick.x;
 
-	{
-		float brake = 0;
-		//readGamingWheel(&steering, &speed, &brake);
-		speed -= brake;
-	}
-
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_W) == GLFW_PRESS)
-		speed += 1;
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_S) == GLFW_PRESS)
-		speed -= 1;
-
-	
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_D) == GLFW_PRESS)
-		steering += 1;
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_A) == GLFW_PRESS)
-		steering -= 1;
-	
 	btClamp(speed, -1.0f, +1.0f);
-	btClamp(steering, -1.0f, +1.0f);
 	float direction = atan2(steering, speed);
 	float leftSpeed = speed + sinf(direction);
 	float rightSpeed = speed + sinf(-direction);
@@ -204,21 +186,15 @@ void Tank::handleInput(float deltaTime) {
 		((btHinge2Constraint*)wheelConstraints[i++])->setMaxMotorForce(motorIndex, (leftSpeed || rightSpeed) ? 1000 : 100);
 	}
 
-	handleTurretInput(deltaTime);
+	handleTurretInput(input, deltaTime);
 }
 
-void Tank::handleTurretInput(float deltaTime) {
-	cannon->updateBarrel(GLFW_KEY_SPACE);
+void Tank::handleTurretInput(const Input& input, float deltaTime) {
+	cannon->updateBarrel(input, 6);//TODO: Define constants for inputs
 
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_UP) == GLFW_PRESS)
-		turretPitch -= 0.1f * deltaTime;
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_DOWN) == GLFW_PRESS)
-		turretPitch += 0.1f * deltaTime;
-
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_RIGHT) == GLFW_PRESS)
-		turretYaw -= 0.25f * deltaTime;
-	if (glfwGetKey(renderer->getWindow(), GLFW_KEY_LEFT) == GLFW_PRESS)
-		turretYaw += 0.25f * deltaTime;
+	
+	turretPitch -= input.rightStick.y * 0.1f * deltaTime;
+	turretYaw -= input.rightStick.x * 0.25f * deltaTime;
 
 	int motorIndex = 3;
 

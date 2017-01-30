@@ -8,6 +8,7 @@
 Input::Input(OpenClRayTracer * renderer)
 {
 	this->renderer = renderer;
+	clearInput();
 }
 
 Input::~Input()
@@ -17,6 +18,7 @@ Input::~Input()
 void Input::readInput(float deltaTime){
 	clearInput();
 	readKeyBoard();
+	readMouse(deltaTime);
 	readGamingWheel(GLFW_JOYSTICK_1);
 
 
@@ -38,10 +40,10 @@ void Input::readKeyBoard(){
 
 	buttonE += glfwGetKey(renderer->getWindow(), GLFW_KEY_E);
 	buttonR += glfwGetKey(renderer->getWindow(), GLFW_KEY_R);
-	buttonQ += glfwGetKey(renderer->getWindow(), GLFW_KEY_Q);
 	buttonF += glfwGetKey(renderer->getWindow(), GLFW_KEY_F);
 	buttonCtrl += glfwGetKey(renderer->getWindow(), GLFW_KEY_LEFT_CONTROL);
 	buttonSpace += glfwGetKey(renderer->getWindow(), GLFW_KEY_SPACE);
+	buttonShift += glfwGetKey(renderer->getWindow(), GLFW_KEY_LEFT_SHIFT);
 }
 
 void Input::readMouse(float deltaTime){
@@ -51,9 +53,9 @@ void Input::readMouse(float deltaTime){
 
 
 #ifdef _DEBUG
-	if (glfwGetMouseButton(renderer->getWindow(), GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
+	if (glfwGetMouseButton(renderer->getWindow(), GLFW_MOUSE_BUTTON_3) == GLFW_PRESS) {
 #endif
-		rightStick.x += (posX - lastPosX) * deltaTime;
+		rightStick.x -= (posX - lastPosX) * deltaTime;
 		rightStick.y += (posY - lastPosY) * deltaTime;
 #ifdef _DEBUG
 	}
@@ -67,7 +69,7 @@ void Input::readMouse(float deltaTime){
 
 
 	leftBumper  += glfwGetMouseButton(renderer->getWindow(), GLFW_MOUSE_BUTTON_1);
-	rightBumper += glfwGetMouseButton(renderer->getWindow(), GLFW_MOUSE_BUTTON_3);
+	rightBumper += glfwGetMouseButton(renderer->getWindow(), GLFW_MOUSE_BUTTON_2);
 }
 
 bool Input::readGamingWheel(int joyStick) {
@@ -93,4 +95,18 @@ bool Input::readGamingWheel(int joyStick) {
 	leftStick.x += wheel;
 
 	return present;
+}
+
+sf::Packet & operator<<(sf::Packet & packet, const Input & input)
+{
+	for (auto value : input.inputs)
+		packet << value;
+	return packet;
+}
+
+sf::Packet & operator >> (sf::Packet & packet, Input & input)
+{
+	for (auto& value : input.inputs)
+		packet >> value;
+	return packet;
 }

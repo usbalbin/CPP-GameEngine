@@ -13,6 +13,6 @@ RifleTester::~RifleTester()
 {
 }
 
-void RifleTester::handleInput(float deltaTime) {
+void RifleTester::handleInput(const Input& input, float deltaTime) {
 	rifle->update(deltaTime);
 }

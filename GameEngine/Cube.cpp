@@ -23,7 +23,7 @@ Cube::Cube(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec
 	;
 	this->scale = scale;
 
-	if (!builderInitialized) {
+	if (!builderInitialized && renderer) {
 		initializeBuilder(renderer, physics);
 		renderer->writeToObjectTypeBuffers();
 	}

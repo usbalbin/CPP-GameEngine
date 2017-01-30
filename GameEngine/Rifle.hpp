@@ -3,6 +3,7 @@
 
 #include "CompoundShape.hpp"
 #include "Barrel.hpp"
+#include "Input.hpp"
 
 class Rifle :
 	public CompoundShape
@@ -12,7 +13,7 @@ public:
 	~Rifle();
 	void update(float deltaTime);
 
-	void handleInput(float deltaTime);
+	void handleInput(const Input& input, float deltaTime);
 
 private:
 	CompoundShapeChild* barrel;

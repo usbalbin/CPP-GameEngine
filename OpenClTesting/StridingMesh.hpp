@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Containers.hpp"
-#include "BulletCollision\CollisionShapes\btStridingMeshInterface.h"
+#include "bullet\BulletCollision\CollisionShapes\btStridingMeshInterface.h"
 
 #include <vector>
 

@@ -5,6 +5,7 @@
 #include "GLFW\glfw3.h"
 
 #include "OpenClTesting\OpenClRayTracer.hpp"
+#include "SFML\Network.hpp"
 
 #define NUM_INPUTS 16
 #define NUM_EXTRA_INPUTS NUM_INPUTS-14
@@ -12,6 +13,7 @@
 class Input
 {
 public:
+	Input() {};
 	Input(OpenClRayTracer* renderer);
 	~Input();
 	void readInput(float deltaTime);
@@ -20,9 +22,7 @@ public:
 	void readMouse(float deltaTime);
 	bool readGamingWheel(int joyStick = GLFW_JOYSTICK_1);
 
-private:
-
-	float& operator[](int input) { return inputs[input]; }
+	float& operator[](const int input) { return inputs[input]; }
 
 	OpenClRayTracer* renderer;
 
@@ -33,12 +33,13 @@ private:
 			float leftTrigger, rightTrigger;
 			float leftBumper, rightBumper;
 			float buttonE, buttonR;
-			float buttonQ, buttonSpace;
+			float buttonShift, buttonSpace;
 			float buttonF, buttonCtrl;
-			float extraInputs[NUM_EXTRA_INPUTS];
 		};
 		float inputs[NUM_INPUTS];
 	};
 	
 };
 
+sf::Packet& operator << (sf::Packet& packet, const Input& input);
+sf::Packet& operator >> (sf::Packet& packet, Input& input);

@@ -16,7 +16,7 @@ TerrainShape::TerrainShape(OpenClRayTracer * renderer, btDiscreteDynamicsWorld *
 		)
 		;
 
-	if (!builderInitialized) {
+	if (!builderInitialized && renderer) {
 		initializeBuilder(renderer, physics);
 		renderer->writeToObjectTypeBuffers();
 	}

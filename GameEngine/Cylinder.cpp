@@ -23,7 +23,7 @@ Cylinder::Cylinder(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, 
 		;
 	
 
-	if (!builderInitialized) {
+	if (!builderInitialized && renderer) {
 		initializeBuilder(renderer, physics);
 		renderer->writeToObjectTypeBuffers();
 	}

@@ -1,45 +1,41 @@
 #pragma once
 
+#include "GameBase.hpp"
 #include "Entity.hpp"
 
-typedef std::chrono::high_resolution_clock::time_point TimePoint;
 
-class GameEngine {
+class GameEngine : public GameBase {
 public:
 	GameEngine(int width, int height);
 	~GameEngine();
 
-	void initialize();
-
 	template<typename T>
 	void initializeBuilders(T entity) {
-		T::initializeBuilder(&renderer, physics);
-		renderer.writeToObjectTypeBuffers();
+		T::initializeBuilder(renderer, physics);
+		renderer->writeToObjectTypeBuffers();
 	}
 
 	template<typename T, typename... Ts>
 	void initializeBuilders(T entity, Ts... entities) {
-		T::initializeBuilder(&renderer, physics);
+		T::initializeBuilder(renderer, physics);
 		initializeBuilders(entities...);
 	}
 
-	void openScene(std::string& scenePath, std::vector<Entity*>& gameEntities, Entity*& player);
+	virtual void initialize();
 
-	void update();
-	void draw();
+	virtual void openScene(std::string fileName);
 
-	bool shouldExit();
-private:
+	//void openScene(std::istream & sceneStream, std::vector<Entity*>& gameEntities, Entity *& player);
+
+	virtual void update() override;
+	virtual void draw();
+
+	bool shouldExit() override;
+protected:
 	void updateTime();
 
-
-	OpenClRayTracer renderer;
-	
-	btDiscreteDynamicsWorld* physics;
+	OpenClRayTracer* renderer;
+	Input input;
 	Entity* player = nullptr;
-	std::vector<Entity*> gameEntities;
-
-	TimePoint lastTime = std::chrono::high_resolution_clock::now();
-	float deltaTime;
 };
 

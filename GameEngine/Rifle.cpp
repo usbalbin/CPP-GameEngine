@@ -72,7 +72,7 @@ void Rifle::update(float deltaTime) {
 }
 
 
-void Rifle::handleInput(float deltaTime) {
+void Rifle::handleInput(const Input& input, float deltaTime) {
 	Barrel* barrelPart = ((Barrel*)barrel->getShape());
-	barrelPart->updateBarrel(GLFW_KEY_F, physicsObject, toVec3(barrel->getLocalTransform().getOrigin()), barrel->getWorldMatrix());
+	barrelPart->updateBarrel(input, 6, physicsObject, toVec3(barrel->getLocalTransform().getOrigin()), barrel->getWorldMatrix());
 }
