@@ -44,7 +44,7 @@ void Barrel::update(float deltaTime) {
 	auto now = std::chrono::system_clock::now();
 	while (projectiles.size() && projectiles.front().isTimeToDie(now))
 		projectiles.pop_front();
-	if(renderer)
+	if(renderer && physicsObject)
 		sound.setPosition(getPosition().x, getPosition().y, getPosition().z);
 }
 

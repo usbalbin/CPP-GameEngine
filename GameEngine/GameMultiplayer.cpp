@@ -99,7 +99,7 @@ void GameMultiplayer::update()
 	}
 	
 
-	GameEngine::update();
+	input.readInput(deltaTime); //GameEngine::update();
 
 
 	sf::Packet playerInputPacket;
