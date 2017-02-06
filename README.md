@@ -1,6 +1,11 @@
 # RayTracer
 Reverse Ray Tracer for rendering graphics using CPU or GPU via OpenCL.
 
+
+##IMPORTANT
+
+- YOU MUST UNZIP THE LIB FILE IN "dependencies\libs\x64\wxWidgets\wxmsw31ud_core.zip" to be able to compile the GameLauncher.
+
 ## TODO:
 - Rename "Object" struct to "Mesh"
 
@@ -8,17 +13,7 @@ Reverse Ray Tracer for rendering graphics using CPU or GPU via OpenCL.
 
 - Fix the window resize-functionality, currently crashing when using advancedRender
 
-- Add support for multiple AABBs per mesh so there will be fewer triangles(expensive) to check for intersection per AABB(cheap) to improve performance.
-
-- If possible, increase number of threads per Mesh in "vertex-shader"-kernel. There is currently only 1 thread / Mesh.
-
 - Consider removing last run of the treeTraverser kernel with a modified version of the colorToPixel kernel.
-
-- Consider moving AABB step into "vertex-shader" if beneficial
-
-- Consider adding frustum culling step after AABB step
-
-- Consider adding sorting step before Raytracer to improve performance
 
 - Consider "chaining" OpenCL kernels to free up some CPU-time and to help making other calculations on CPU without it having to launch kernel steps during rendering of image.
 
@@ -40,9 +35,10 @@ Reverse Ray Tracer for rendering graphics using CPU or GPU via OpenCL.
   - When possible/beneficial change flags for cl::Buffers to as conservative ones as possible such as CL_MEM_READ_ONLY or CL_MEM_WRITE_ONLY.
   - Remove unnecessary reads/writes to cl:Buffers
 
+  
+
 ## WIP
 
-- Add support for reflection, refrection and light source(s) in some recursive-like fashion but implemented iterative through multiple kernels calls. One kernel for tracing rays and one for producing reflection/refraction rays on impacts. Repetedly call these
- multiple times and then collect the result through a third kernel.
+-GameLauncher: Creating functional gamelauncher.
 
-  - Look into why there are random flickering pixels when increasing resolution or object count
+-GameLauncher: Successfully save all the required settings and load them correctly.
