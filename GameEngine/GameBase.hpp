@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Entity.hpp"
+#include "Options.hpp"
 
 //typedef std::chrono::high_resolution_clock::time_point TimePoint;
 
@@ -18,7 +19,7 @@ public:
 
 	virtual bool shouldExit();
 protected:
-	void openScene(std::istream & sceneStream, Entity ** player = nullptr, OpenClRayTracer * renderer = nullptr);
+	void openScene(std::istream & sceneStream, Entity ** player = nullptr, ClRayTracer * renderer = nullptr);
 	void addEntity(Entity* entity);
 	void updateTime();
 	const std::vector<Entity*> getGameEntities() const { return gameEntities; }
@@ -28,6 +29,7 @@ protected:
 
 	RtTimePoint lastTime = std::chrono::high_resolution_clock::now();
 	float deltaTime;
+	Options options;
 private:
 	std::vector<Entity*> gameEntities;
 };

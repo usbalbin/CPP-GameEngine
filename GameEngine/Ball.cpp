@@ -3,7 +3,7 @@
 
 #include "Sphere.hpp"
 
-Ball::Ball(OpenClRayTracer * renderer, btDiscreteDynamicsWorld * physics, glm::vec3 position, float scale, float mass) : Entity(renderer, physics)
+Ball::Ball(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics, glm::vec3 position, float scale, float mass) : Entity(renderer, physics)
 {
 	parts.push_back(
 		new Sphere(renderer, physics, position, scale, mass)

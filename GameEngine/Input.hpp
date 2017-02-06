@@ -4,7 +4,7 @@
 #include "GL\glew.h"
 #include "GLFW\glfw3.h"
 
-#include "OpenClTesting\OpenClRayTracer.hpp"
+#include "OpenClTesting\ClRayTracer.hpp"
 #include "SFML\Network.hpp"
 
 #define NUM_INPUTS 16
@@ -14,7 +14,7 @@ class Input
 {
 public:
 	Input() {};
-	Input(OpenClRayTracer* renderer);
+	Input(ClRayTracer* renderer);
 	~Input();
 	void readInput(float deltaTime);
 	void clearInput();
@@ -24,7 +24,7 @@ public:
 
 	float& operator[](const int input) { return inputs[input]; }
 
-	OpenClRayTracer* renderer;
+	ClRayTracer* renderer;
 
 	union {
 		struct {

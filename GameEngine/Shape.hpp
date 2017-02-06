@@ -1,7 +1,7 @@
 #pragma once
 
 #include "OpenClTesting\Containers.hpp"
-#include "OpenClTesting\OpenClRayTracer.hpp"
+#include "OpenClTesting\ClRayTracer.hpp"
 
 #include "bullet/btBulletDynamicsCommon.h"
 #include "glm/gtc/type_ptr.hpp"
@@ -15,9 +15,9 @@ class Shape
 {
 public:
 	Shape();
-	Shape(OpenClRayTracer * renderer, btDiscreteDynamicsWorld* physics);
+	Shape(ClRayTracer * renderer, btDiscreteDynamicsWorld* physics);
 
-	void initialize(MultiInstance& graphicsObject, btRigidBody* physicsObject);
+	void initialize(Instance& graphicsObject, btRigidBody* physicsObject);
 	~Shape();
 	virtual void update(float deltaTime);
 	virtual void draw();
@@ -36,11 +36,11 @@ public:
 	//virtual void initializeBuilder(OpenClRayTracer * renderer, btDiscreteDynamicsWorld * physics) = 0;
 protected:
 	glm::vec3 scale;
-	static OpenClRayTracer* renderer;
+	static ClRayTracer* renderer;
 	static btDiscreteDynamicsWorld* physics;
 	sf::Sound sound;
 private:
-	MultiInstance graphicsObject;
+	Instance graphicsObject;
 	btCollisionShape* physicsShape = nullptr;
 };
 

@@ -4,7 +4,7 @@
 #include "Cube.hpp"
 #include "Utils.hpp"
 
-Rifle::Rifle(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float yaw, float pitch, float roll) : CompoundShape(renderer, physics){
+Rifle::Rifle(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float yaw, float pitch, float roll) : CompoundShape(renderer, physics){
 	btCompoundShape* rifleShape = new btCompoundShape();
 	
 	float buttMass = 0.1f;
@@ -37,6 +37,32 @@ Rifle::Rifle(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::v
 	);
 	addChild(base);
 
+	float sightMass = 0.01f;
+	glm::vec3 sightHalfExtent(0.004f);
+	glm::vec3 sightLPos = basePos + glm::vec3(2*-sightHalfExtent.x, +baseHalfExtent.y + sightHalfExtent.y, 0);
+	CompoundShapeChild* sightL = new CompoundShapeChild(
+		renderer, physics, toTransform(sightLPos),
+		new Cube(renderer, physics, sightLPos, sightHalfExtent, 0),
+		physicsObject
+	);
+	addChild(sightL);
+
+	glm::vec3 sightRPos = glm::vec3(-sightLPos.x, sightLPos.y, sightLPos.z);
+	CompoundShapeChild* sightR = new CompoundShapeChild(
+		renderer, physics, toTransform(sightRPos),
+		new Cube(renderer, physics, sightRPos, sightHalfExtent, 0),
+		physicsObject
+	);
+	addChild(sightR);
+
+	glm::vec3 sightFPos = glm::vec3(0, sightLPos.y, basePos.z - 0.1f);
+	CompoundShapeChild* sightF = new CompoundShapeChild(
+		renderer, physics, toTransform(sightFPos),
+		new Cube(renderer, physics, sightFPos, sightHalfExtent, 0),
+		physicsObject
+	);
+	addChild(sightF);
+
 	float bulletDiameter = 0.1f;//0.00782;
 	float bulletMass = 0.010;
 	auto fireRate = 60.0s / 800;
@@ -58,7 +84,7 @@ Rifle::Rifle(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::v
 	btTransform transform = toTransform(position);
 	btDefaultMotionState* motionState = new btDefaultMotionState(transform);
 
-	std::vector<float> masses{ buttMass, combMass, baseMass, barrelMass };
+	std::vector<float> masses{ buttMass, combMass, baseMass, sightMass, sightMass, sightMass, barrelMass };
 	finalize(position, masses, yaw, pitch, roll);
 }
 

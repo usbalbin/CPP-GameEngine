@@ -4,12 +4,12 @@
 
 
 bool Cube::builderInitialized = false;
-MultiInstanceBuilder Cube::graphicsObjectBuilder;
+InstanceBuilder Cube::graphicsObjectBuilder;
 
 Cube::Cube(){
 }
 
-Cube::Cube(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, glm::vec3 scale, float mass, float yaw, float pitch, float roll)
+Cube::Cube(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, glm::vec3 scale, float mass, float yaw, float pitch, float roll)
 	: Shape(renderer, physics) {
 	glm::mat4 matrix = 
 		glm::translate(glm::mat4(1.0f), position)
@@ -25,9 +25,9 @@ Cube::Cube(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec
 
 	if (!builderInitialized && renderer) {
 		initializeBuilder(renderer, physics);
-		renderer->writeToObjectTypeBuffers();
+		//renderer->writeToObjectTypeBuffers();
 	}
-	MultiInstance instance(matrix, graphicsObjectBuilder);
+	Instance instance(matrix, glm::inverse(matrix), graphicsObjectBuilder);
 
 	btBoxShape* boxShape = new btBoxShape(btVector3(scale.x, scale.y, scale.z));
 	
@@ -42,7 +42,7 @@ Cube::Cube(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec
 	
 }
 
-void Cube::initializeBuilder(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics){
+void Cube::initializeBuilder(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics){
 	if (builderInitialized)//Only initialize one
 		return;
 
@@ -52,7 +52,7 @@ void Cube::initializeBuilder(OpenClRayTracer* renderer, btDiscreteDynamicsWorld*
 
 	readObjFile(vertices, indices, std::string("content/cube.obj"), reflection, refraction);
 
-	graphicsObjectBuilder = renderer->push_backMultiObjectTypes(indices, vertices);
+	graphicsObjectBuilder = renderer->push_backObjectType(indices, vertices);
 	builderInitialized = true;
 }
 

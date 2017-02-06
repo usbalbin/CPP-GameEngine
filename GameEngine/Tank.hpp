@@ -7,7 +7,7 @@ class Tank :
 	public Vehicle
 {
 public:
-	Tank(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float yaw = 0, float pitch = 0, float roll = 0);
+	Tank(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float yaw = 0, float pitch = 0, float roll = 0);
 
 	
 	

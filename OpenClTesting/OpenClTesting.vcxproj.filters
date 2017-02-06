@@ -27,9 +27,6 @@
     <ClInclude Include="OpenClContexts.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OpenClRayTracer.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ArraySlice.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -63,6 +60,15 @@
     <ClInclude Include="BvhTree.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ClReadBuffer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ClRayTracer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenClRayTracer.old.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -72,9 +78,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OpenClContexts.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OpenClRayTracer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DebugRayTracer.cpp">
@@ -99,6 +102,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BvhTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ClRayTracer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenClRayTracer.old.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

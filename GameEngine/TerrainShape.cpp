@@ -2,12 +2,12 @@
 #include "TerrainShape.hpp"
 
 bool TerrainShape::builderInitialized = false;
-MultiInstanceBuilder TerrainShape::graphicsObjectBuilder;
+InstanceBuilder TerrainShape::graphicsObjectBuilder;
 btHeightfieldTerrainShape* TerrainShape::terrainShape;
 float TerrainShape::heightScale = 10;
 std::vector<float> TerrainShape::heights;
 
-TerrainShape::TerrainShape(OpenClRayTracer * renderer, btDiscreteDynamicsWorld * physics){
+TerrainShape::TerrainShape(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics){
 	this->scale = glm::vec3(1, heightScale, 1);
 	glm::mat4 matrix =
 		glm::scale(
@@ -18,11 +18,10 @@ TerrainShape::TerrainShape(OpenClRayTracer * renderer, btDiscreteDynamicsWorld *
 
 	if (!builderInitialized && renderer) {
 		initializeBuilder(renderer, physics);
-		renderer->writeToObjectTypeBuffers();
+		//renderer->writeToObjectTypeBuffers();
 	}
-	MultiInstance instance(matrix, graphicsObjectBuilder);
-	for(auto& ins : instance.instances)
-	ins.texture[0] = SHRT_MAX;
+	Instance instance(matrix, glm::inverse(matrix), graphicsObjectBuilder);
+	instance.texture[0] = SHRT_MAX;
 	
 	
 	btDefaultMotionState* motionState = new btDefaultMotionState(btTransform::getIdentity());
@@ -32,7 +31,7 @@ TerrainShape::TerrainShape(OpenClRayTracer * renderer, btDiscreteDynamicsWorld *
 	initialize(instance, rigidBody);
 }
 
-void TerrainShape::initializeBuilder(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics) {
+void TerrainShape::initializeBuilder(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics) {
 	if (builderInitialized)//Only initialize one
 		return;
 
@@ -54,7 +53,7 @@ void TerrainShape::initializeBuilder(OpenClRayTracer* renderer, btDiscreteDynami
 		heights.push_back(vertex.position.y * heightScale);
 	}
 
-	graphicsObjectBuilder = renderer->push_backMultiToObjectTypeBuffers(indices, vertices);
+	graphicsObjectBuilder = renderer->push_backObjectType(indices, vertices);
 	builderInitialized = true;
 
 	

@@ -1,10 +1,16 @@
 #include "stdafx.h"
 
+#include "GameEngine/Options.hpp"
+
 #include "GameEngine/GameEngine.hpp"
 #include "GameEngine/GameMultiplayer.hpp"
 
+
+#include "OpenClTesting\ClReadBuffer.hpp"
+
+
 void playMulti() {
-	GameMultiplayer game("localhost", 6536, 1024, 768);
+	GameMultiplayer game;
 	game.initialize();
 
 	while (!game.shouldExit()) {
@@ -14,7 +20,7 @@ void playMulti() {
 }
 
 void playSingle() {
-	GameEngine game(1024, 768);
+	GameEngine game;
 	game.initialize();
 
 	while (!game.shouldExit()) {
@@ -22,6 +28,7 @@ void playSingle() {
 		game.draw();
 	}
 }
+
 
 int main() {
 	playSingle();

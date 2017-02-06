@@ -158,6 +158,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Ak47.hpp" />
     <ClInclude Include="Ball.hpp" />
     <ClInclude Include="Barrel.hpp" />
     <ClInclude Include="Box.hpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="GenericShape.hpp" />
     <ClInclude Include="Input.hpp" />
     <ClInclude Include="NetworkDiscreteDynamicsWorld.hpp" />
+    <ClInclude Include="Options.hpp" />
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="RifleTester.hpp" />
     <ClInclude Include="Shape.hpp" />
@@ -193,6 +195,7 @@
     <ClInclude Include="Vehicle.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Ak47.cpp" />
     <ClCompile Include="Ball.cpp" />
     <ClCompile Include="Barrel.cpp" />
     <ClCompile Include="Box.cpp" />
@@ -210,6 +213,7 @@
     <ClCompile Include="GenericShape.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="NetworkDiscreteDynamicsWorld.cpp" />
+    <ClCompile Include="Options.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RifleTester.cpp" />
     <ClCompile Include="Shape.cpp" />

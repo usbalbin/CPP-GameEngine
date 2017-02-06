@@ -5,7 +5,7 @@
 #include <numeric>
 
 
-CompoundShape::CompoundShape(OpenClRayTracer * renderer, btDiscreteDynamicsWorld * physics)
+CompoundShape::CompoundShape(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics)
 {
 	this->renderer = renderer;
 	this->physics = physics;

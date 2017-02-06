@@ -7,14 +7,14 @@ class TerrainShape :
 	public Shape
 {
 public:
-	TerrainShape(OpenClRayTracer * renderer, btDiscreteDynamicsWorld * physics);
+	TerrainShape(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics);
 	~TerrainShape();
 
 
-	static void initializeBuilder(OpenClRayTracer * renderer, btDiscreteDynamicsWorld * physics);
+	static void initializeBuilder(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics);
 
 	static bool builderInitialized;
-	static MultiInstanceBuilder graphicsObjectBuilder;
+	static InstanceBuilder graphicsObjectBuilder;
 	static btHeightfieldTerrainShape* terrainShape;
 	static float heightScale;
 	static std::vector<float> heights;

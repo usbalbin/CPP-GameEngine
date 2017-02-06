@@ -4,7 +4,7 @@
 #include "Utils.hpp"
 #include <fstream>
 
-Barrel::Barrel(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, glm::vec2 scale, float mass, float projectileRadius, float projectileMass, float yaw, float pitch, float roll, std::chrono::duration<double> fireRate, std::vector<FireMode> fireModes) :
+Barrel::Barrel(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, glm::vec2 scale, float mass, float projectileRadius, float projectileMass, float yaw, float pitch, float roll, std::chrono::duration<double> fireRate, std::vector<FireMode> fireModes) :
 	Cylinder(renderer, physics, position, scale, mass, yaw, pitch, roll)
 {
 	this->projectileRadius = projectileRadius;

@@ -4,7 +4,7 @@
 #include "Cube.hpp"
 
 
-SimpleTerrain::SimpleTerrain(OpenClRayTracer * renderer, btDiscreteDynamicsWorld * physics, glm::vec3 position, glm::vec3 scale) : Entity(renderer, physics) {
+SimpleTerrain::SimpleTerrain(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics, glm::vec3 position, glm::vec3 scale) : Entity(renderer, physics) {
 	parts.push_back(
 		new Cube(renderer, physics, position, scale)
 	);

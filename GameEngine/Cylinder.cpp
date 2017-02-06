@@ -3,12 +3,12 @@
 
 
 bool Cylinder::builderInitialized = false;
-MultiInstanceBuilder Cylinder::graphicsObjectBuilder;
+InstanceBuilder Cylinder::graphicsObjectBuilder;
 
 Cylinder::Cylinder() {
 }
 
-Cylinder::Cylinder(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, glm::vec2 size, float mass, float yaw, float pitch, float roll)
+Cylinder::Cylinder(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, glm::vec2 size, float mass, float yaw, float pitch, float roll)
 	: Shape(renderer, physics) {
 	this->scale = glm::vec3(size, size.x);
 	glm::mat4 matrix =
@@ -25,9 +25,9 @@ Cylinder::Cylinder(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, 
 
 	if (!builderInitialized && renderer) {
 		initializeBuilder(renderer, physics);
-		renderer->writeToObjectTypeBuffers();
+		//renderer->writeToObjectTypeBuffers();
 	}
-	MultiInstance instance(matrix, graphicsObjectBuilder);
+	Instance instance(matrix, glm::inverse(matrix), graphicsObjectBuilder);
 
 	btCylinderShape* boxShape = new btCylinderShape(btVector3(scale.x, scale.y, scale.z));
 
@@ -42,7 +42,7 @@ Cylinder::Cylinder(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, 
 
 }
 
-void Cylinder::initializeBuilder(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics) {
+void Cylinder::initializeBuilder(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics) {
 	if (builderInitialized)//Only initialize one
 		return;
 
@@ -52,7 +52,7 @@ void Cylinder::initializeBuilder(OpenClRayTracer* renderer, btDiscreteDynamicsWo
 
 	readObjFile(vertices, indices, std::string("content/cylinder.obj"), reflection, refraction);
 
-	graphicsObjectBuilder = renderer->push_backMultiObjectTypes(indices, vertices);
+	graphicsObjectBuilder = renderer->push_backObjectType(indices, vertices);
 	builderInitialized = true;
 }
 

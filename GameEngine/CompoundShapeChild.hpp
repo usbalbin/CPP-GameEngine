@@ -5,7 +5,7 @@
 class CompoundShapeChild
 {
 public:
-	CompoundShapeChild(OpenClRayTracer * renderer, btDiscreteDynamicsWorld * physics, btTransform localTransform, Shape * shape, btRigidBody * parentCompoundBody);
+	CompoundShapeChild(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics, btTransform localTransform, Shape * shape, btRigidBody * parentCompoundBody);
 	~CompoundShapeChild();
 
 	void setParent(btRigidBody* parentCompoundBody);

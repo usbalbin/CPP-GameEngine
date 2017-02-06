@@ -9,7 +9,7 @@ class GameMultiplayer :
 	public GameEngine
 {
 public:
-	GameMultiplayer(sf::IpAddress, ushort port, int width, int height);
+	GameMultiplayer();
 	~GameMultiplayer();
 	void initialize() override;
 	void update() override;

@@ -7,7 +7,7 @@ class Player :
 	public Character
 {
 public:
-	Player(std::vector<Entity*>& allEntities, OpenClRayTracer * renderer, btDiscreteDynamicsWorld * physics, glm::vec3 position, float yaw = 0, float pitch = 0, float roll = 0);
+	Player(std::vector<Entity*>& allEntities, ClRayTracer * renderer, btDiscreteDynamicsWorld * physics, glm::vec3 position, float yaw = 0, float pitch = 0, float roll = 0);
 	~Player();
 
 	void draw();

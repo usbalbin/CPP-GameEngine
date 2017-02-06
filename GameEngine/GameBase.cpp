@@ -10,7 +10,7 @@
 #include <sstream>
 
 
-#include "OpenClTesting\OpenClRayTracer.hpp"
+#include "OpenClTesting\ClRayTracer.hpp"
 #include "OpenClTesting\OpenClContexts.hpp"
 #include "OpenClTesting\OpenGlShaders.hpp"
 #include "OpenClTesting\Meshes.hpp"
@@ -36,7 +36,7 @@
 #include "Sphere.hpp"
 
 
-GameBase::GameBase() {
+GameBase::GameBase() : options("content/options.cfg") {
 	btBroadphaseInterface* broadphase = new btDbvtBroadphase();
 
 	btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
@@ -65,7 +65,7 @@ GameBase::~GameBase() {
 
 }
 
-void GameBase::openScene(std::istream & sceneStream, Entity ** player, OpenClRayTracer * renderer) {
+void GameBase::openScene(std::istream & sceneStream, Entity ** player, ClRayTracer * renderer) {
 
 
 	std::string str;

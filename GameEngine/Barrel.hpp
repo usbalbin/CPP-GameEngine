@@ -47,7 +47,7 @@ class Barrel :
 	public Cylinder
 {
 public:
-	Barrel(OpenClRayTracer * renderer, btDiscreteDynamicsWorld * physics, glm::vec3 position, glm::vec2 scale, float mass, float projectileRadius, float projectileMass, float yaw, float pitch, float roll, std::chrono::duration<double> fireRate, std::vector<FireMode> fireModes = {FireMode::SINGLE});
+	Barrel(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics, glm::vec3 position, glm::vec2 scale, float mass, float projectileRadius, float projectileMass, float yaw, float pitch, float roll, std::chrono::duration<double> fireRate, std::vector<FireMode> fireModes = {FireMode::SINGLE});
 	~Barrel();
 	void draw();
 	void draw(glm::mat4 matrix);

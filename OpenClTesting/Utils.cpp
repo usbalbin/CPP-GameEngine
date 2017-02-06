@@ -198,6 +198,8 @@ void pixelsToMesh(int width, int length, std::vector<ubyte3> colors, std::vector
 	calculateNormals(vertices, indices);
 }
 
+
+
 void readObjFile(std::vector<Vertex>& vertices, std::vector<TriangleIndices>& indices, std::string& filePath, float reflection, float refraction) {
 	std::ifstream objFile;
 	objFile.open(filePath);

@@ -4,7 +4,7 @@ class SimpleTerrain :
 	public Entity
 {
 public:
-	SimpleTerrain(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, glm::vec3 scale);
+	SimpleTerrain(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, glm::vec3 scale);
 	~SimpleTerrain();
 };
 

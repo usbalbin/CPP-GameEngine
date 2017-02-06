@@ -9,7 +9,7 @@ class Entity
 {
 public:
 	Entity();
-	Entity(OpenClRayTracer * renderer, btDiscreteDynamicsWorld * physics);
+	Entity(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics);
 	void addConstraint(btTypedConstraint * constraint, bool disableCollisionBetweenLinkedBodies);
 	~Entity();
 	virtual void handleInput(const Input& input, float deltaTime);
@@ -26,7 +26,7 @@ protected:
 	
 	std::vector<Shape*> parts;
 	btDiscreteDynamicsWorld* physics;
-	OpenClRayTracer* renderer;
+	ClRayTracer* renderer;
 	std::vector<btTypedConstraint*> constraints;
 private:
 	int gameArrayIndex = -1;

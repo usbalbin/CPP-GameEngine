@@ -3,7 +3,7 @@
 
 #include "TerrainShape.hpp"
 
-Terrain::Terrain(OpenClRayTracer * renderer, btDiscreteDynamicsWorld * physics) : 
+Terrain::Terrain(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics) : 
 	Entity(renderer, physics) {
 	parts.push_back(
 		new TerrainShape(renderer, physics)
