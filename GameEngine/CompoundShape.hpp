@@ -7,7 +7,7 @@
 class CompoundShape : public Shape
 {
 public:
-	CompoundShape(OpenClRayTracer * renderer, btDiscreteDynamicsWorld * physics);
+	CompoundShape(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics);
 	~CompoundShape();
 
 	void addChild(CompoundShapeChild * child);

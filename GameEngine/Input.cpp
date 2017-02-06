@@ -5,7 +5,7 @@
 
 
 
-Input::Input(OpenClRayTracer * renderer)
+Input::Input(ClRayTracer * renderer)
 {
 	this->renderer = renderer;
 	clearInput();

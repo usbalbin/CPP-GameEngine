@@ -14,10 +14,10 @@ OpenGlShaders::OpenGlShaders() {
 
 }
 
-OpenGlShaders::OpenGlShaders(int width, int height, std::string vertexShaderPath, std::string fragmentShaderPath, GLFWframebuffersizefun customResizeCallback) {
+OpenGlShaders::OpenGlShaders(int width, int height, bool fullScreen, std::string vertexShaderPath, std::string fragmentShaderPath, GLFWframebuffersizefun customResizeCallback) {
 	this->width = width;
 	this->height = height;
-	setupWindow(customResizeCallback);
+	setupWindow(customResizeCallback, fullScreen);
 	this->programID = setupShaders(vertexShaderPath, fragmentShaderPath);
 }
 
@@ -106,7 +106,7 @@ void OpenGlShaders::writeToScreen(float* colors) {
 	glFinish();
 }
 
-void OpenGlShaders::setupWindow(GLFWframebuffersizefun customResizeCallback) {
+void OpenGlShaders::setupWindow(GLFWframebuffersizefun customResizeCallback, bool fullScreen) {
 	if (glfwInit() != GL_TRUE)
 		exit(1);
 
@@ -115,7 +115,7 @@ void OpenGlShaders::setupWindow(GLFWframebuffersizefun customResizeCallback) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, openglVersion[2] - '0');
 
 	std::string title = "Title";
-	window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+	window = glfwCreateWindow(width, height, title.c_str(), fullScreen ? glfwGetPrimaryMonitor() : nullptr, nullptr);
 
 	if (window == nullptr)
 		exit(2);
@@ -164,7 +164,6 @@ GLuint OpenGlShaders::setupShaders(std::string vertexShaderPath, std::string fra
 
 	return programID;
 }
-
 
 GLuint OpenGlShaders::compileShader(std::string shaderPath, GLuint shaderType) {
 	std::string shaderCode = readFileToString(shaderPath);
@@ -219,6 +218,4 @@ void OpenGlShaders::draw() {
 	// Swap buffers
 	glfwSwapBuffers(window);
 	glfwPollEvents();
-
-
 }

@@ -4,7 +4,7 @@ class Ball :
 	public Entity
 {
 public:
-	Ball(OpenClRayTracer * renderer, btDiscreteDynamicsWorld * physics, glm::vec3 position, float scale, float mass);
+	Ball(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics, glm::vec3 position, float scale, float mass);
 	~Ball();
 };
 

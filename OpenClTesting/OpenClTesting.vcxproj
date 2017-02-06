@@ -161,13 +161,15 @@
   <ItemGroup>
     <ClInclude Include="ArraySlice.hpp" />
     <ClInclude Include="BvhTree.hpp" />
+    <ClInclude Include="ClRayTracer.hpp" />
+    <ClInclude Include="ClReadBuffer.hpp" />
     <ClInclude Include="DebugRayTracer.hpp" />
     <ClInclude Include="intersection.hpp" />
     <ClInclude Include="kernels\containers.h" />
     <ClInclude Include="kernels\intersection.h" />
     <ClInclude Include="kernels\math.h" />
     <ClInclude Include="Meshes.hpp" />
-    <ClInclude Include="OpenClRayTracer.hpp" />
+    <ClInclude Include="OpenClRayTracer.old.hpp" />
     <ClInclude Include="Containers.hpp" />
     <ClInclude Include="OpenClContexts.hpp" />
     <ClInclude Include="OpenGlShaders.hpp" />
@@ -178,11 +180,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BvhTree.cpp" />
+    <ClCompile Include="ClRayTracer.cpp" />
     <ClCompile Include="Containers.cpp" />
     <ClCompile Include="DebugRayTracer.cpp" />
     <ClCompile Include="intersection.cpp" />
     <ClCompile Include="Meshes.cpp" />
-    <ClCompile Include="OpenClRayTracer.cpp" />
+    <ClCompile Include="OpenClRayTracer.old.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="OpenClContexts.cpp" />
     <ClCompile Include="OpenGlShaders.cpp" />

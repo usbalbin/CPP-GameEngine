@@ -4,7 +4,7 @@
 #include "Barrel.hpp"
 #include "Cube.hpp"
 
-Cannon::Cannon(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float mass) : Entity(renderer, physics)
+Cannon::Cannon(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float mass) : Entity(renderer, physics)
 {
 	float PI_HALF = 1.57079632679;
 	

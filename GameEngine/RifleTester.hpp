@@ -6,7 +6,7 @@
 class RifleTester : public Entity
 {
 public:
-	RifleTester(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position);
+	RifleTester(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position);
 	~RifleTester();
 
 	void handleInput(const Input& input, float deltaTime) override;

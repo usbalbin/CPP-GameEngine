@@ -13,7 +13,7 @@ class OpenGlShaders
 public:
 	OpenGlShaders();
 	//OpenGlShaders();
-	OpenGlShaders::OpenGlShaders(int width, int height, std::string vertexShaderPath, std::string fragmentShaderPath, GLFWframebuffersizefun customResizeCallback);
+	OpenGlShaders::OpenGlShaders(int width, int height, bool fullScreen, std::string vertexShaderPath, std::string fragmentShaderPath, GLFWframebuffersizefun customResizeCallback);
 	~OpenGlShaders();
 	void resizeCallback(GLFWwindow * window, int width, int height);
 	GLuint setupScreen();
@@ -22,8 +22,10 @@ public:
 	void writeToScreen(std::vector<float4>& colors);
 	void writeToScreen(float * colors);
 
+	
+
 private:
-	void setupWindow(GLFWframebuffersizefun customResizeCallback);
+	void setupWindow(GLFWframebuffersizefun customResizeCallback, bool fullScreen);
 	void resizeWindow(int width, int height);
 	GLuint setupShaders(std::string vertexShaderPath, std::string fragmentShaderPath);
 	GLuint compileShader(std::string shaderPath, GLuint shaderType);

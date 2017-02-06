@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include "GameMultiplayer.hpp"
 #include "NetworkDiscreteDynamicsWorld.hpp"
+#include "Options.hpp"
 
 #include <sstream>
 
 
-GameMultiplayer::GameMultiplayer(sf::IpAddress address, ushort port, int width, int height) : GameEngine(width, height), serverAddress(address), serverPort(port) {
+GameMultiplayer::GameMultiplayer() : GameEngine(), serverAddress(options.serverAddress), serverPort(options.serverPort), playerName(options.playerName) {
 	renderer->initializeAdvancedRender();
 
 	btBroadphaseInterface* broadphase = new btDbvtBroadphase();
@@ -98,8 +99,11 @@ void GameMultiplayer::update()
 		}
 	}
 	
-
-	input.readInput(deltaTime); //GameEngine::update();
+	updateTime();
+	input.readInput(deltaTime);
+	for (auto entity : getGameEntities())
+		entity->update(deltaTime);
+	//GameEngine::update();
 
 
 	sf::Packet playerInputPacket;

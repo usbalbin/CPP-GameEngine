@@ -3,7 +3,7 @@
 
 #include "Utils.hpp"
 
-OpenClRayTracer* Shape::renderer;
+ClRayTracer* Shape::renderer;
 btDiscreteDynamicsWorld* Shape::physics;
 
 Shape::Shape()
@@ -12,16 +12,19 @@ Shape::Shape()
 }
 
 
-Shape::Shape(OpenClRayTracer * renderer, btDiscreteDynamicsWorld * physics)
+Shape::Shape(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics)
 {
 	this->renderer = renderer;
 	this->physics = physics;
 }
 
 
-void Shape::initialize(MultiInstance & graphicsObject, btRigidBody * physicsObject)
+void Shape::initialize(Instance & graphicsObject, btRigidBody * physicsObject)
 {
 	this->graphicsObject = graphicsObject;
+	if (!physicsObject)
+		return;
+
 	this->physicsObject = physicsObject;
 	this->physicsShape = physicsObject->getCollisionShape();
 
@@ -50,7 +53,8 @@ void Shape::draw(){
 		throw "Tried to draw non initialized object";
 
 	glm::mat4 matrix = getMatrix();
-	graphicsObject.setMatrix(matrix);
+	graphicsObject.modelMatrix = matrix;
+	graphicsObject.invModelMatrix = glm::inverse(matrix);
 	renderer->push_back(graphicsObject);
 }
 
@@ -58,7 +62,8 @@ void Shape::draw(glm::mat4 matrix) {
 	if (!graphicsObject.isInitialized())
 		throw "Tried to draw non initialized object";
 
-	graphicsObject.setMatrix(matrix);
+	graphicsObject.modelMatrix = matrix;
+	graphicsObject.invModelMatrix = glm::inverse(matrix);
 	renderer->push_back(graphicsObject);
 }
 

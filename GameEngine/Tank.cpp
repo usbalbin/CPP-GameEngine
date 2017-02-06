@@ -5,7 +5,7 @@
 #include "Cylinder.hpp"
 #include "Utils.hpp"
 
-Tank::Tank(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float yaw, float pitch, float roll)
+Tank::Tank(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float yaw, float pitch, float roll)
 	: Vehicle(renderer, physics)
 {
 	glm::vec3 bodyHalfExtents(1.83f, 0.4f, 3.96f);

@@ -4,12 +4,12 @@
 #include "OpenClTesting\Meshes.hpp"
 
 bool Sphere::builderInitialized = false;
-MultiInstanceBuilder Sphere::graphicsObjectBuilder;
+InstanceBuilder Sphere::graphicsObjectBuilder;
 
 Sphere::Sphere(){
 }
 
-Sphere::Sphere(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float scale, float mass, float yaw, float pitch, float roll)
+Sphere::Sphere(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float scale, float mass, float yaw, float pitch, float roll)
 	: Shape(renderer, physics)
 {
 	glm::mat4 matrix =
@@ -30,9 +30,9 @@ Sphere::Sphere(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm:
 
 	if (!builderInitialized && renderer) {
 		initializeBuilder(renderer, physics);
-		renderer->writeToObjectTypeBuffers();
+		//renderer->writeToObjectTypeBuffers();
 	}
-	MultiInstance instance = MultiInstance(matrix, graphicsObjectBuilder);
+	Instance instance(matrix, glm::inverse(matrix), graphicsObjectBuilder);
 
 	btSphereShape* sphereShape = new btSphereShape(scale);
 
@@ -47,7 +47,7 @@ Sphere::Sphere(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm:
 
 }
 
-void Sphere::initializeBuilder(OpenClRayTracer * renderer, btDiscreteDynamicsWorld * physics) {
+void Sphere::initializeBuilder(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics) {
 	if (builderInitialized)//Only initialize one
 		return;
 
@@ -57,7 +57,7 @@ void Sphere::initializeBuilder(OpenClRayTracer * renderer, btDiscreteDynamicsWor
 	std::vector<TriangleIndices> indices = genSphereIndices(qualityFactor);
 	std::vector<Vertex> vertices = genSphereVertices(1.0f, color, qualityFactor);
 
-	graphicsObjectBuilder = renderer->push_backMultiObjectTypes(indices, vertices);
+	graphicsObjectBuilder = renderer->push_backObjectType(indices, vertices);
 	builderInitialized = true;
 }
 

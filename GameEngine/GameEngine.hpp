@@ -6,13 +6,13 @@
 
 class GameEngine : public GameBase {
 public:
-	GameEngine(int width, int height);
+	GameEngine();
 	~GameEngine();
 
 	template<typename T>
 	void initializeBuilders(T entity) {
 		T::initializeBuilder(renderer, physics);
-		renderer->writeToObjectTypeBuffers();
+		//renderer->writeToObjectTypeBuffers();
 	}
 
 	template<typename T, typename... Ts>
@@ -34,7 +34,7 @@ public:
 protected:
 	void updateTime();
 
-	OpenClRayTracer* renderer;
+	ClRayTracer* renderer;
 	Input input;
 	Entity* player = nullptr;
 };

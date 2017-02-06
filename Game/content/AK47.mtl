@@ -1,0 +1,14 @@
+# Blender MTL File: 'AK47low.blend'
+# Material Count: 1
+
+newmtl AK47
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.101194 0.101194 0.101194
+Ks 0.252066 0.252066 0.252066
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd D:\Users\albin\AK€\AKNormal.png
+map_Bump D:\\Users\\albin\\AK€\\AKNormal.png

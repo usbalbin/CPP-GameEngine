@@ -6,7 +6,7 @@
 #include "Utils.hpp"
 
 
-ApcTank::ApcTank(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float yaw, float pitch, float roll) :
+ApcTank::ApcTank(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float yaw, float pitch, float roll) :
 	Vehicle(renderer, physics)
 {
 

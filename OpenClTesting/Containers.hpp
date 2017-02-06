@@ -75,14 +75,19 @@ struct Light {
 	__declspec(align(4 * sizeof(float))) float radius;
 };*/
 
+#define TEXTURE_COUNT 16
+
 struct Vertex {
 	Vertex() {}
 	Vertex(float3 position, float4 color) : position(position), color(color), normal(0.0f), reflectFactor(0), refractFactor(0) {}
 	Vertex(float3 position, float4 color, float3 normal) : position(position), color(color), normal(normal), reflectFactor(0.5f), refractFactor(0.25f) {}
 	Vertex(float3 position, float4 color, float3 normal, float reflectFactor, float refractFactor) : position(position), color(color), normal(normal), reflectFactor(reflectFactor), refractFactor(refractFactor) {}
+	Vertex(float3 position, unsigned char textures[TEXTURE_COUNT], float3 normal, float reflectFactor = 0, float refractFactor = 0) : position(position), normal(normal), reflectFactor(reflectFactor), refractFactor(refractFactor) { std::copy(&textures[0], &textures[TEXTURE_COUNT], this->textures); }
 	//Vertex(float3 position, Color color, float3 normal) : position(position), color(color), normal(normal) {}
-
-	float4 color;
+	union {
+		float4 color;
+		unsigned char textures[TEXTURE_COUNT] = { 0 };
+	};
 	__declspec(align(4 * sizeof(float))) float3 normal;
 	__declspec(align(4 * sizeof(float))) float3 position;
 	__declspec(align(4 * sizeof(float))) float reflectFactor;
@@ -173,17 +178,14 @@ struct Object {
 	int numTriangles;
 	int numVertices;
 
-#ifdef BVH
+
 	int bvhRootNodeIndex;
 	int bvhTreeSize;
-#endif
 };
 
 struct InstanceBuilder : public Object {
 	InstanceBuilder() {};
 	InstanceBuilder(Object object, int meshType) {
-		//if (object.numTriangles > MAX_INDICES_PER_OBJECT || object.numVertices > MAX_VERTICES_PER_OBJECT)
-		//	throw "Too many triangles or vertices in mesh";
 
 		this->boundingBox = object.boundingBox;
 		this->startTriangle = object.startTriangle;
@@ -219,7 +221,7 @@ struct MultiInstance {
 			instances.emplace_back(modelMatrix, glm::inverse(modelMatrix), instanceBuilder);
 	}
 	std::vector<Instance> instances;
-	bool isInitialized() { return instances[0].isInitialized(); }
+	bool isInitialized() { return !instances.empty() && instances[0].isInitialized(); }
 	float16 getMatrix() { return instances[0].modelMatrix; }
 	void setMatrix(float16& matrix) {
 		float16 invMatrix = glm::inverse(matrix);

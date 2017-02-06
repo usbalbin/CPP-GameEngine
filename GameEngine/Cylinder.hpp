@@ -6,13 +6,13 @@ class Cylinder :
 {
 public:
 	Cylinder();
-	Cylinder(OpenClRayTracer * renderer, btDiscreteDynamicsWorld * physics, glm::vec3 position, glm::vec2 scale, float mass, float yaw, float pitch, float roll);
+	Cylinder(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics, glm::vec3 position, glm::vec2 scale, float mass, float yaw, float pitch, float roll);
 	~Cylinder();
 
-	static void initializeBuilder(OpenClRayTracer * renderer, btDiscreteDynamicsWorld * physics);
+	static void initializeBuilder(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics);
 	
 	static bool builderInitialized;
-	static MultiInstanceBuilder graphicsObjectBuilder;
+	static InstanceBuilder graphicsObjectBuilder;
 private:
 
 };

@@ -3,7 +3,7 @@
 
 #include "Utils.hpp"
 
-CompoundShapeChild::CompoundShapeChild(OpenClRayTracer * renderer, btDiscreteDynamicsWorld * physics, btTransform localTransform, Shape* shape, btRigidBody* parentCompoundBody){
+CompoundShapeChild::CompoundShapeChild(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics, btTransform localTransform, Shape* shape, btRigidBody* parentCompoundBody){
 	this->localTransform = localTransform;
 	this->shape = shape;
 	this->parentCompoundBody = parentCompoundBody;

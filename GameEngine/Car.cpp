@@ -6,7 +6,7 @@
 #include "Utils.hpp"
 
 
-Car::Car(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float yaw, float pitch, float roll) : 
+Car::Car(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float yaw, float pitch, float roll) : 
 	Vehicle(renderer, physics)
 {
 

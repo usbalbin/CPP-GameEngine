@@ -168,7 +168,7 @@ void GameServer::broadcastToClients() {
 	sf::Packet gameState;
 	gameState << PacketType::SERVER_TO_CLIENT_GAMESTATE;
 	gameState << nonStaticRigidBodyCount;
-	gameState << tickCounter/*++*/;
+	gameState << tickCounter++;
 
 	for(int i = 0; i < physics->getNonStaticRigidBodies().size(); i++) {
 		CollisionObjectData data;

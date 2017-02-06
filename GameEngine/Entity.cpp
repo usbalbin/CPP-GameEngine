@@ -5,7 +5,7 @@
 Entity::Entity(){
 }
 
-Entity::Entity(OpenClRayTracer* renderer, btDiscreteDynamicsWorld* physics){
+Entity::Entity(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics){
 	this->physics = physics;
 	this->renderer = renderer;
 }
