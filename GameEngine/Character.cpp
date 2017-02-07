@@ -30,7 +30,7 @@ Character::Character(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, gl
 	motorIndex = 3;//Engine
 	neckConnection->enableMotor(motorIndex, true);
 	neckConnection->setTargetVelocity(motorIndex, 100);
-	neckConnection->setMaxMotorForce(motorIndex, 500);
+	neckConnection->setMaxMotorForce(motorIndex, 1000);
 	neckConnection->setServo(motorIndex, true);
 	neckConnection->setServoTarget(motorIndex, 0);
 

@@ -84,7 +84,11 @@ void MainFrame::startButton(wxCommandEvent& WXUNUSED(event))
 	//wxMessageBox(resres + std::to_string(int(Fullscreen->GetValue())), "hello2", wxOK | wxICON_INFORMATION, this, 200, 200);
 	options.save("../Game/content/options.cfg");
 	this->Close();
-	system("cd ../Game && start ../x64/Release/Game");
+	#ifdef _DEBUG
+		system("cd ../Game && start ../x64/Debug/Game");
+	#else
+		system("cd ../Game && start ../x64/Release/Game");
+	#endif
 }
 
 void MainFrame::filfunc(wxCommandEvent& WXUNUSED(event))

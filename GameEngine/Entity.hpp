@@ -28,7 +28,9 @@ protected:
 	btDiscreteDynamicsWorld* physics;
 	ClRayTracer* renderer;
 	std::vector<btTypedConstraint*> constraints;
+	bool isServer();
 private:
 	int gameArrayIndex = -1;
+	
 };
 

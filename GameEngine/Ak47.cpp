@@ -77,7 +77,7 @@ Ak47::Ak47(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 po
 
 	barrel = new CompoundShapeChild(
 		renderer, physics, toTransform(barrelPos, 0, PI_HALF, 0),
-		new Barrel(renderer, physics, barrelPos, barrelHalfExtent, barrelMass, bulletDiameter, bulletMass, 0, PI_HALF, 0, fireRate, fireModes),
+		new Barrel(renderer, physics, barrelPos, barrelHalfExtent, barrelMass, bulletDiameter, bulletMass, 0, PI_HALF, 0, fireRate, fireModes, "content/AK47.wav"),
 		physicsObject
 	);
 	addChild(barrel);
