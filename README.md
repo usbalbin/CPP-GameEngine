@@ -38,7 +38,3 @@ Reverse Ray Tracer for rendering graphics using CPU or GPU via OpenCL.
   
 
 ## WIP
-
--GameLauncher: Creating functional gamelauncher.
-
--GameLauncher: Successfully save all the required settings and load them correctly.

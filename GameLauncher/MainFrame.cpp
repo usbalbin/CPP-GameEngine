@@ -15,6 +15,9 @@ MainFrame::MainFrame() :
 	Forcecpu = new wxCheckBox(this, wxID_HIGHEST + 4, "Force CPU Graphics", wxPoint(60, 80), wxDefaultSize);
 	Forcecpu->SetValue((bool)options.forceCpu);
 
+	//Forcecpu = new wxCheckBox(this, wxID_HIGHEST + 5, "Multiplayer", wxPoint(60, 80), wxDefaultSize);
+	//Forcecpu->SetValue((bool)options.forceCpu);
+
 	Nickname = new wxTextCtrl(this, wxID_ANY, options.playerName, wxPoint(60, 120), wxDefaultSize, wxTE_PROCESS_ENTER);
 	Nickname->SetForegroundColour(*wxBLACK);
 	Nickname->SetBackgroundColour(*wxWHITE);
@@ -36,7 +39,7 @@ MainFrame::MainFrame() :
 	ResolutionArray.Add("1024x768");
 	ResolutionArray.Add("1280x1024");
 	ResolutionArray.Add("1920x1200");
-
+	
 	Resolution = new wxOwnerDrawnComboBox(this, wxID_ANY, std::to_string(options.width)+"x"+std::to_string(options.height),
 		wxPoint(60, 55), wxSize(100, 20),
 		ResolutionArray,
@@ -45,8 +48,6 @@ MainFrame::MainFrame() :
 
 	filbladdare = new wxFileDialog(this, "Choose Scenario", "","","Scene File (*.scene)|*.scene", wxFD_OPEN | wxFD_FILE_MUST_EXIST);	
 	scenariostring = new wxTextCtrl(this, wxID_ANY, "Please Select a scenario", wxPoint(width - 270, 30), wxSize(240, 20), wxTE_READONLY);
-		//new wxDocTemplate(filbladdare, "scenario", "*.scene", "", "scene", "hello1", "hello2");
-	//filbladdare->SetMaxDocsOpen(1);
 }
 
 BEGIN_EVENT_TABLE(MainFrame, wxFrame)
@@ -79,10 +80,11 @@ void MainFrame::startButton(wxCommandEvent& WXUNUSED(event))
 	options.serverPort = wxAtoi(Serverport->GetValue());
 	options.forceCpu = Forcecpu->GetValue();
 	options.fullScreen = Fullscreen->GetValue();
-	
+
 	//wxMessageBox(resres + std::to_string(int(Fullscreen->GetValue())), "hello2", wxOK | wxICON_INFORMATION, this, 200, 200);
 	options.save("../Game/content/options.cfg");
-
+	this->Close();
+	system("cd ../Game && start ../x64/Release/Game");
 }
 
 void MainFrame::filfunc(wxCommandEvent& WXUNUSED(event))
