@@ -18,12 +18,6 @@ public:
 
 
 
-
-	static void initializeBuilder(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics);
-
-	static bool builderInitialized;
-	static InstanceBuilder graphicsObjectBuilder;
-
 private:
 	CompoundShapeChild* barrel;
 };

@@ -18,9 +18,6 @@ private:
 	void connectToServer();
 	void setupScene(sf::Packet& gameScenePacket);
 
-	sf::IpAddress serverAddress;
-	ushort serverPort;
 	sf::UdpSocket socket;
-	std::string playerName = "Kamel-Hubert";
 };
 

@@ -8,18 +8,18 @@ class GameEngine : public GameBase {
 public:
 	GameEngine();
 	~GameEngine();
-
+	/*
 	template<typename T>
 	void initializeBuilders(T entity) {
 		T::initializeBuilder(renderer, physics);
 		//renderer->writeToObjectTypeBuffers();
 	}
-
+	
 	template<typename T, typename... Ts>
 	void initializeBuilders(T entity, Ts... entities) {
 		T::initializeBuilder(renderer, physics);
 		initializeBuilders(entities...);
-	}
+	}*/
 
 	virtual void initialize();
 

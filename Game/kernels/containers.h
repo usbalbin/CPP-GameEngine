@@ -31,6 +31,7 @@ typedef struct {
 	float4 color;
 	float3 normal;
 	float3 position;
+	float2 uv;
 	float reflectFactor;
 	float refractFactor;
 }Vertex;
@@ -95,5 +96,5 @@ typedef struct {
 	float16 invModelMatrix;
 	int meshType;
 	int startVertex;
-	unsigned short texture[28];
+	int textureId;
 } Instance;

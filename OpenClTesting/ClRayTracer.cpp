@@ -81,6 +81,7 @@ void ClRayTracer::initialize() {
 		useInterop = false;
 	}
 
+	textureManager = TextureManager(MAX_TEXTURE_COUNT, context);
 
 	cl::Program::Sources sources;
 	std::string debugSource = readFileToString("kernels/debug.cl");
@@ -91,6 +92,8 @@ void ClRayTracer::initialize() {
 	std::string colorToPixelSource = readFileToString("kernels/newKernels/4_colorToPixel.cl");
 
 
+	sources.push_back( "#define TEXTURE_ARGS " + textureManager.genOclTextureArgumentsCode() + "\n" );
+	sources.push_back( "#define GET_TEXTURE_COLOR(RES_COLOR,TEX_ID,TEX_POS) " + textureManager.genOclTextureBlendCode() + "\n");
 	sources.push_back({ debugSource.c_str(), debugSource.length() });
 	sources.push_back({ perspectiveRayGeneratorSource.c_str(), perspectiveRayGeneratorSource.length() });
 	sources.push_back({ rayTraceAdvancedSource.c_str(), rayTraceAdvancedSource.length() });
@@ -162,7 +165,6 @@ void ClRayTracer::initialize() {
 		colors = std::vector<float4>(width * height);
 	}
 
-	push_backTexture("content/kamel.bmp");
 }
 
 
@@ -180,13 +182,8 @@ void ClRayTracer::push_back(Instance instance) {
 	this->transformedVertexCount += objectType.numVertices;
 }
 
-void ClRayTracer::push_backTexture(std::string path) {
-	int width, height;
-	std::vector<ubyte4> pixels = readBmpPixels4(path, &width, &height);
 
-	textures[path] = textureBuffers.size();
-	textureBuffers.emplace_back(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, cl::ImageFormat(CL_RGBA, CL_UNORM_INT8), width, height, 0, pixels.data());
-}
+
 
 InstanceBuilder ClRayTracer::push_backObjectType(std::vector<TriangleIndices>& objectTypeIndices, std::vector<Vertex>& objectTypeVertices) {
 	Object objectType;
@@ -221,10 +218,12 @@ Instance ClRayTracer::makeInstance(std::string meshPath, float16 initialTransfor
 	std::vector<Vertex> vertices;
 	std::vector<TriangleIndices> indices;
 
-	readObjFile(vertices, indices, meshPath, reflection, refraction);
+	std::string texturePath;
+	readObjFile(vertices, indices, texturePath, meshPath);
 	builders[meshPath] = push_backObjectType(indices, vertices);
 
-	return Instance(initialTransform, glm::inverse(initialTransform), builders[meshPath]);
+	
+	return Instance(initialTransform, glm::inverse(initialTransform), builders[meshPath], texturePath.length() ? textureManager.getTextureId(texturePath) : -1);
 }
 
 void ClRayTracer::getMeshData(const Instance & instance, std::vector<TriangleIndices>& indices, std::vector<Vertex>& vertices)
@@ -234,6 +233,20 @@ void ClRayTracer::getMeshData(const Instance & instance, std::vector<TriangleInd
 	std::copy(&objectTypeIndices[object.startTriangle], &objectTypeIndices[object.startTriangle + object.numTriangles], indices.begin());
 	
 	std::copy(&objectTypeVertices[object.startTriangle], &objectTypeVertices[object.startVertex + object.numVertices], vertices.begin());
+}
+
+void ClRayTracer::getMeshVertices(const Instance & instance, std::vector<Vertex>& verticesOut)
+{
+	const Object object = objectTypes[instance.meshType];
+
+	std::copy(&objectTypeVertices[object.startTriangle], &objectTypeVertices[object.startVertex + object.numVertices], verticesOut.begin());
+}
+
+void ClRayTracer::getMeshPoints(const Instance & instance, float*& const vertices, int& vertexCount, int& stride) {
+	const Object object = objectTypes[instance.meshType];
+	vertices = &(objectTypeVertices[object.startVertex].position.x);
+	vertexCount = object.numVertices;
+	stride = sizeof(Vertex);
 }
 
 
@@ -307,8 +320,7 @@ void ClRayTracer::render(float16 matrix) {
 	rayTraceAdvancedKernel.setArg(7, hitBuffers[0]);
 	rayTraceAdvancedKernel.setArg(8, rayTreeBuffers[0]);
 
-	for (int i = 0; i < textureBuffers.size(); i++)
-		rayTraceAdvancedKernel.setArg(9 + i, textureBuffers[i]);
+	textureManager.setTextureArguments(9, rayTraceAdvancedKernel);
 
 	queue.enqueueNDRangeKernel(rayTraceAdvancedKernel, cl::NullRange, cl::NDRange(width * height));
 	queue.finish();

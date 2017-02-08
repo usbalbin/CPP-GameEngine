@@ -3,8 +3,6 @@
 
 
 
-bool Cube::builderInitialized = false;
-InstanceBuilder Cube::graphicsObjectBuilder;
 
 Cube::Cube(){
 }
@@ -23,11 +21,8 @@ Cube::Cube(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 po
 	;
 	this->scale = scale;
 
-	if (!builderInitialized && renderer) {
-		initializeBuilder(renderer, physics);
-		//renderer->writeToObjectTypeBuffers();
-	}
-	Instance instance(matrix, glm::inverse(matrix), graphicsObjectBuilder);
+	
+	Instance instance = renderer->makeInstance("content/cube.obj");
 
 	btBoxShape* boxShape = new btBoxShape(btVector3(scale.x, scale.y, scale.z));
 	
@@ -42,19 +37,6 @@ Cube::Cube(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 po
 	
 }
 
-void Cube::initializeBuilder(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics){
-	if (builderInitialized)//Only initialize one
-		return;
-
-	std::vector<TriangleIndices> indices;
-	std::vector<Vertex> vertices;
-	float reflection = 0.0f, refraction = 0.0f;
-
-	readObjFile(vertices, indices, std::string("content/cube.obj"), reflection, refraction);
-
-	graphicsObjectBuilder = renderer->push_backObjectType(indices, vertices);
-	builderInitialized = true;
-}
 
 Cube::~Cube(){
 	

@@ -7,10 +7,8 @@ class GenericShape :
 	public Shape
 {
 public:
-	GenericShape(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics, std::string filePath, glm::vec3 position, glm::vec3 scale, float mass, float yaw, float pitch, float roll);
+	GenericShape(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics, std::string filePath, glm::vec3 position, float mass = 0, float yaw = 0, float pitch = 0, float roll = 0);
 	~GenericShape();
-	static InstanceBuilder& initializeBuilder(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics, std::string filePath);
 private:
-	static std::map<std::string, InstanceBuilder> builders;
 };
 

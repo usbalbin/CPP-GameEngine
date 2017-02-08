@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Entity.hpp"
+#include "Utils.hpp"
 
 
 Entity::Entity(){
@@ -60,6 +61,19 @@ float Entity::distance2(Entity * other)
 {
 	return glm::distance2(this->getPosition(), other->getPosition());
 
+}
+
+glm::mat4 Entity::cameraMatrix(float yaw, float pitch, bool firstPerson)
+{
+	glm::vec3 relativeOffset(0, 0, 5);
+	glm::vec3 rotationPivotPos(0, 0, 0);
+
+	return cameraMatrix(yaw, pitch, relativeOffset, rotationPivotPos);
+}
+
+glm::mat4 Entity::cameraMatrix(float yaw, float pitch, glm::vec3 & relativeOffset, glm::vec3 & rotationPivotPos)
+{
+	return toMatrix(relativeOffset) * glm::rotate(glm::rotate(glm::mat4(1), pitch, glm::vec3(1, 0, 0)), yaw, glm::vec3(0, 1, 0)) * toMatrix(rotationPivotPos) * getTranslationMatrix();
 }
 
 bool Entity::isServer()
