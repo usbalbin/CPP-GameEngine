@@ -39,6 +39,8 @@ protected:
 	static ClRayTracer* renderer;
 	static btDiscreteDynamicsWorld* physics;
 	sf::Sound sound;
+	bool isServer();
+
 private:
 	Instance graphicsObject;
 	btCollisionShape* physicsShape = nullptr;

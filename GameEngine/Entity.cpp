@@ -75,3 +75,8 @@ glm::mat4 Entity::cameraMatrix(float yaw, float pitch, glm::vec3 & relativeOffse
 {
 	return toMatrix(relativeOffset) * glm::rotate(glm::rotate(glm::mat4(1), pitch, glm::vec3(1, 0, 0)), yaw, glm::vec3(0, 1, 0)) * toMatrix(rotationPivotPos) * getTranslationMatrix();
 }
+
+bool Entity::isServer()
+{
+	return !renderer;
+}

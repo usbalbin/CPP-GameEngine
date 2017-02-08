@@ -110,3 +110,8 @@ btCollisionShape* Shape::getCollisionShape()
 {
 	return physicsShape;
 }
+
+bool Shape::isServer()
+{
+	return !renderer;
+}

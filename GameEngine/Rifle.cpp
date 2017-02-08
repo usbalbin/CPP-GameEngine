@@ -75,7 +75,7 @@ Rifle::Rifle(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 
 	
 	barrel = new CompoundShapeChild(
 		renderer, physics, toTransform(barrelPos, 0, PI_HALF, 0),
-		new Barrel(renderer, physics, barrelPos, barrelHalfExtent, barrelMass, bulletDiameter, bulletMass, 0, PI_HALF, 0, fireRate, fireModes),
+		new Barrel(renderer, physics, barrelPos, barrelHalfExtent, barrelMass, bulletDiameter, bulletMass, 0, PI_HALF, 0, fireRate, fireModes, "content/TankShot.wav"),
 		physicsObject
 	);
 	addChild(barrel);

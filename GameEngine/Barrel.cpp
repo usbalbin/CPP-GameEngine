@@ -4,7 +4,7 @@
 #include "Utils.hpp"
 #include <fstream>
 
-Barrel::Barrel(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, glm::vec2 scale, float mass, float projectileRadius, float projectileMass, float yaw, float pitch, float roll, std::chrono::duration<double> fireRate, std::vector<FireMode> fireModes) :
+Barrel::Barrel(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, glm::vec2 scale, float mass, float projectileRadius, float projectileMass, float yaw, float pitch, float roll, std::chrono::duration<double> fireRate, std::vector<FireMode> fireModes, std::string soundFile) :
 	Cylinder(renderer, physics, position, scale, mass, yaw, pitch, roll)
 {
 	this->projectileRadius = projectileRadius;
@@ -14,9 +14,9 @@ Barrel::Barrel(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec
 	this->fireModes = fireModes;
 	this->currentFireMode = fireModes[0];
 	
-	if (renderer) {
-		if (!firingSound.loadFromFile("content/TankShot.wav"))
-			throw "Sound did'nt get loaded correctly Content/TankShot.wav";
+	if (!isServer()) {
+		if (!firingSound.loadFromFile(soundFile))
+			throw "Sound did'nt get loaded correctly!";
 		sound.setBuffer(firingSound);
 	}
 }
@@ -44,8 +44,7 @@ void Barrel::update(float deltaTime) {
 	auto now = std::chrono::system_clock::now();
 	while (projectiles.size() && projectiles.front().isTimeToDie(now))
 		projectiles.pop_front();
-	if(renderer && physicsObject)
-		sound.setPosition(getPosition().x, getPosition().y, getPosition().z);
+	
 }
 
 void Barrel::updateBarrel(const Input& input, int fireKey, btRigidBody* physicsObject, glm::vec3 recoilCenter, glm::mat4 barrelTransMatrix) {
@@ -63,8 +62,8 @@ void Barrel::updateBarrel(const Input& input, int fireKey, btRigidBody* physicsO
 	if (currentFireMode == lastTriggerState)
 		return;
 	
-	if(renderer)
-		sound.play();
+
+		
 	barrelTransMatrix = !physicsObject ? getTranslationMatrix() : barrelTransMatrix;
 	glm::mat4 invBarrelTransMatrix = glm::inverse(barrelTransMatrix);
 
@@ -87,6 +86,12 @@ void Barrel::updateBarrel(const Input& input, int fireKey, btRigidBody* physicsO
 
 	lastTriggerState = triggerState;
 	lastFired += deltaTime;
+
+	if (!isServer())
+	{
+		sound.setPosition(toSfVector3(projectilePos));
+		sound.play();
+	}
 }
 
 float Barrel::calcPropellingImpulse()
