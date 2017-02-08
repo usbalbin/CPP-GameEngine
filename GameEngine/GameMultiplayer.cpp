@@ -6,7 +6,7 @@
 #include <sstream>
 
 
-GameMultiplayer::GameMultiplayer() : GameEngine(), serverAddress(options.serverAddress), serverPort(options.serverPort), playerName(options.playerName) {
+GameMultiplayer::GameMultiplayer() : GameEngine() {
 	renderer->initializeAdvancedRender();
 
 	btBroadphaseInterface* broadphase = new btDbvtBroadphase();
@@ -27,18 +27,18 @@ GameMultiplayer::GameMultiplayer() : GameEngine(), serverAddress(options.serverA
 void GameMultiplayer::connectToServer() {
 	sf::Packet connectPackage;
 	connectPackage << PacketType::CONNECTION_REQUEST;
-	connectPackage << playerName;
+	connectPackage << options.playerName;
 
 	socket.setBlocking(true);
-	socket.bind(sf::Socket::AnyPort, serverAddress);
-	socket.send(connectPackage, serverAddress, serverPort);
+	socket.bind(sf::Socket::AnyPort, options.serverAddress);
+	socket.send(connectPackage, options.serverAddress, options.serverPort);
 
 	sf::Packet serverResponse;
 	sf::IpAddress address;
 	ushort port;
 	do {
 		socket.receive(serverResponse, address, port);
-	} while (port != serverPort);
+	} while (port != options.serverPort);
 	PacketType packetType;
 	serverResponse >> packetType;
 
@@ -110,5 +110,5 @@ void GameMultiplayer::update()
 	playerInputPacket << PacketType::CLIENT_TO_SERVER_UPDATE;
 	playerInputPacket << (sf::Uint16)player->getArrayIndex();
 	playerInputPacket << input;
-	socket.send(playerInputPacket, serverAddress, serverPort);
+	socket.send(playerInputPacket, options.serverAddress, options.serverPort);
 }

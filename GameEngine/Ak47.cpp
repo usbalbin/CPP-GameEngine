@@ -4,9 +4,6 @@
 #include "Cube.hpp"
 #include "Utils.hpp"
 
-bool Ak47::builderInitialized = false;
-InstanceBuilder Ak47::graphicsObjectBuilder;
-
 Ak47::Ak47(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float yaw, float pitch, float roll) : CompoundShape(renderer, physics)
 {
 	glm::vec3 scale(1);
@@ -22,13 +19,9 @@ Ak47::Ak47(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 po
 		;
 	this->scale = scale;
 
-	if (!builderInitialized && renderer) {
-		initializeBuilder(renderer, physics);
-		//renderer->writeToObjectTypeBuffers();
-	}
-	Instance instance(matrix, glm::inverse(matrix), graphicsObjectBuilder);
-
 	
+
+	Instance instance = renderer->makeInstance("content/AK47.obj");
 
 
 	btCompoundShape* rifleShape = new btCompoundShape();
@@ -112,19 +105,4 @@ void Ak47::handleInput(const Input & input, float deltaTime)
 {
 	Barrel* barrelPart = ((Barrel*)barrel->getShape());
 	barrelPart->updateBarrel(input, 6, physicsObject, toVec3(barrel->getLocalTransform().getOrigin()), barrel->getWorldMatrix());
-}
-
-void Ak47::initializeBuilder(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics)
-{
-	if (builderInitialized)//Only initialize one
-		return;
-
-	std::vector<TriangleIndices> indices;
-	std::vector<Vertex> vertices;
-	float reflection = 0.0f, refraction = 0.0f;
-
-	readObjFile(vertices, indices, std::string("content/AK47.obj"), reflection, refraction);
-
-	graphicsObjectBuilder = renderer->push_backObjectType(indices, vertices);
-	builderInitialized = true;
 }

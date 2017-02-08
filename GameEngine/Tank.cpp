@@ -216,6 +216,15 @@ void Tank::update(float deltaTime) {
 	Entity::update(deltaTime);
 }
 
+glm::mat4 Tank::cameraMatrix(float yaw, float pitch, bool firstPerson)
+{
+	glm::vec3 relativeOffset = firstPerson ? glm::vec3(0) : glm::vec3(0, 0, 5);
+	glm::vec3 rotationPivotPos = firstPerson ? glm::vec3(-0.5f, -0.2f, 1) : glm::vec3(0);
+
+	pitch += PI_HALF;
+	return Entity::cameraMatrix(yaw, pitch, relativeOffset, rotationPivotPos);
+}
+
 Tank::~Tank()
 {
 }

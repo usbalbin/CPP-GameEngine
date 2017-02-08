@@ -21,7 +21,6 @@ TerrainShape::TerrainShape(ClRayTracer * renderer, btDiscreteDynamicsWorld * phy
 		//renderer->writeToObjectTypeBuffers();
 	}
 	Instance instance(matrix, glm::inverse(matrix), graphicsObjectBuilder);
-	instance.texture[0] = SHRT_MAX;
 	
 	
 	btDefaultMotionState* motionState = new btDefaultMotionState(btTransform::getIdentity());

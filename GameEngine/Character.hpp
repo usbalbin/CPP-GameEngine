@@ -17,7 +17,7 @@ public:
 private:
 	Ak47* rifle;
 	float rideHeight = 0.2f;
-	glm::vec3 bodyHalfExtents = glm::vec3(0.3f, 1.25f, 0.1f);
+	glm::vec3 bodyHalfExtents = glm::vec3(0.3f, 0.25f, 0.075f);
 	glm::vec3 wheelPos = glm::vec3(0, -bodyHalfExtents.y - rideHeight, 0);
 	float pitch = 0;
 	float yaw = 0;

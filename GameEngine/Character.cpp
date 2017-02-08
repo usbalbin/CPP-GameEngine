@@ -11,42 +11,42 @@ Character::Character(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, gl
 	const float PI_HALF = 1.57079632679;
 	
 
-	Cube* body = new Cube(renderer, physics, position, bodyHalfExtents, 70);
-	body->physicsObject->setActivationState(DISABLE_DEACTIVATION);
-	body->physicsObject->setAngularFactor(btVector3(0, 0, 0));//Make sure the body won't fall over
+	Cube* lowerTorso = new Cube(renderer, physics, position, bodyHalfExtents, 70);
+	lowerTorso->physicsObject->setActivationState(DISABLE_DEACTIVATION);
+	lowerTorso->physicsObject->setAngularFactor(btVector3(0, 0, 0));//Make sure the body won't fall over
 
 
-	glm::vec3 neckHalfExtents(0.1f, 0.1f, 0.1f);
-	glm::vec3 neckPos(0, bodyHalfExtents.y + neckHalfExtents.y, 0);
-	Cube* neck = new Cube(renderer, physics, position + neckPos, neckHalfExtents, 5);
-	neck->physicsObject->setActivationState(DISABLE_DEACTIVATION);
+	glm::vec3 upperTorsoHalfExtents = bodyHalfExtents * glm::vec3(1.1f, 1.0f, 1.5f);
+	glm::vec3 upperTorsoPos(0, bodyHalfExtents.y + upperTorsoHalfExtents.y, 0);
+	Cube* upperTorso = new Cube(renderer, physics, position + upperTorsoPos, upperTorsoHalfExtents, 5);
+	upperTorso->physicsObject->setActivationState(DISABLE_DEACTIVATION);
 
-	btHinge2Constraint* neckConnection = new btHinge2Constraint(*body->physicsObject, *neck->physicsObject, toVector3(position + neckPos), btVector3(0, 1, 0), btVector3(1, 0, 0));
+	btHinge2Constraint* upperTorsoConnection = new btHinge2Constraint(*lowerTorso->physicsObject, *upperTorso->physicsObject, toVector3(position + glm::vec3(0, upperTorsoHalfExtents.y, 0)), btVector3(0, 1, 0), btVector3(1, 0, 0));
 
 	int motorIndex = 2;//Suspension
-	neckConnection->enableSpring(motorIndex, false);
-	neckConnection->setLimit(motorIndex, 0, 0);
+	upperTorsoConnection->enableSpring(motorIndex, false);
+	upperTorsoConnection->setLimit(motorIndex, 0, 0);
 
 	motorIndex = 3;//Engine
-	neckConnection->enableMotor(motorIndex, true);
-	neckConnection->setTargetVelocity(motorIndex, 100);
-	neckConnection->setMaxMotorForce(motorIndex, 500);
-	neckConnection->setServo(motorIndex, true);
-	neckConnection->setServoTarget(motorIndex, 0);
+	upperTorsoConnection->enableMotor(motorIndex, true);
+	upperTorsoConnection->setTargetVelocity(motorIndex, 100);
+	upperTorsoConnection->setMaxMotorForce(motorIndex, 500);
+	upperTorsoConnection->setServo(motorIndex, true);
+	upperTorsoConnection->setServoTarget(motorIndex, 0);
 
 	motorIndex = 5;//Steering
-	neckConnection->enableSpring(motorIndex, false);
-	neckConnection->setLimit(motorIndex, 0, 0);
+	upperTorsoConnection->enableSpring(motorIndex, false);
+	upperTorsoConnection->setLimit(motorIndex, 0, 0);
 
 
 
 	
 	glm::vec3 headHalfExtents(0.2f, 0.2f, 0.2f);
-	glm::vec3 headPos(0.0f, neckHalfExtents.y + headHalfExtents.y, 0);
-	Cube* head = new Cube(renderer, physics, position + neckPos + headPos, headHalfExtents, 7);
+	glm::vec3 headPos(0.0f, upperTorsoHalfExtents.y + headHalfExtents.y, 0);
+	Cube* head = new Cube(renderer, physics, position + upperTorsoPos + headPos, headHalfExtents, 7);
 	head->physicsObject->setActivationState(DISABLE_DEACTIVATION);
 
-	btHinge2Constraint* headConnection = new btHinge2Constraint(*neck->physicsObject, *head->physicsObject, toVector3(position + neckPos/* + headPos*/), btVector3(0, 0, -1), btVector3(1, 0, 0));
+	btHinge2Constraint* headConnection = new btHinge2Constraint(*upperTorso->physicsObject, *head->physicsObject, toVector3(position + upperTorsoPos/* + headPos*/), btVector3(0, 0, -1), btVector3(1, 0, 0));
 
 
 	motorIndex = 2;//Suspension
@@ -81,7 +81,7 @@ Character::Character(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, gl
 	wheel->physicsObject->setActivationState(DISABLE_DEACTIVATION);
 	wheel->physicsObject->setFriction(4.0f);
 
-	btHinge2Constraint* wheelConnection = new btHinge2Constraint(*body->physicsObject, *wheel->physicsObject, toVector3(position + wheelPos), btVector3(0, 1, 0), btVector3(1, 0, 0));
+	btHinge2Constraint* wheelConnection = new btHinge2Constraint(*lowerTorso->physicsObject, *wheel->physicsObject, toVector3(position + wheelPos), btVector3(0, 1, 0), btVector3(1, 0, 0));
 
 	wheelConnection->setLowerLimit(+PI_HALF * 1);
 	wheelConnection->setUpperLimit(-PI_HALF * 1);
@@ -116,7 +116,7 @@ Character::Character(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, gl
 
 	glm::vec3 riflePos = position + headPos + glm::vec3(0.05f + bodyHalfExtents.x, -0.1f, -0.5f);
 	rifle = new Ak47(renderer, physics, riflePos, 0, 0, 0);
-	btHinge2Constraint* rifleConnection = new btHinge2Constraint(*neck->physicsObject, *rifle->physicsObject, toVector3(riflePos + glm::vec3(0, 0, 0.3f)), btVector3(0, 0, -1), btVector3(1, 0, 0));
+	btHinge2Constraint* rifleConnection = new btHinge2Constraint(*upperTorso->physicsObject, *rifle->physicsObject, toVector3(riflePos + glm::vec3(0, 0, 0.3f)), btVector3(0, 0, -1), btVector3(1, 0, 0));
 
 
 
@@ -151,11 +151,11 @@ Character::Character(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, gl
 
 	
 	parts.push_back(head);
-	parts.push_back(neck);
-	parts.push_back(body);
+	parts.push_back(upperTorso);
+	parts.push_back(lowerTorso);
 	parts.push_back(wheel);
 	parts.push_back(rifle);
-	addConstraint(neckConnection, true);
+	addConstraint(upperTorsoConnection, true);
 	addConstraint(wheelConnection, true);
 	addConstraint(headConnection, true);
 	

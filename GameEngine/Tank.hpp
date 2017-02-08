@@ -8,13 +8,13 @@ class Tank :
 {
 public:
 	Tank(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float yaw = 0, float pitch = 0, float roll = 0);
-
-	
+	~Tank();
 	
 	void handleInput(const Input& input, float deltaTime) override;
 	void handleTurretInput(const Input & input, float deltaTime);
 	void update(float deltaTime);
-	~Tank();
+
+	glm::mat4 cameraMatrix(float yaw, float pitch, bool firstPerson = true) override;
 private:
 	Barrel* cannon;
 	std::vector<btHinge2Constraint*> wheelConstraints;

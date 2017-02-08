@@ -53,6 +53,7 @@ void sortObjects(Ray ray, int objectCount, global const Object* allObjects, loca
 Vertex interpolateTriangle(Triangle triangle, float2 uv);
 float4 interpolate4(float4 a, float4 b, float4 c, float2 uv);
 float3 interpolate3(float3 a, float3 b, float3 c, float2 uv);
+float2 interpolate2(float2 a, float2 b, float2 c, float2 uv);
 float interpolate1(float a, float b, float c, float2 uv);
 
 
@@ -97,7 +98,7 @@ void kernel rayTraceAdvanced(
 	global Hit* hits,
 	global RayTree* rayTrees,
 	
-	read_only image2d_t texture0
+	TEXTURE_ARGS
 ){
 	Vertex intersectionPoint;
 	Ray ray = rays[gid];
@@ -161,19 +162,13 @@ void kernel rayTraceAdvanced(
 		
 		
 		
-		float2 textureCoords = intersectionPoint.position.xz * 0.02f;
 		
 		float blendWidth = 5;
 		float blendDistance = 10;
 	
-		if(closestInstance.texture[0] > 0){
-			intersectionPoint.color += mix(
-				((float)closestInstance.texture[0] / SHRT_MAX) * read_imagef(texture0, sampler, textureCoords * 8).xyzw,
-				((float)closestInstance.texture[0] / SHRT_MAX) * read_imagef(texture0, sampler, textureCoords).xyzw,
-				(float4)(clamp((closestTriangleDist - blendDistance) / blendWidth,0.0f, 1.0f))
-			);
-		}
+		GET_TEXTURE_COLOR(intersectionPoint.color, closestInstance.textureId, intersectionPoint.uv);
 		
+		//int printOkidok = printf("texId: %d\n", closestInstance.textureId);
 		
 		
 		float3 lightDir = normalize((float3)(-0.9f, -0.5f, 0.2f));
@@ -217,6 +212,7 @@ Vertex interpolateTriangle(Triangle triangle, float2 uv){
 	Vertex result;
 	result.position = interpolate3(triangle.a.position, triangle.b.position, triangle.c.position, uv);
 	result.normal = interpolate3(triangle.a.normal, triangle.b.normal, triangle.c.normal, uv);
+	result.uv = interpolate2(triangle.a.uv, triangle.b.uv, triangle.c.uv, uv);
 	
 	result.color = interpolate4(triangle.a.color, triangle.b.color, triangle.c.color, uv);
 
@@ -236,6 +232,14 @@ float4 interpolate4(float4 a, float4 b, float4 c, float2 uv){
 }
 
 float3 interpolate3(float3 a, float3 b, float3 c, float2 uv){
+	float bFactor = uv.x;
+	float cFactor = uv.y;
+	float aFactor = 1 - uv.x - uv.y;
+	
+	return a * aFactor + b * bFactor + c * cFactor;
+}
+
+float2 interpolate2(float2 a, float2 b, float2 c, float2 uv){
 	float bFactor = uv.x;
 	float cFactor = uv.y;
 	float aFactor = 1 - uv.x - uv.y;

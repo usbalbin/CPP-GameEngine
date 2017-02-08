@@ -28,6 +28,8 @@
 #include "Player.hpp"
 #include "Terrain.hpp"
 #include "Cannon.hpp"
+#include "TestEntity.hpp"
+
 #include "Options.hpp"
 
 #include "Cube.hpp"
@@ -45,12 +47,18 @@ GameEngine::~GameEngine() {
 }
 
 void GameEngine::initialize() {
-	initializeBuilders(Cube(), Cylinder(), Sphere());
+	Vertex v;
+	int d = (float*)&v.uv - (float*)&v.position;
+	int s = sizeof(Vertex);
 
-	openScene("content/scene.scene");
+	openScene(options.scenarioPath);
 //	gameEntities.push_back(
 //		new Terrain(&renderer, physics)
 //	);
+	/*
+	addEntity(
+		new TestEntity(renderer, physics, glm::vec3(0, 100, 0))
+	);*/
 }
 
 void GameEngine::openScene(std::string fileName)
@@ -97,10 +105,12 @@ void GameEngine::draw()
 	//glm::mat4 cameraMatrix = toMatrix(glm::vec3(0, 0.1f, -0.21f)) * glm::rotate(glm::rotate(glm::mat4(1), pitch, glm::vec3(1, 0, 0)), yaw, glm::vec3(0, 1.0f, 0)) * toMatrix(relativeCameraPos) * player->getTranslationMatrix();
 
 	//Tank 3ps camera
-	glm::mat4 cameraMatrix = toMatrix(glm::vec3(0, 0, 5)) * glm::rotate(glm::rotate(glm::mat4(1), pitch + 1.1f * PI_HALF, glm::vec3(1, 0, 0)), yaw, glm::vec3(0, 1.0f, 0)) * player->getTranslationMatrix();
+	//glm::mat4 cameraMatrix = toMatrix(glm::vec3(0, 0, 5)) * glm::rotate(glm::rotate(glm::mat4(1), pitch + 1.1f * PI_HALF, glm::vec3(1, 0, 0)), yaw, glm::vec3(0, 1.0f, 0)) * player->getTranslationMatrix();
 
 
 	//glm::mat4 cameraMatrix = toMatrix(glm::vec3(-0.5f, -0.2f, 1)) * glm::rotate(glm::rotate(glm::mat4(1), pitch + 1.0f * PI_HALF, glm::vec3(1, 0, 0)), yaw, glm::vec3(0, 1.0f, 0)) * player->getTranslationMatrix();
+
+	glm::mat4 cameraMatrix = player->cameraMatrix(yaw, pitch);
 
 	sf::Listener::setUpVector(toSfVector3(glm::vec4(0, 1, 0, 0) * cameraMatrix));
 	sf::Listener::setDirection(toSfVector3(glm::vec4(0, 0, -1.0f, 0) * cameraMatrix));

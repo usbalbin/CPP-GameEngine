@@ -30,7 +30,6 @@ void writeSourcesToFile(cl::Program::Sources sources, std::string path);
 void setColor(std::vector<Vertex>& vertices, float4 color);
 void calculateNormals(std::vector<Vertex>& vertices, const std::vector<TriangleIndices>& indices);
 
-void readObjFile(std::vector<Vertex>& vertices, std::vector<TriangleIndices>& indices, std::string & filePath, float reflection = 0, float refraction = 0);
 
 std::vector<ubyte3> readBmpPixels(std::string& filePath, int* widthOut, int* heightOut);
 
@@ -38,13 +37,17 @@ std::vector<ubyte4> readBmpPixels4(std::string& filePath, int* widthOut, int* he
 
 void pixelsToMesh(int width, int length, std::vector<ubyte3> colors, std::vector<Vertex>& vertices, std::vector<TriangleIndices>& indices);
 
-void addVertex(FaceElement facePart, int * indexOut, std::map<Vertex, int>& vertexMap, std::vector<Vertex>& vertices, std::vector<float3>& positions, std::vector<float3>& normals, float reflection, float refraction);
+void readMtlFile(std::string & filePath, std::string & texturePathOut);
 
-Vertex facePartToVertex(FaceElement facePart, std::vector<float3>& positions,/* std::vector<float3>& texturePositions,*/ std::vector<float3>& normals);
+void readObjFile(std::vector<Vertex>& vertices, std::vector<TriangleIndices>& indices, std::string & texturePathOut, std::string & filePath, float reflection = 0, float refraction = 0);
+
+void addVertex(FaceElement facePart, int * indexOut, std::map<Vertex, int>& vertexMap, std::vector<Vertex>& vertices, std::vector<float3>& positions, std::vector<float2>& texturePositions, std::vector<float3>& normals, float reflection, float refraction);
+Vertex facePartToVertex(FaceElement facePart, std::vector<float3>& positions, std::vector<float2>& texturePositions, std::vector<float3>& normals);
 
 Face parseFace(std::string line);
 FaceElement parseFacePart(std::string line);
 float3 parseFloat3(std::string str);
+float2 parseFloat2(std::string str);
 
 
 void splitMesh(std::vector<Vertex>& vertices, std::vector<TriangleIndices>& indices, std::vector<Vertex>& verticesOut, std::vector<TriangleIndices>& indicesOut);

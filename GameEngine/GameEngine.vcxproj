@@ -191,6 +191,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Terrain.hpp" />
     <ClInclude Include="TerrainShape.hpp" />
+    <ClInclude Include="TestEntity.hpp" />
     <ClInclude Include="Utils.hpp" />
     <ClInclude Include="Vehicle.hpp" />
   </ItemGroup>
@@ -231,6 +232,7 @@
     <ClCompile Include="Tank.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TerrainShape.cpp" />
+    <ClCompile Include="TestEntity.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Vehicle.cpp" />
   </ItemGroup>

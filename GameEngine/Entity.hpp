@@ -10,8 +10,8 @@ class Entity
 public:
 	Entity();
 	Entity(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics);
-	void addConstraint(btTypedConstraint * constraint, bool disableCollisionBetweenLinkedBodies);
 	~Entity();
+	void addConstraint(btTypedConstraint * constraint, bool disableCollisionBetweenLinkedBodies);
 	virtual void handleInput(const Input& input, float deltaTime);
 	virtual glm::mat4 getTranslationMatrix();
 	virtual glm::mat4 getMatrix();
@@ -22,8 +22,10 @@ public:
 	float distance2(Entity* other);
 	void setArrayIndex(int index) { gameArrayIndex = index; }
 	int getArrayIndex() { return gameArrayIndex; }
-protected:
+	virtual glm::mat4 cameraMatrix(float yaw, float pitch, bool firstPerson = true);
 	
+protected:
+	glm::mat4 cameraMatrix(float yaw, float pitch, glm::vec3& relativeOffset, glm::vec3& rotationPivotPos = glm::vec3(0));
 	std::vector<Shape*> parts;
 	btDiscreteDynamicsWorld* physics;
 	ClRayTracer* renderer;

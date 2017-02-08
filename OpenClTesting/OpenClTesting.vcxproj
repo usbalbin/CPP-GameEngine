@@ -176,6 +176,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StridingMesh.hpp" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TextureManager.hpp" />
     <ClInclude Include="Utils.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -196,6 +197,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="StridingMesh.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>

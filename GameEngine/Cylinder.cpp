@@ -2,9 +2,6 @@
 #include "Cylinder.hpp"
 
 
-bool Cylinder::builderInitialized = false;
-InstanceBuilder Cylinder::graphicsObjectBuilder;
-
 Cylinder::Cylinder() {
 }
 
@@ -23,11 +20,8 @@ Cylinder::Cylinder(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm:
 		;
 	
 
-	if (!builderInitialized && renderer) {
-		initializeBuilder(renderer, physics);
-		//renderer->writeToObjectTypeBuffers();
-	}
-	Instance instance(matrix, glm::inverse(matrix), graphicsObjectBuilder);
+	
+	Instance instance = renderer->makeInstance("content/cylinder.obj");
 
 	btCylinderShape* boxShape = new btCylinderShape(btVector3(scale.x, scale.y, scale.z));
 
@@ -40,20 +34,6 @@ Cylinder::Cylinder(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm:
 
 	initialize(instance, rigidBody);
 
-}
-
-void Cylinder::initializeBuilder(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics) {
-	if (builderInitialized)//Only initialize one
-		return;
-
-	std::vector<TriangleIndices> indices;
-	std::vector<Vertex> vertices;
-	float reflection = 0.0f, refraction = 0.0f;
-
-	readObjFile(vertices, indices, std::string("content/cylinder.obj"), reflection, refraction);
-
-	graphicsObjectBuilder = renderer->push_backObjectType(indices, vertices);
-	builderInitialized = true;
 }
 
 Cylinder::~Cylinder() {

@@ -82,15 +82,13 @@ struct Vertex {
 	Vertex(float3 position, float4 color) : position(position), color(color), normal(0.0f), reflectFactor(0), refractFactor(0) {}
 	Vertex(float3 position, float4 color, float3 normal) : position(position), color(color), normal(normal), reflectFactor(0.5f), refractFactor(0.25f) {}
 	Vertex(float3 position, float4 color, float3 normal, float reflectFactor, float refractFactor) : position(position), color(color), normal(normal), reflectFactor(reflectFactor), refractFactor(refractFactor) {}
-	Vertex(float3 position, unsigned char textures[TEXTURE_COUNT], float3 normal, float reflectFactor = 0, float refractFactor = 0) : position(position), normal(normal), reflectFactor(reflectFactor), refractFactor(refractFactor) { std::copy(&textures[0], &textures[TEXTURE_COUNT], this->textures); }
+	//Vertex(float3 position, unsigned char textures[TEXTURE_COUNT], float3 normal, float reflectFactor = 0, float refractFactor = 0) : position(position), normal(normal), reflectFactor(reflectFactor), refractFactor(refractFactor) { std::copy(&textures[0], &textures[TEXTURE_COUNT], this->textures); }
 	//Vertex(float3 position, Color color, float3 normal) : position(position), color(color), normal(normal) {}
-	union {
-		float4 color;
-		unsigned char textures[TEXTURE_COUNT] = { 0 };
-	};
+	float4 color;
 	__declspec(align(4 * sizeof(float))) float3 normal;
 	__declspec(align(4 * sizeof(float))) float3 position;
-	__declspec(align(4 * sizeof(float))) float reflectFactor;
+	__declspec(align(4 * sizeof(float))) float2 uv;
+	float reflectFactor;
 	float refractFactor;
 
 	//bool operator<(const Vertex other);
@@ -203,7 +201,7 @@ struct MultiInstanceBuilder {
 
 struct Instance {
 	Instance() : meshType(-1){};
-	Instance(float16 modelMatrix, float16 invModelMatrix, InstanceBuilder builder) : modelMatrix(modelMatrix), invModelMatrix(invModelMatrix), meshType(builder.meshType) {};
+	Instance(float16 modelMatrix, float16 invModelMatrix, InstanceBuilder builder, int textureId = -1) : modelMatrix(modelMatrix), invModelMatrix(invModelMatrix), meshType(builder.meshType), textureId(textureId) {};
 	bool isInitialized() { return meshType != -1; }
 
 	float16 modelMatrix;
@@ -211,7 +209,8 @@ struct Instance {
 	int meshType;
 	int startVertex;
 	
-	unsigned short texture[28] = { 0 };
+	int textureId;
+	int padding[13];// = { 0 };
 };
 
 struct MultiInstance {

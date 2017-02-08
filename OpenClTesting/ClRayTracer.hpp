@@ -5,6 +5,7 @@
 #include "OpenGlShaders.hpp"
 
 #include "ClReadBuffer.hpp"
+#include "TextureManager.hpp"
 
 #include <unordered_map>
 #include <vector>
@@ -18,6 +19,7 @@
 
 #define GPU_CONTEXT_ID 0			//GPU ID
 #define GPU_DEVICE_ID 0
+#define MAX_TEXTURE_COUNT 2
 
 #define RAY_DEPTH 2
 typedef std::chrono::high_resolution_clock::time_point RtTimePoint;
@@ -35,12 +37,14 @@ public:
 	void clear();
 	void push_back(Instance instance);
 
-	void push_backTexture(std::string path);
+	
 
 
 	InstanceBuilder push_backObjectType(std::vector<TriangleIndices>& objectTypeIndices, std::vector<Vertex>& objectTypeVertices);
 	Instance makeInstance(std::string meshPath, float16 initialTransform = float16(1));
 	void getMeshData(const Instance& instance, std::vector<TriangleIndices>& indicesOut, std::vector<Vertex>& verticesOut);
+	void getMeshVertices(const Instance & instance, std::vector<Vertex>& verticesOut);
+	void getMeshPoints(const Instance & instance, float *& const vertices, int & vertexCount, int & stride);
 
 	//ArraySlice<TriangleIndices> getTriangles(Object object);	// Doing stuff to thise object type will alter every instance of this object type once the buffers are updated
 	//ArraySlice<Vertex> getVertices(Object object);			// Not yet implemented
@@ -54,8 +58,6 @@ public:
 
 	GLFWwindow* getWindow() { return renderer.getWindow(); }
 	void render(float16 matrix);
-
-	std::unordered_map<std::string, size_t> textures;
 
 	void resizeCallback(GLFWwindow * window, int width, int height);
 
@@ -91,9 +93,8 @@ private:
 	std::vector<cl::Buffer> rayTreeBuffers;
 	std::vector<cl::Buffer> hitBuffers;
 
-	std::vector<cl::Image2D> textureBuffers;
-
 	std::unordered_map<std::string, InstanceBuilder> builders;
+	TextureManager textureManager;
 
 
 	bool useInterop = true;

@@ -12,7 +12,7 @@
 //
 //, where left out arguments will default to zero
 
-character 0 2 20		//This will be the player controlled entity
+//character 0 2 20		//This will be the player controlled entity
 tank 0 0.5 0				
 //car 2 1 5
 

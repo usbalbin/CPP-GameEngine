@@ -198,29 +198,48 @@ void pixelsToMesh(int width, int length, std::vector<ubyte3> colors, std::vector
 	calculateNormals(vertices, indices);
 }
 
+void readMtlFile(std::string& filePath, std::string& texturePathOut) {
+	std::ifstream mtlFile(filePath);
+	
+	std::string directory = filePath.substr(0, filePath.find_last_of("/\\"));
 
+	std::string line;
+	while (getline(mtlFile, line)) {
+		if (line.find("map_Kd ") != line.npos)
+			texturePathOut = directory + "/" + line.substr(7);
+	}
+}
 
-void readObjFile(std::vector<Vertex>& vertices, std::vector<TriangleIndices>& indices, std::string& filePath, float reflection, float refraction) {
+void readObjFile(std::vector<Vertex>& vertices, std::vector<TriangleIndices>& indices, std::string& texturePathOut, std::string& filePath, float reflection, float refraction) {
 	std::ifstream objFile;
 	objFile.open(filePath);
 	if (!objFile)
 		throw "Failed to open file " + filePath;
 
+	texturePathOut = "";
+
 	std::string line;
+	std::string directory = filePath.substr(0, filePath.find_last_of("/\\"));
 
 	std::vector<float3> positions;
-	//std::vector<float2> texturePositions;
+	std::vector<float2> texturePositions;
 	std::vector<float3> normals;
 	std::vector<Face> faces;
 
 	std::map<Vertex, int> vertexMap;
 
 	while (getline(objFile, line)) {
-		if (line.find("v ") != line.npos)
+		if (line.find("mtllib ") != line.npos)
+			readMtlFile(directory + "/" + line.substr(7), texturePathOut);
+
+		else if (line.find("v ") != line.npos)
 			positions.push_back(parseFloat3(line.substr(2)));
 		
 		else if (line.find("vn ") != line.npos)
 			normals.push_back(parseFloat3(line.substr(3)));
+
+		else if (line.find("vt ") != line.npos)
+			texturePositions.push_back(parseFloat2(line.substr(3)));
 
 
 		else if (line.find("f ") != line.npos) {
@@ -232,44 +251,18 @@ void readObjFile(std::vector<Vertex>& vertices, std::vector<TriangleIndices>& in
 
 		TriangleIndices triangleIndices;
 
-		addVertex(std::get<0>(face), &triangleIndices.a, vertexMap, vertices, positions, normals, reflection, refraction);
+		addVertex(std::get<0>(face), &triangleIndices.a, vertexMap, vertices, positions, texturePositions, normals, reflection, refraction);
 
-		addVertex(std::get<1>(face), &triangleIndices.b, vertexMap, vertices, positions, normals, reflection, refraction);
+		addVertex(std::get<1>(face), &triangleIndices.b, vertexMap, vertices, positions, texturePositions, normals, reflection, refraction);
 
-		addVertex(std::get<2>(face), &triangleIndices.c, vertexMap, vertices, positions, normals, reflection, refraction);
+		addVertex(std::get<2>(face), &triangleIndices.c, vertexMap, vertices, positions, texturePositions, normals, reflection, refraction);
 
 		indices.push_back(triangleIndices);
 	}
-	int max = -1, min = INT_MAX;
-	for (TriangleIndices triIndices : indices) {
-		if (triIndices.a >= vertices.size() || triIndices.a < 0)
-			throw;
-		if (triIndices.b >= vertices.size() || triIndices.b < 0)
-			throw;
-		if (triIndices.c >= vertices.size() || triIndices.c < 0)
-			throw;
-		max = std::max({ max, triIndices.a, triIndices.b, triIndices.c });
-		min = std::min({ min, triIndices.a, triIndices.b, triIndices.c });
-	}
-
-	float3 maxPos(-FLT_MAX, -FLT_MAX, -FLT_MAX), minPos(FLT_MAX, FLT_MAX, FLT_MAX);
-	for (auto v : vertices) {
-		maxPos = float3(
-			std::max(maxPos.x, v.position.x),
-			std::max(maxPos.y, v.position.y),
-			std::max(maxPos.z, v.position.z)
-		);
-		minPos = float3(
-			std::min(minPos.x, v.position.x),
-			std::min(minPos.y, v.position.y),
-			std::min(minPos.z, v.position.z)
-		);
-	}
-	int x = 0;
 }
 
-void addVertex(FaceElement facePart, int* indexOut, std::map<Vertex, int>& vertexMap, std::vector<Vertex>& vertices, std::vector<float3>& positions,/* std::vector<float3>& texturePositions,*/ std::vector<float3>& normals, float reflection, float refraction) {
-	Vertex vertex = facePartToVertex(facePart, positions, normals);
+void addVertex(FaceElement facePart, int* indexOut, std::map<Vertex, int>& vertexMap, std::vector<Vertex>& vertices, std::vector<float3>& positions, std::vector<float2>& texturePositions, std::vector<float3>& normals, float reflection, float refraction) {
+	Vertex vertex = facePartToVertex(facePart, positions, texturePositions, normals);
 	vertex.reflectFactor = reflection;
 	vertex.refractFactor = refraction;
 
@@ -282,12 +275,16 @@ void addVertex(FaceElement facePart, int* indexOut, std::map<Vertex, int>& verte
 		*indexOut = vertexMap[vertex];
 }
 
-Vertex facePartToVertex(FaceElement facePart, std::vector<float3>& positions,/* std::vector<float3>& texturePositions,*/ std::vector<float3>& normals) {
+Vertex facePartToVertex(FaceElement facePart, std::vector<float3>& positions, std::vector<float2>& texturePositions, std::vector<float3>& normals) {
 	Vertex vertex;
 	vertex.position = positions[std::get<0>(facePart)];
 	vertex.color = float4(0.2f);
 
-	//vertex.uv = texturePositions[std::get<1>(facePart)]
+	if (std::get<1>(facePart) != -1)
+		vertex.uv = texturePositions[std::get<1>(facePart)];
+	else
+		vertex.uv = vertex.position.xz;
+
 	if (std::get<2>(facePart) != -1)
 		vertex.normal = normals[std::get<2>(facePart)];
 	else
@@ -354,6 +351,17 @@ float3 parseFloat3(std::string str) {
 	size_t pos;
 
 	for (int i = 0; i < 3; i++) {
+		result[i] = std::stof(str, &pos);
+		str = str.substr(pos);
+	}
+	return result;
+}
+
+float2 parseFloat2(std::string str) {
+	float2 result;
+	size_t pos;
+
+	for (int i = 0; i < 2; i++) {
 		result[i] = std::stof(str, &pos);
 		str = str.substr(pos);
 	}
