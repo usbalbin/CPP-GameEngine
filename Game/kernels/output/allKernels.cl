@@ -253,7 +253,7 @@ void kernel rayTraceAdvanced(
 Hit sky(Ray ray){
 	Hit hit;
 	hit.ray = ray;
-	hit.vertex.color = (float4)(1.0f, 0.41f, 0.71f, 1.0f);
+	hit.vertex.color = (float4)(0.4f, 0.4f, 1.0f, 1.0f);
 	hit.vertex.reflectFactor = 0.0f;
 	hit.vertex.refractFactor = 0.0f;
 	return hit;

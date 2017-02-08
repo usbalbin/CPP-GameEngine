@@ -102,7 +102,7 @@ void GameEngine::draw()
 
 	glm::vec3 relativeCameraPos(0, 0, 0);
 	//Character fps camera
-	glm::mat4 cameraMatrix = toMatrix(glm::vec3(0, 0.1f, -0.21f)) * glm::rotate(glm::rotate(glm::mat4(1), pitch, glm::vec3(1, 0, 0)), yaw, glm::vec3(0, 1.0f, 0)) * toMatrix(relativeCameraPos) * player->getTranslationMatrix();
+	//glm::mat4 cameraMatrix = toMatrix(glm::vec3(0, 0.1f, -0.21f)) * glm::rotate(glm::rotate(glm::mat4(1), pitch, glm::vec3(1, 0, 0)), yaw, glm::vec3(0, 1.0f, 0)) * toMatrix(relativeCameraPos) * player->getTranslationMatrix();
 
 	//Tank 3ps camera
 	//glm::mat4 cameraMatrix = toMatrix(glm::vec3(0, 0, 5)) * glm::rotate(glm::rotate(glm::mat4(1), pitch + 1.1f * PI_HALF, glm::vec3(1, 0, 0)), yaw, glm::vec3(0, 1.0f, 0)) * player->getTranslationMatrix();

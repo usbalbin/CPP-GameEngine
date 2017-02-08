@@ -10,7 +10,9 @@ public:
 	Player(std::vector<Entity*>& allEntities, ClRayTracer * renderer, btDiscreteDynamicsWorld * physics, glm::vec3 position, float yaw = 0, float pitch = 0, float roll = 0);
 	~Player();
 
-	void draw();
+	virtual glm::mat4 cameraMatrix(float yaw, float pitch, bool firstPerson = true) override;
+	
+	void draw() const override;
 	void handleInput(const Input& input, float deltaTime) override;
 private:
 
@@ -20,7 +22,7 @@ private:
 
 
 	bool lastEnterVehicleKeyPressed = false;
-	bool isInVehicle();
+	bool isInVehicle() const;
 	void enterVehicle();
 	void exitVehicle();
 

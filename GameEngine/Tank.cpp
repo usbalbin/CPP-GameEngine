@@ -167,7 +167,7 @@ void Tank::handleInput(const Input& input, float deltaTime) {
 	float steering = input.leftStick.x;
 
 	btClamp(speed, -1.0f, +1.0f);
-	float direction = atan2(steering, speed);
+	float direction = steering * PI_HALF;
 	float leftSpeed = speed + sinf(direction);
 	float rightSpeed = speed + sinf(-direction);
 	btClamp(leftSpeed,  -1.0f, +1.0f);
@@ -180,10 +180,10 @@ void Tank::handleInput(const Input& input, float deltaTime) {
 
 		
 		((btHinge2Constraint*)wheelConstraints[i])->setTargetVelocity(motorIndex, leftSpeed * maxSpeed);
-		((btHinge2Constraint*)wheelConstraints[i++])->setMaxMotorForce(motorIndex, (leftSpeed || rightSpeed) ? 1000 : 100);
+		((btHinge2Constraint*)wheelConstraints[i++])->setMaxMotorForce(motorIndex, 1000);
 
 		((btHinge2Constraint*)wheelConstraints[i])->setTargetVelocity(motorIndex, rightSpeed * maxSpeed);
-		((btHinge2Constraint*)wheelConstraints[i++])->setMaxMotorForce(motorIndex, (leftSpeed || rightSpeed) ? 1000 : 100);
+		((btHinge2Constraint*)wheelConstraints[i++])->setMaxMotorForce(motorIndex, 1000);
 	}
 
 	handleTurretInput(input, deltaTime);
@@ -193,8 +193,8 @@ void Tank::handleTurretInput(const Input& input, float deltaTime) {
 	cannon->updateBarrel(input, 6);//TODO: Define constants for inputs
 
 	
-	turretPitch -= input.rightStick.y * 0.1f * deltaTime;
-	turretYaw -= input.rightStick.x * 0.25f * deltaTime;
+	turretPitch += input.rightStick.y * 0.1f * deltaTime;
+	turretYaw += input.rightStick.x * 0.25f * deltaTime;
 
 	int motorIndex = 3;
 
