@@ -12,10 +12,12 @@ class MainFrame : public wxFrame
 {
 public:
 	MainFrame();
+	~MainFrame();
 	wxButton* Start;
 	wxButton* filbladdrarknapp;
 	wxCheckBox* Fullscreen;
 	wxCheckBox* Forcecpu;
+	//wxCheckBox* Multiplayer;
 	wxTextCtrl* Nickname;
 	wxTextCtrl* Servername;
 	wxTextCtrl* Serverport;
@@ -23,6 +25,9 @@ public:
 	wxArrayString ResolutionArray;
 	wxFileDialog *filbladdare;
 	wxTextCtrl* scenariostring;
+	wxStaticBitmap* backGround;
+	std::string ImagePath = "../Game/content/bg.png";
+	wxBoxSizer* bSizer1;
 	int i;
 	int width;
 	int height;
