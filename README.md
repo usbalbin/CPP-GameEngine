@@ -1,6 +1,22 @@
-# RayTracer
-Reverse Ray Tracer for rendering graphics using CPU or GPU via OpenCL.
+# Title
 
+## Survival game
+- Multiplayer?
+	- Fix shooting in multiplayer
+- Survive:
+	- Add support for dying, taking damage etc.
+- Bad guys: Zombies?
+	- Make basic AI that can hurt the player(s)
+- Loot: weapons, vehicles
+	- Add content; vehicles and weapons
+	- Add support for picking up weapons
+- Terrain:
+	- Large terrain from .bmp's
+	- Loot/zombie zones from .bmp
+	- Heightbased texture mix
+	- Terrain decoration:
+		- Trees, bushes
+		- 2D grass things
 
 ##IMPORTANT
 

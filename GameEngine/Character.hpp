@@ -16,6 +16,11 @@ public:
 	~Character();
 	void handleInput(const Input& input, float deltaTime) override;
 	void moveTo(glm::vec3 position, float yaw);
+	glm::mat4 cameraMatrix(float yaw, float pitch, bool firstPerson = true) override;
+	
+	float getYaw() { return yaw; }
+	float getPitch() { return pitch; }
+
 protected:
 	float rideHeight = 0.2f;
 	glm::vec3 bodyHalfExtents = glm::vec3(0.3f, 0.25f, 0.075f);

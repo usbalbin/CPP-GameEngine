@@ -57,7 +57,7 @@ void Input::readKeyBoard(){
 void Input::readMouse(float deltaTime){
 	static double lastPosX = 0, lastPosY = 0;
 	double posX = 0, posY = 0;
-	double mouseSense = 2;
+	double mouseSense = 0.1f;
 
 	glfwGetCursorPos(renderer->getWindow(), &posX, &posY);
 
@@ -65,12 +65,14 @@ void Input::readMouse(float deltaTime){
 //#ifdef _DEBUG
 	if (glfwGetMouseButton(renderer->getWindow(), GLFW_MOUSE_BUTTON_3) == GLFW_PRESS) {
 //#endif
-		rightStick.x -= (posX - lastPosX) * deltaTime * mouseSense;
-		rightStick.y += (posY - lastPosY) * deltaTime * mouseSense;
+		glfwSetInputMode(renderer->getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		rightStick.x -= (posX - lastPosX) * mouseSense;
+		rightStick.y += (posY - lastPosY) * mouseSense;
 //#ifdef _DEBUG
-	}
+	}else
+		glfwSetInputMode(renderer->getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 //#else
-//	glfwSetCursorPos(renderer->getWindow(), 0, 0);
+	//glfwSetCursorPos(renderer->getWindow(), 0, 0);
 //#endif
 
 	lastPosX = posX;

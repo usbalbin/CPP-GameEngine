@@ -238,3 +238,11 @@ void Character::moveTo(glm::vec3 position, float yaw)
 	//*constraints[0] = btHinge2Constraint(*parts[0]->physicsObject, *parts[1]->physicsObject, toVector3(position + wheelPos), btVector3(0, 1, 0), btVector3(1, 0, 0));
 	//btHinge2Constraint* connection = new btHinge2Constraint(*parts[0]->physicsObject, *parts[1]->physicsObject, toVector3(position + wheelPos), btVector3(0, 1, 0), btVector3(1, 0, 0));
 }
+
+glm::mat4 Character::cameraMatrix(float yaw, float pitch, bool firstPerson)
+{
+	glm::vec3 relativeCameraPos(0.35f, -0.3f, -0.4f);
+	
+
+	return Entity::cameraMatrix(yaw, pitch, relativeCameraPos);
+}

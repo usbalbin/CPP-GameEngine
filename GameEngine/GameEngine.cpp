@@ -29,6 +29,7 @@
 #include "Terrain.hpp"
 #include "Cannon.hpp"
 #include "TestEntity.hpp"
+#include "Zombie.hpp"
 
 #include "Options.hpp"
 
@@ -52,13 +53,14 @@ void GameEngine::initialize() {
 	int s = sizeof(Vertex);
 
 	openScene(options.scenarioPath);
+	players.push_back((Player*)player);
 //	gameEntities.push_back(
 //		new Terrain(&renderer, physics)
 //	);
-	/*
+	
 	addEntity(
-		new TestEntity(renderer, physics, glm::vec3(0, 100, 0))
-	);*/
+		new Zombie(players, renderer, physics, glm::vec3(0, 100, 0))
+	);
 }
 
 void GameEngine::openScene(std::string fileName)
