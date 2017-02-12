@@ -1,5 +1,5 @@
-#define TEXTURE_ARGS  read_only image2d_t texture0, read_only image2d_t texture1
-#define GET_TEXTURE_COLOR(RES_COLOR,TEX_ID,TEX_POS) switch(TEX_ID){case 0:	RES_COLOR = read_imagef(texture0, sampler, TEX_POS).xyzw;	break;case 1:	RES_COLOR = read_imagef(texture1, sampler, TEX_POS).xyzw;	break;}
+#define TEXTURE_ARGS  read_only image2d_t texture0, read_only image2d_t texture1, read_only image2d_t texture2, read_only image2d_t texture3
+#define GET_TEXTURE_COLOR(RES_COLOR,TEX_ID,TEX_POS) switch(TEX_ID){case 0:	RES_COLOR = read_imagef(texture0, sampler, TEX_POS).xyzw;	break;case 1:	RES_COLOR = read_imagef(texture1, sampler, TEX_POS).xyzw;	break;case 2:	RES_COLOR = read_imagef(texture2, sampler, TEX_POS).xyzw;	break;case 3:	RES_COLOR = read_imagef(texture3, sampler, TEX_POS).xyzw;	break;}
 
 
 kernel void debug(

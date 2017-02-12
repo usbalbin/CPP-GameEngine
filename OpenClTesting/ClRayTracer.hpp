@@ -19,7 +19,7 @@
 
 #define GPU_CONTEXT_ID 0			//GPU ID
 #define GPU_DEVICE_ID 0
-#define MAX_TEXTURE_COUNT 2
+#define MAX_TEXTURE_COUNT 4
 
 #define RAY_DEPTH 2
 typedef std::chrono::high_resolution_clock::time_point RtTimePoint;
