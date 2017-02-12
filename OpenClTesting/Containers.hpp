@@ -94,6 +94,7 @@ struct Vertex {
 	//bool operator<(const Vertex other);
 };
 bool operator<(Vertex, Vertex);
+bool operator==(const Vertex&, const Vertex&);
 
 
 

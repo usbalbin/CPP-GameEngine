@@ -227,7 +227,7 @@ void readObjFile(std::vector<Vertex>& vertices, std::vector<TriangleIndices>& in
 	std::vector<float3> normals;
 	std::vector<Face> faces;
 
-	std::map<Vertex, int> vertexMap;
+	std::unordered_map<Vertex, int, VertexHasher> vertexMap;
 
 	while (getline(objFile, line)) {
 		line = line.substr(0, line.find("#"));
@@ -264,7 +264,21 @@ void readObjFile(std::vector<Vertex>& vertices, std::vector<TriangleIndices>& in
 	}
 }
 
-void addVertex(FaceElement facePart, int* indexOut, std::map<Vertex, int>& vertexMap, std::vector<Vertex>& vertices, std::vector<float3>& positions, std::vector<float2>& texturePositions, std::vector<float3>& normals, float reflection, float refraction) {
+void readObjPoints(std::vector<glm::vec3> pointsOut, std::string& filePath) {
+	std::ifstream objFile;
+	objFile.open(filePath);
+	if (!objFile)
+		throw "Failed to open file " + filePath;
+
+	std::string line;
+	while (getline(objFile, line)) {
+		line = line.substr(0, line.find("#"));
+		if (line.find("v ") != line.npos)
+			pointsOut.push_back(parseFloat3(line.substr(2)));
+	}
+}
+
+void addVertex(FaceElement facePart, int* indexOut, std::unordered_map<Vertex, int, VertexHasher>& vertexMap, std::vector<Vertex>& vertices, std::vector<float3>& positions, std::vector<float2>& texturePositions, std::vector<float3>& normals, float reflection, float refraction) {
 	Vertex vertex = facePartToVertex(facePart, positions, texturePositions, normals);
 	vertex.reflectFactor = reflection;
 	vertex.refractFactor = refraction;
@@ -408,7 +422,7 @@ void splitMesh(std::vector<Vertex>& vertices, std::vector<TriangleIndices>& indi
 
 	std::sort(indices.begin(), indices.end(), sortingFunction);
 
-	std::map<int, int> dictionary;
+	std::unordered_map<int, int> dictionary;
 	for (int i = 0; i < indices.size() / 2; i++) {
 		TriangleIndices triIndex = indices[i];
 		TriangleIndices translatedTriIndex;

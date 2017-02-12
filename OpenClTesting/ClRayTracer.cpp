@@ -317,10 +317,10 @@ void ClRayTracer::readObjMulti(std::vector<Vertex>& verticesOut, std::unordered_
 	std::unordered_map<std::string, std::vector<Face>> faces;
 	std::string materialName = filePath;
 
-	std::map<Vertex, int> vertexMap;
+	std::unordered_map<Vertex, int, VertexHasher> vertexMap;
 
 	//Key is materialName, value is libFile
-	std::map<std::string, std::string> nameToMtlLib;
+	std::unordered_map<std::string, std::string> nameToMtlLib;
 
 	while (getline(objFile, line)) {
 		line = line.substr(0, line.find("#"));
