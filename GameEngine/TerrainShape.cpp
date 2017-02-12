@@ -37,7 +37,7 @@ void TerrainShape::initializeBuilder(ClRayTracer* renderer, btDiscreteDynamicsWo
 	
 	int imageWidth = 2, imageHeight = 2;
 
-	std::vector<ubyte3> pixels = readBmpPixels(std::string("content/heightmap2.bmp"), &imageWidth, &imageHeight);
+	std::vector<ubyte3> pixels = readBmpPixels(std::string("content/Terrain/heightmap2.bmp"), &imageWidth, &imageHeight);
 	/*{
 		ubyte3(0, 0, 0), ubyte3(0, 0, 0),
 		ubyte3(0, 0, 0), ubyte3(1, 0, 0),

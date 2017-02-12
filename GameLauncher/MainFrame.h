@@ -27,7 +27,7 @@ public:
 	wxFileDialog *filbladdare;
 	wxTextCtrl* scenariostring;
 	wxStaticBitmap* backGround;
-	std::string ImagePath = "../Game/content/bg.png";
+	std::string ImagePath = "content/Pictures/bg.png";
 	wxBoxSizer* bSizer1;
 	wxHyperlinkCtrl* urlToBugReport;
 	int i;
