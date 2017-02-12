@@ -21,7 +21,7 @@ Cylinder::Cylinder(Entity* parent, ClRayTracer* renderer, btDiscreteDynamicsWorl
 	
 
 	
-	Instance instance = renderer->makeInstance("content/basicObjects/cylinder.obj");
+	Instance instance = renderer->makeInstanceOld("content/basicObjects/cylinder.obj");
 
 	btCylinderShape* boxShape = new btCylinderShape(btVector3(scale.x, scale.y, scale.z));
 

@@ -218,8 +218,9 @@ struct Instance {
 struct MultiInstance {
 	MultiInstance() {}
 	MultiInstance(float16& modelMatrix, MultiInstanceBuilder& builder) {
+		auto inv = glm::inverse(modelMatrix);
 		for (auto& instanceBuilder : builder.instanceBuilders)
-			instances.emplace_back(modelMatrix, glm::inverse(modelMatrix), instanceBuilder);
+			instances.emplace_back(modelMatrix, inv, instanceBuilder);
 	}
 	std::vector<Instance> instances;
 	bool isInitialized() { return !instances.empty() && instances[0].isInitialized(); }

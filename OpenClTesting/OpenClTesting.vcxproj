@@ -176,11 +176,15 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StridingMesh.hpp" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="TextureManager.hpp" />
+    <ClInclude Include="MaterialManager.hpp" />
     <ClInclude Include="Utils.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BvhTree.cpp" />
+    <ClCompile Include="BvhTree.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Disabled</Optimization>
+      <IntrinsicFunctions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IntrinsicFunctions>
+      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</WholeProgramOptimization>
+    </ClCompile>
     <ClCompile Include="ClRayTracer.cpp" />
     <ClCompile Include="Containers.cpp" />
     <ClCompile Include="DebugRayTracer.cpp" />
@@ -197,8 +201,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="StridingMesh.cpp" />
-    <ClCompile Include="TextureManager.cpp" />
-    <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="MaterialManager.cpp" />
+    <ClCompile Include="Utils.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Disabled</Optimization>
+      <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</WholeProgramOptimization>
+      <IntrinsicFunctions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IntrinsicFunctions>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="kernels\aabb.cl" />

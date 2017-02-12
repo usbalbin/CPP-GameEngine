@@ -21,7 +21,8 @@ public:
 	Shape();
 	Shape(Entity* parent, ClRayTracer * renderer, btDiscreteDynamicsWorld* physics);
 
-	void initialize(Instance& graphicsObject, btRigidBody* physicsObject);
+	void initialize(MultiInstance& graphicsObject, btRigidBody* physicsObject);
+	void initialize(Instance & graphicsObject, btRigidBody * physicsObject);
 	~Shape();
 	virtual void update(float deltaTime);
 	virtual void draw();
@@ -48,7 +49,7 @@ protected:
 	bool isServer();
 
 private:
-	Instance graphicsObject;
+	MultiInstance graphicsObject;
 	btCollisionShape* physicsShape = nullptr;
 };
 

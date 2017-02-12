@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <queue>
+#include <unordered_map>
 
 /*inline float3 max(float3 l, float3 r) {
 	return float3(
@@ -120,7 +121,7 @@ std::vector<ubyte3> readBmpPixels(std::string& filePath, int* widthOut, int* hei
 	return pixels;
 }
 
-std::vector<ubyte4> readBmpPixels4(std::string& filePath, int* widthOut, int* heightOut) {
+std::vector<ubyte4> readBmpPixels4(const std::string& filePath, int* widthOut, int* heightOut) {
 	std::ifstream bmpFile(filePath, std::ios_base::binary);
 	if (!bmpFile)
 		throw filePath + " not found!";

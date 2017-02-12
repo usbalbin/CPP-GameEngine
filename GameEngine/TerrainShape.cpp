@@ -22,7 +22,6 @@ TerrainShape::TerrainShape(ClRayTracer * renderer, btDiscreteDynamicsWorld * phy
 	}
 	Instance instance(matrix, glm::inverse(matrix), graphicsObjectBuilder);
 	
-	
 	btDefaultMotionState* motionState = new btDefaultMotionState(btTransform::getIdentity());
 
 	btRigidBody* rigidBody = new btRigidBody(0, motionState, terrainShape);

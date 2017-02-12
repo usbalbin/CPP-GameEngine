@@ -47,7 +47,7 @@ vt 1.0000000000 0.75 #14
 #f 2/5/1 8/11/1 4/6/1 	#vänster-ner +1, höger-upp +1, vänster-upp +1
 
 
-
+usemtl zombieHead
 
 
 f 1/4/2 7/8/2 5/9/2 	#vänster-ner -1, höger-upp -1, höger-ner -1

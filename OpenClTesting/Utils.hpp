@@ -33,7 +33,7 @@ void calculateNormals(std::vector<Vertex>& vertices, const std::vector<TriangleI
 
 std::vector<ubyte3> readBmpPixels(std::string& filePath, int* widthOut, int* heightOut);
 
-std::vector<ubyte4> readBmpPixels4(std::string& filePath, int* widthOut, int* heightOut);
+std::vector<ubyte4> readBmpPixels4(const std::string& filePath, int* widthOut, int* heightOut);
 
 void pixelsToMesh(int width, int length, std::vector<ubyte3> colors, std::vector<Vertex>& vertices, std::vector<TriangleIndices>& indices);
 

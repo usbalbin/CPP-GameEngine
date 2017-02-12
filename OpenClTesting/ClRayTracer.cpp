@@ -14,6 +14,7 @@
 #include <stack>
 #include <atomic>
 #include <iomanip>
+#include <fstream>
 
 #ifdef _WIN32
 #include <direct.h>
@@ -81,7 +82,7 @@ void ClRayTracer::initialize() {
 		useInterop = false;
 	}
 
-	textureManager = TextureManager(MAX_TEXTURE_COUNT, context);
+	materialManager = MaterialManager(MAX_TEXTURE_COUNT, context);
 
 	cl::Program::Sources sources;
 	std::string debugSource = readFileToString("kernels/debug.cl");
@@ -92,8 +93,8 @@ void ClRayTracer::initialize() {
 	std::string colorToPixelSource = readFileToString("kernels/newKernels/4_colorToPixel.cl");
 
 
-	sources.push_back( "#define TEXTURE_ARGS " + textureManager.genOclTextureArgumentsCode() + "\n" );
-	sources.push_back( "#define GET_TEXTURE_COLOR(RES_COLOR,TEX_ID,TEX_POS) " + textureManager.genOclTextureBlendCode() + "\n");
+	sources.push_back( "#define TEXTURE_ARGS " + materialManager.genOclTextureArgumentsCode() + "\n" );
+	sources.push_back( "#define GET_TEXTURE_COLOR(RES_COLOR,TEX_ID,TEX_POS) " + materialManager.genOclTextureBlendCode() + "\n");
 	sources.push_back({ debugSource.c_str(), debugSource.length() });
 	sources.push_back({ perspectiveRayGeneratorSource.c_str(), perspectiveRayGeneratorSource.length() });
 	sources.push_back({ rayTraceAdvancedSource.c_str(), rayTraceAdvancedSource.length() });
@@ -182,7 +183,11 @@ void ClRayTracer::push_back(Instance instance) {
 	this->transformedVertexCount += objectType.numVertices;
 }
 
-
+void ClRayTracer::push_back(MultiInstance& multiInstance)
+{
+	for (auto& instance : multiInstance.instances)
+		push_back(instance);
+}
 
 
 InstanceBuilder ClRayTracer::push_backObjectType(std::vector<TriangleIndices>& objectTypeIndices, std::vector<Vertex>& objectTypeVertices) {
@@ -208,7 +213,31 @@ InstanceBuilder ClRayTracer::push_backObjectType(std::vector<TriangleIndices>& o
 	return instanceBuilder;
 }
 
-Instance ClRayTracer::makeInstance(std::string meshPath, float16 initialTransform) {
+InstanceBuilder ClRayTracer::push_backObjectType(std::vector<TriangleIndices>& objectTypeIndices, std::vector<Vertex>& objectTypeVertices, const InstanceBuilder & builderWithCommonVertices)
+{
+	Object objectType;
+	BvhTree bvhTree(objectTypeIndices, objectTypeVertices);
+
+	objectType.bvhRootNodeIndex = this->objectTypeTriangleBvhNodes.size();
+	objectType.bvhTreeSize = bvhTree.getCurNodeIndex();
+	bvhTree.appendNodesToVector(objectTypeTriangleBvhNodes.getHostData());
+
+	objectType.startTriangle = this->objectTypeIndices.size();
+	objectType.startVertex = builderWithCommonVertices.startVertex;
+	objectType.numTriangles = objectTypeIndices.size();
+	objectType.numVertices = builderWithCommonVertices.numVertices;
+
+	this->objectTypes.push_back(objectType);
+	this->objectTypeIndices.insert_back(objectTypeIndices);
+
+	const int meshType = objectTypes.size() - 1;
+	InstanceBuilder instanceBuilder(objectType, meshType);
+
+	return instanceBuilder;
+}
+
+//depricated
+Instance ClRayTracer::makeInstanceOld(std::string meshPath, float16 initialTransform) {
 	if (builders.find(meshPath) != builders.end())
 		return Instance(initialTransform, glm::inverse(initialTransform), builders[meshPath]);
 
@@ -220,9 +249,123 @@ Instance ClRayTracer::makeInstance(std::string meshPath, float16 initialTransfor
 	std::string texturePath;
 	readObjFile(vertices, indices, texturePath, meshPath);
 	builders[meshPath] = push_backObjectType(indices, vertices);
-	builders[meshPath].texId = texturePath.length() ? textureManager.getTextureId(texturePath) : -1;
+	builders[meshPath].texId = texturePath.length() ? materialManager.getTextureId(texturePath) : -1;
 	
 	return Instance(initialTransform, glm::inverse(initialTransform), builders[meshPath]);
+}
+
+MultiInstance ClRayTracer::makeInstance(std::string meshPath, float16 initialTransform)
+{
+	if (multiBuilders.find(meshPath) != multiBuilders.end())
+		return MultiInstance(initialTransform, multiBuilders[meshPath]);
+
+	float reflection = 0;
+	float refraction = 0;
+	std::vector<Vertex> vertices;
+	std::unordered_map<std::string, std::vector<TriangleIndices>> indices;
+	MultiInstanceBuilder multiBuilder;
+	
+	readObjMulti(vertices, indices, meshPath);
+	InstanceBuilder firstBuilder;
+	{//First builder will have all vertices
+		auto& firstP = *indices.begin();
+		auto& indexList = firstP.second;
+		const std::string& materialName = firstP.first;
+		const Material& material = materialManager.getMaterial(materialName);
+		const std::string& texturePath = material.texturePath;
+
+		std::string builderKey = meshPath + ':' + materialName;
+
+		firstBuilder = push_backObjectType(indexList, vertices);
+		firstBuilder.texId = materialManager.getTextureId(texturePath);
+		multiBuilder.instanceBuilders.push_back(firstBuilder);
+
+		indices.erase(firstP.first);
+	}
+
+	for (auto& p : indices) {//The rest of the builders will use the first ones vertices
+		auto& indexList = p.second;
+		const std::string& materialName = p.first;
+		const Material& material = materialManager.getMaterial(materialName);
+		const std::string& texturePath = material.texturePath;
+
+		std::string builderKey = meshPath + ':' + materialName;
+
+
+		auto builder = push_backObjectType(indexList, vertices, firstBuilder);
+		builder.texId = materialManager.getTextureId(texturePath);
+		multiBuilder.instanceBuilders.push_back(builder);
+	}
+	multiBuilders[meshPath] = multiBuilder;
+	return MultiInstance(initialTransform, multiBuilder);
+}
+
+void ClRayTracer::readObjMulti(std::vector<Vertex>& verticesOut, std::unordered_map<std::string, std::vector<TriangleIndices>>& indicesOut, std::string & filePath, float reflection, float refraction) {
+	std::ifstream objFile;
+	objFile.open(filePath);
+	if (!objFile)
+		throw "Failed to open file " + filePath;
+
+	
+
+	std::string line;
+	std::string directory = filePath.substr(0, filePath.find_last_of("/\\"));
+
+	std::vector<float3> positions;
+	std::vector<float2> texturePositions;
+	std::vector<float3> normals;
+	std::unordered_map<std::string, std::vector<Face>> faces;
+	std::string materialName = filePath;
+
+	std::map<Vertex, int> vertexMap;
+
+	//Key is materialName, value is libFile
+	std::map<std::string, std::string> nameToMtlLib;
+
+	while (getline(objFile, line)) {
+		line = line.substr(0, line.find("#"));
+
+		if (line.find("usemtl ") != line.npos)
+			materialName = nameToMtlLib[line.substr(7)] + ':' + line.substr(7);
+
+		else if (line.find("mtllib ") != line.npos) {
+			auto materialNames = materialManager.readMtlFileMulti(directory + "/" + line.substr(7));
+			for (auto name : materialNames)
+				nameToMtlLib[name] = directory + "/" + line.substr(7);
+		}
+
+		else if (line.find("v ") != line.npos)
+			positions.push_back(parseFloat3(line.substr(2)));
+
+		else if (line.find("vn ") != line.npos)
+			normals.push_back(parseFloat3(line.substr(3)));
+
+		else if (line.find("vt ") != line.npos)
+			texturePositions.push_back(parseFloat2(line.substr(3)));
+
+
+		else if (line.find("f ") != line.npos)
+			faces[materialName].push_back(parseFace(line.substr(2)));
+
+	}
+
+	for (auto& p : faces) {
+		auto& material = p.first;
+		auto& faceList = p.second;
+
+		for (Face& face : faceList) {
+			TriangleIndices triangleIndices;
+
+			addVertex(std::get<0>(face), &triangleIndices.a, vertexMap, verticesOut, positions, texturePositions, normals, reflection, refraction);
+			addVertex(std::get<1>(face), &triangleIndices.b, vertexMap, verticesOut, positions, texturePositions, normals, reflection, refraction);
+			addVertex(std::get<2>(face), &triangleIndices.c, vertexMap, verticesOut, positions, texturePositions, normals, reflection, refraction);
+
+			indicesOut[material].push_back(triangleIndices);
+		}
+	}
+
+	if (indicesOut[filePath].size() < 1)//Remove default material if not being used
+		indicesOut.erase(filePath);
 }
 
 void ClRayTracer::getMeshData(const Instance & instance, std::vector<TriangleIndices>& indices, std::vector<Vertex>& vertices) {
@@ -240,6 +383,9 @@ void ClRayTracer::getMeshVertices(const Instance & instance, std::vector<Vertex>
 	std::copy(&objectTypeVertices[object.startTriangle], &objectTypeVertices[object.startVertex + object.numVertices], verticesOut.begin());
 }
 
+void ClRayTracer::getMeshPointsJoinedMulti(const MultiInstance & instance, float*& const vertices, int& vertexCount, int& stride) {
+	getMeshPoints(instance.instances[0], vertices, vertexCount, stride);
+}
 void ClRayTracer::getMeshPoints(const Instance & instance, float*& const vertices, int& vertexCount, int& stride) {
 	const Object object = objectTypes[instance.meshType];
 	vertices = &(objectTypeVertices[object.startVertex].position.x);
@@ -318,7 +464,7 @@ void ClRayTracer::render(float16 matrix) {
 	rayTraceAdvancedKernel.setArg(7, hitBuffers[0]);
 	rayTraceAdvancedKernel.setArg(8, rayTreeBuffers[0]);
 
-	textureManager.setTextureArguments(9, rayTraceAdvancedKernel);
+	materialManager.setTextureArguments(9, rayTraceAdvancedKernel);
 
 	queue.enqueueNDRangeKernel(rayTraceAdvancedKernel, cl::NullRange, cl::NDRange(width * height));
 	queue.finish();

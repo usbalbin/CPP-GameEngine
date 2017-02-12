@@ -5,7 +5,7 @@
 #include "OpenGlShaders.hpp"
 
 #include "ClReadBuffer.hpp"
-#include "TextureManager.hpp"
+#include "MaterialManager.hpp"
 
 #include <unordered_map>
 #include <vector>
@@ -19,7 +19,7 @@
 
 #define GPU_CONTEXT_ID 0			//GPU ID
 #define GPU_DEVICE_ID 0
-#define MAX_TEXTURE_COUNT 4
+#define MAX_TEXTURE_COUNT 8
 
 #define RAY_DEPTH 2
 typedef std::chrono::high_resolution_clock::time_point RtTimePoint;
@@ -37,14 +37,26 @@ public:
 	void clear();
 	void push_back(Instance instance);
 
+	void push_back(MultiInstance & multiInstance);
+
 	
 
 
 	InstanceBuilder push_backObjectType(std::vector<TriangleIndices>& objectTypeIndices, std::vector<Vertex>& objectTypeVertices);
-	Instance makeInstance(std::string meshPath, float16 initialTransform = float16(1));
+	InstanceBuilder push_backObjectType(std::vector<TriangleIndices>& objectTypeIndices, std::vector<Vertex>& objectTypeVertices, const InstanceBuilder & builderWithCommonVertices);
+
+	Instance makeInstanceOld(std::string meshPath, float16 initialTransform = float16(1));
+	MultiInstance makeInstance(std::string meshPath, float16 initialTransform = float16(1));
+	
+	//The key indices is formated like "<MTL-path>:<materialName>"
+	void readObjMulti(std::vector<Vertex>& vertices, std::unordered_map<std::string, std::vector<TriangleIndices>>& indices, std::string & filePath, float reflection = 0, float refraction = 0);
+	
 	void getMeshData(const Instance& instance, std::vector<TriangleIndices>& indicesOut, std::vector<Vertex>& verticesOut);
 	void getMeshVertices(const Instance & instance, std::vector<Vertex>& verticesOut);
 	void getMeshPoints(const Instance & instance, float *& const vertices, int & vertexCount, int & stride);
+
+	//Only use me when first instance has every vertex of all of the others combined, such as is returned by makeInstance
+	void getMeshPointsJoinedMulti(const MultiInstance & instance, float*& const vertices, int& vertexCount, int& stride);
 
 	//ArraySlice<TriangleIndices> getTriangles(Object object);	// Doing stuff to thise object type will alter every instance of this object type once the buffers are updated
 	//ArraySlice<Vertex> getVertices(Object object);			// Not yet implemented
@@ -93,8 +105,9 @@ private:
 	std::vector<cl::Buffer> rayTreeBuffers;
 	std::vector<cl::Buffer> hitBuffers;
 
+	std::unordered_map<std::string, MultiInstanceBuilder> multiBuilders;
 	std::unordered_map<std::string, InstanceBuilder> builders;
-	TextureManager textureManager;
+	MaterialManager materialManager;
 
 
 	bool useInterop = true;
