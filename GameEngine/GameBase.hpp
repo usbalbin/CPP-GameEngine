@@ -4,6 +4,8 @@
 #include "Options.hpp"
 #include <deque>
 
+#include "Player.hpp"
+
 #include "Garbage.hpp"
 
 //typedef std::chrono::high_resolution_clock::time_point TimePoint;
@@ -39,6 +41,8 @@ protected:
 	RtTimePoint lastTime = std::chrono::high_resolution_clock::now();
 	float deltaTime;
 	Options options;
+	std::vector<Player*> players;
+
 private:
 	static bool collisionCallback(btManifoldPoint& cp, void* body0, void* body1);
 	std::vector<Entity*> gameEntities;

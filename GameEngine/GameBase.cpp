@@ -26,9 +26,11 @@
 #include "Box.hpp"
 #include "Ball.hpp"
 #include "Player.hpp"
+#include "Zombie.hpp"
 #include "Terrain.hpp"
 #include "Cannon.hpp"
 #include "RifleTester.hpp"
+#include "HMMWV.hpp"
 
 
 #include "Cube.hpp"
@@ -104,7 +106,8 @@ void GameBase::openScene(std::istream & sceneStream, Entity ** player, ClRayTrac
 
 			if (objectType == "character")
 				entity = new Player(gameEntities, renderer, physics, glm::vec3(x, y, z), yaw);
-
+			else if (objectType == "zombie")
+				entity = new Zombie(players, renderer, physics, glm::vec3(x, y, z), yaw);
 
 			else if (objectType == "tank")
 				entity = new Tank(renderer, physics, glm::vec3(x, y, z), yaw);
@@ -112,6 +115,8 @@ void GameBase::openScene(std::istream & sceneStream, Entity ** player, ClRayTrac
 				entity = new ApcTank(renderer, physics, glm::vec3(x, y, z), yaw);
 			else if (objectType == "car")
 				entity = new Car(renderer, physics, glm::vec3(x, y, z), yaw);
+			else if (objectType == "HMMWV" || objectType == "hmmwv")
+				entity = new HMMWV(renderer, physics, glm::vec3(x, y, z), yaw);
 
 			else
 				throw(std::string("Invalid syntax at line: ") + std::to_string(row) + std::string("\n") + line.str());

@@ -59,12 +59,6 @@ void GameEngine::initialize() {
 		new Terrain(renderer, physics)
 	);
 	
-	addEntity(
-		new HMMWV(renderer, physics, glm::vec3(0, 2, 5))
-	);
-	addEntity(
-		new Zombie(players, renderer, physics, glm::vec3(0, 100, 0))
-	);
 }
 
 void GameEngine::openScene(std::string fileName)

@@ -17,7 +17,7 @@ MainFrame::MainFrame() :
 	this->Layout();
 	this->GetSize(&width, &height);
 
-	urlToBugReport = new wxHyperlinkCtrl(backGround, wxID_ANY, "FOUND ANY BUGS? CLICK HERE TO REPORT", "https://github.com/usbalbin/CPP-GameEngine/issues", wxPoint(width - 300, height - 150), wxDefaultSize);
+	urlToBugReport = new wxHyperlinkCtrl(backGround, wxID_ANY, "FOUND ANY BUGS? CLICK HERE TO REPORT", "https://github.com/usbalbin/CPP-GameEngine/issues", wxPoint(5, height - 60), wxDefaultSize);
 	filbladdrarknapp = new wxButton(backGround, wxID_HIGHEST + 1, "choose scenario file", wxPoint(width - 250, 50), wxSize(200, 40));
 	Start = new wxButton(backGround, wxID_HIGHEST + 2, "Save and Start", wxPoint(width - 218, height - 80), wxSize(200, 40));
 	
