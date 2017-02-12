@@ -7,6 +7,7 @@
 #include "wx\docmdi.h"
 #include "wx\cmdline.h"
 #include "wx\config.h"
+#include "wx\hyperlink.h"
 
 class MainFrame : public wxFrame
 {
@@ -28,6 +29,7 @@ public:
 	wxStaticBitmap* backGround;
 	std::string ImagePath = "../Game/content/bg.png";
 	wxBoxSizer* bSizer1;
+	wxHyperlinkCtrl* urlToBugReport;
 	int i;
 	int width;
 	int height;

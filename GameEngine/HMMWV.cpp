@@ -18,13 +18,13 @@ HMMWV::HMMWV(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 
 	//radius, width, radius
 	glm::vec2 wheelHalfExtents(0.5f, 0.1f);
 	float wheelMass = 80.0f;
-	float rideHeight = -1;
-	float axleLength = wheelHalfExtents.y + 0.1f;
+	float rideHeight = -1.4f;
+	float axleLength = wheelHalfExtents.y;
 
-	glm::vec3 posFL = glm::vec3(-bodyHalfExtents.x - axleLength, rideHeight, -bodyHalfExtents.z + 0.3);
-	glm::vec3 posFR = glm::vec3(+bodyHalfExtents.x + axleLength, rideHeight, -bodyHalfExtents.z + 0.3);
-	glm::vec3 posRL = glm::vec3(-bodyHalfExtents.x - axleLength, rideHeight, +bodyHalfExtents.z);
-	glm::vec3 posRR = glm::vec3(+bodyHalfExtents.x + axleLength, rideHeight, +bodyHalfExtents.z);
+	glm::vec3 posFL = glm::vec3(-bodyHalfExtents.x - axleLength, rideHeight, -bodyHalfExtents.z + 0.37f);
+	glm::vec3 posFR = glm::vec3(+bodyHalfExtents.x + axleLength, rideHeight, -bodyHalfExtents.z + 0.37f);
+	glm::vec3 posRL = glm::vec3(-bodyHalfExtents.x - axleLength, rideHeight, +bodyHalfExtents.z + 0.1f);
+	glm::vec3 posRR = glm::vec3(+bodyHalfExtents.x + axleLength, rideHeight, +bodyHalfExtents.z + 0.1f);
 
 	Cylinder* wheelFL = new Cylinder(this, renderer, physics, position + posFL, wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
 	Cylinder* wheelFR = new Cylinder(this, renderer, physics, position + posFR, wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
@@ -54,8 +54,8 @@ HMMWV::HMMWV(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 
 		int motorIndex = 2;//Suspension
 		connection->enableSpring(motorIndex, true);
 		connection->setLimit(motorIndex, -0.3, 1);
-		connection->setStiffness(motorIndex, 2000);
-		connection->setDamping(motorIndex, 2000.0f);
+		connection->setStiffness(motorIndex, 4480); //higher number = more stiff
+		connection->setDamping(motorIndex, 5000.0f);
 		connection->setEquilibriumPoint(motorIndex, -1);
 
 
@@ -82,8 +82,8 @@ HMMWV::HMMWV(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 
 		int motorIndex = 2;//Suspension
 		connection->enableSpring(motorIndex, true);
 		connection->setLimit(motorIndex, -0.1, 1);
-		connection->setStiffness(motorIndex, 2000);
-		connection->setDamping(motorIndex, 2000.0f);
+		connection->setStiffness(motorIndex, 3200);
+		connection->setDamping(motorIndex, 1500.0f);
 		connection->setEquilibriumPoint(motorIndex, -1);
 
 		motorIndex = 3;//Engine
@@ -113,7 +113,7 @@ void HMMWV::handleInput(const Input& input, float deltaTime) {
 	int motorIndex = 3;
 	for (auto& constraint : constraints) {
 		((btHinge2Constraint*)constraint)->setTargetVelocity(motorIndex, +speed * 140);
-		((btHinge2Constraint*)constraint)->setMaxMotorForce(motorIndex, std::abs(speed) * 10);
+		((btHinge2Constraint*)constraint)->setMaxMotorForce(motorIndex, std::abs(speed) * 40);
 	}
 
 	motorIndex = 5;

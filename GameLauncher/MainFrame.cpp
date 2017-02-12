@@ -1,8 +1,10 @@
 #include "MainFrame.h"
+#include "Utils.hpp"
+#include <wx/filefn.h> 
 
 MainFrame::MainFrame() :
 	wxFrame(NULL, -1, "GAMELAUNCHER", wxDefaultPosition, wxSize(640, 480)),
-	options("../Game/content/options.cfg"){
+	options("content/options.cfg"){
 	
 	wxImage::AddHandler( new wxPNGHandler);
 
@@ -13,9 +15,9 @@ MainFrame::MainFrame() :
 	bSizer1->Add(0, 0, 1, wxEXPAND, 5);
 	this->SetSizer(bSizer1);
 	this->Layout();
-
 	this->GetSize(&width, &height);
 
+	urlToBugReport = new wxHyperlinkCtrl(backGround, wxID_ANY, "FOUND ANY BUGS? CLICK HERE TO REPORT", "https://github.com/usbalbin/CPP-GameEngine/issues", wxPoint(width - 300, height - 150), wxDefaultSize);
 	filbladdrarknapp = new wxButton(backGround, wxID_HIGHEST + 1, "choose scenario file", wxPoint(width - 250, 50), wxSize(200, 40));
 	Start = new wxButton(backGround, wxID_HIGHEST + 2, "Save and Start", wxPoint(width - 218, height - 80), wxSize(200, 40));
 	
@@ -56,7 +58,7 @@ MainFrame::MainFrame() :
 		(long)0 // wxCB_SORT // wxNO_BORDER | wxCB_READONLY
 	);
 
-	filbladdare = new wxFileDialog(backGround, "Choose Scenario", "","","Scene File (*.scene)|*.scene", wxFD_OPEN | wxFD_FILE_MUST_EXIST);	
+	filbladdare = new wxFileDialog(backGround, "Choose Scenario","","","Scene File (*.scene)|*.scene", wxFD_OPEN | wxFD_FILE_MUST_EXIST);	
 	scenariostring = new wxTextCtrl(backGround, wxID_ANY, "Please Select a scenario", wxPoint(width - 270, 30), wxSize(240, 20), wxTE_READONLY);
 
 
@@ -97,13 +99,13 @@ void MainFrame::startButton(wxCommandEvent& WXUNUSED(event))
 	options.serverPort = wxAtoi(Serverport->GetValue());
 	options.forceCpu = Forcecpu->GetValue();
 	options.fullScreen = Fullscreen->GetValue();
-
-	options.save("../Game/content/options.cfg");
+	options.save("content/options.cfg");
+	
 	this->Close();
 	#ifdef _DEBUG
-		system("cd ../Game && start ../x64/Debug/Game");
+		system("start ../x64/Debug/Game");
 	#else
-		system("cd ../Game && start ../x64/Release/Game");
+		system("start ../x64/Release/Game");
 	#endif
 }
 
@@ -111,8 +113,7 @@ void MainFrame::filfunc(wxCommandEvent& WXUNUSED(event))
 {
 	if (filbladdare->ShowModal() == wxID_CANCEL)
 		return;
-
-	options.scenarioPath = filbladdare->GetPath();
+	options.scenarioPath = absToRelPath(wxGetCwd().ToStdString(), filbladdare->GetPath().ToStdString());
 	scenariostring->SetValue(filbladdare->GetPath());
 
 }
