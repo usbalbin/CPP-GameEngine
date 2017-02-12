@@ -191,8 +191,10 @@ struct InstanceBuilder : public Object {
 		this->numTriangles = object.numTriangles;
 		this->numVertices = object.numVertices;
 		this->meshType = meshType;
+		this->texId = -1;
 	}
 	int meshType;
+	size_t texId;
 };
 
 struct MultiInstanceBuilder {
@@ -201,7 +203,7 @@ struct MultiInstanceBuilder {
 
 struct Instance {
 	Instance() : meshType(-1){};
-	Instance(float16 modelMatrix, float16 invModelMatrix, InstanceBuilder builder, int textureId = -1) : modelMatrix(modelMatrix), invModelMatrix(invModelMatrix), meshType(builder.meshType), textureId(textureId) {};
+	Instance(float16 modelMatrix, float16 invModelMatrix, InstanceBuilder builder) : modelMatrix(modelMatrix), invModelMatrix(invModelMatrix), meshType(builder.meshType), textureId(builder.texId) {};
 	bool isInitialized() { return meshType != -1; }
 
 	float16 modelMatrix;

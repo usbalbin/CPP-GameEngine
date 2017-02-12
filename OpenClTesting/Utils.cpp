@@ -229,6 +229,8 @@ void readObjFile(std::vector<Vertex>& vertices, std::vector<TriangleIndices>& in
 	std::map<Vertex, int> vertexMap;
 
 	while (getline(objFile, line)) {
+		line = line.substr(0, line.find("#"));
+
 		if (line.find("mtllib ") != line.npos)
 			readMtlFile(directory + "/" + line.substr(7), texturePathOut);
 

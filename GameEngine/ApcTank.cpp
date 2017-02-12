@@ -13,7 +13,7 @@ ApcTank::ApcTank(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::v
 	glm::vec3 bodyHalfExtents(1.0f, 0.25f, 2.0f);
 	float bodyMass = 750;
 
-	Cube* box = new Cube(renderer, physics, position, bodyHalfExtents, bodyMass, yaw, pitch, roll);
+	Cube* box = new Cube(this, renderer, physics, position, bodyHalfExtents, bodyMass, yaw, pitch, roll);
 	box->physicsObject->setActivationState(DISABLE_DEACTIVATION);
 
 
@@ -25,18 +25,18 @@ ApcTank::ApcTank(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::v
 	float axleLength = -wheelHalfExtents.y - 0.1f;
 
 
-	Cylinder* wheelFFL = new Cylinder(renderer, physics, position + glm::vec3(-bodyHalfExtents.x - axleLength, rideHeight, +bodyHalfExtents.z - wheelHalfExtents.x), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
-	Cylinder* wheelFFR = new Cylinder(renderer, physics, position + glm::vec3(+bodyHalfExtents.x + axleLength, rideHeight, +bodyHalfExtents.z - wheelHalfExtents.x), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
+	Cylinder* wheelFFL = new Cylinder(this, renderer, physics, position + glm::vec3(-bodyHalfExtents.x - axleLength, rideHeight, +bodyHalfExtents.z - wheelHalfExtents.x), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
+	Cylinder* wheelFFR = new Cylinder(this, renderer, physics, position + glm::vec3(+bodyHalfExtents.x + axleLength, rideHeight, +bodyHalfExtents.z - wheelHalfExtents.x), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
 
-	Cylinder* wheelFL = new Cylinder(renderer, physics, position + glm::vec3(-bodyHalfExtents.x - axleLength, rideHeight, +bodyHalfExtents.z * 0.5f - wheelHalfExtents.x), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
-	Cylinder* wheelFR = new Cylinder(renderer, physics, position + glm::vec3(+bodyHalfExtents.x + axleLength, rideHeight, +bodyHalfExtents.z * 0.5f - wheelHalfExtents.x), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
+	Cylinder* wheelFL = new Cylinder(this, renderer, physics, position + glm::vec3(-bodyHalfExtents.x - axleLength, rideHeight, +bodyHalfExtents.z * 0.5f - wheelHalfExtents.x), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
+	Cylinder* wheelFR = new Cylinder(this, renderer, physics, position + glm::vec3(+bodyHalfExtents.x + axleLength, rideHeight, +bodyHalfExtents.z * 0.5f - wheelHalfExtents.x), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
 
-	Cylinder* wheelRL = new Cylinder(renderer, physics, position + glm::vec3(-bodyHalfExtents.x - axleLength, rideHeight, -bodyHalfExtents.z * 0.5f + wheelHalfExtents.x), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
-	Cylinder* wheelRR = new Cylinder(renderer, physics, position + glm::vec3(+bodyHalfExtents.x + axleLength, rideHeight, -bodyHalfExtents.z * 0.5f + wheelHalfExtents.x), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
+	Cylinder* wheelRL = new Cylinder(this, renderer, physics, position + glm::vec3(-bodyHalfExtents.x - axleLength, rideHeight, -bodyHalfExtents.z * 0.5f + wheelHalfExtents.x), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
+	Cylinder* wheelRR = new Cylinder(this, renderer, physics, position + glm::vec3(+bodyHalfExtents.x + axleLength, rideHeight, -bodyHalfExtents.z * 0.5f + wheelHalfExtents.x), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
 
 	
-	Cylinder* wheelRRL = new Cylinder(renderer, physics, position + glm::vec3(-bodyHalfExtents.x - axleLength, rideHeight, -bodyHalfExtents.z + wheelHalfExtents.x), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
-	Cylinder* wheelRRR = new Cylinder(renderer, physics, position + glm::vec3(+bodyHalfExtents.x + axleLength, rideHeight, -bodyHalfExtents.z + wheelHalfExtents.x), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
+	Cylinder* wheelRRL = new Cylinder(this, renderer, physics, position + glm::vec3(-bodyHalfExtents.x - axleLength, rideHeight, -bodyHalfExtents.z + wheelHalfExtents.x), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
+	Cylinder* wheelRRR = new Cylinder(this, renderer, physics, position + glm::vec3(+bodyHalfExtents.x + axleLength, rideHeight, -bodyHalfExtents.z + wheelHalfExtents.x), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
 
 	for (auto part : { wheelFFL, wheelFFR, wheelFL, wheelFR, wheelRL, wheelRR, wheelRRL, wheelRRR }) {
 		part->physicsObject->setActivationState(DISABLE_DEACTIVATION);

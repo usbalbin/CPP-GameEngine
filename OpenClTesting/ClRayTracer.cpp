@@ -208,8 +208,7 @@ InstanceBuilder ClRayTracer::push_backObjectType(std::vector<TriangleIndices>& o
 	return instanceBuilder;
 }
 
-Instance ClRayTracer::makeInstance(std::string meshPath, float16 initialTransform)
-{
+Instance ClRayTracer::makeInstance(std::string meshPath, float16 initialTransform) {
 	if (builders.find(meshPath) != builders.end())
 		return Instance(initialTransform, glm::inverse(initialTransform), builders[meshPath]);
 
@@ -221,13 +220,12 @@ Instance ClRayTracer::makeInstance(std::string meshPath, float16 initialTransfor
 	std::string texturePath;
 	readObjFile(vertices, indices, texturePath, meshPath);
 	builders[meshPath] = push_backObjectType(indices, vertices);
-
+	builders[meshPath].texId = texturePath.length() ? textureManager.getTextureId(texturePath) : -1;
 	
-	return Instance(initialTransform, glm::inverse(initialTransform), builders[meshPath], texturePath.length() ? textureManager.getTextureId(texturePath) : -1);
+	return Instance(initialTransform, glm::inverse(initialTransform), builders[meshPath]);
 }
 
-void ClRayTracer::getMeshData(const Instance & instance, std::vector<TriangleIndices>& indices, std::vector<Vertex>& vertices)
-{
+void ClRayTracer::getMeshData(const Instance & instance, std::vector<TriangleIndices>& indices, std::vector<Vertex>& vertices) {
 	const Object object = objectTypes[instance.meshType];
 	
 	std::copy(&objectTypeIndices[object.startTriangle], &objectTypeIndices[object.startTriangle + object.numTriangles], indices.begin());

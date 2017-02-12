@@ -13,22 +13,22 @@ Car::Car(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 posi
 	glm::vec3 bodyHalfExtents(1.0f, 0.25f, 2.0f);
 	float bodyMass = 700;
 
-	Cube* box = new Cube(renderer, physics, position, bodyHalfExtents, bodyMass, yaw, pitch, roll);
+	Cube* box = new Cube(this, renderer, physics, position, bodyHalfExtents, bodyMass, yaw, pitch, roll);
 	box->physicsObject->setActivationState(DISABLE_DEACTIVATION);
 
 
 	const float PI_HALF = 1.57079632679;
-							//radius, width, radius
+							//radius, width
 	glm::vec2 wheelHalfExtents(0.5f, 0.1f);
 	float wheelMass = 20.0f;
 	float rideHeight = 0;
 	float axleLength = wheelHalfExtents.y + 0.1f;
 
 
-	Cylinder* wheelFL = new Cylinder(renderer, physics, position + glm::vec3(-bodyHalfExtents.x - axleLength, rideHeight, +bodyHalfExtents.z), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
-	Cylinder* wheelFR = new Cylinder(renderer, physics, position + glm::vec3(+bodyHalfExtents.x + axleLength, rideHeight, +bodyHalfExtents.z), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
-	Cylinder* wheelRL = new Cylinder(renderer, physics, position + glm::vec3(-bodyHalfExtents.x - axleLength, rideHeight, -bodyHalfExtents.z), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
-	Cylinder* wheelRR = new Cylinder(renderer, physics, position + glm::vec3(+bodyHalfExtents.x + axleLength, rideHeight, -bodyHalfExtents.z), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
+	Cylinder* wheelFL = new Cylinder(this, renderer, physics, position + glm::vec3(-bodyHalfExtents.x - axleLength, rideHeight, +bodyHalfExtents.z), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
+	Cylinder* wheelFR = new Cylinder(this, renderer, physics, position + glm::vec3(+bodyHalfExtents.x + axleLength, rideHeight, +bodyHalfExtents.z), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
+	Cylinder* wheelRL = new Cylinder(this, renderer, physics, position + glm::vec3(-bodyHalfExtents.x - axleLength, rideHeight, -bodyHalfExtents.z), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
+	Cylinder* wheelRR = new Cylinder(this, renderer, physics, position + glm::vec3(+bodyHalfExtents.x + axleLength, rideHeight, -bodyHalfExtents.z), wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
 	
 	for (auto part : { wheelFL, wheelFR, wheelRL, wheelRR }) {
 		part->physicsObject->setActivationState(DISABLE_DEACTIVATION);

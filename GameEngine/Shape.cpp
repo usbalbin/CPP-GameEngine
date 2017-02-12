@@ -12,8 +12,9 @@ Shape::Shape()
 }
 
 
-Shape::Shape(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics)
+Shape::Shape(Entity* parent, ClRayTracer * renderer, btDiscreteDynamicsWorld * physics)
 {
+	this->parent = parent;
 	this->renderer = renderer;
 	this->physics = physics;
 }
@@ -25,6 +26,7 @@ void Shape::initialize(Instance & graphicsObject, btRigidBody * physicsObject)
 	if (!physicsObject)
 		return;
 
+	physicsObject->setUserPointer(this);
 	this->physicsObject = physicsObject;
 	this->physicsShape = physicsObject->getCollisionShape();
 

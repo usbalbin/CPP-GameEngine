@@ -9,8 +9,8 @@ InstanceBuilder Sphere::graphicsObjectBuilder;
 Sphere::Sphere(){
 }
 
-Sphere::Sphere(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float scale, float mass, float yaw, float pitch, float roll)
-	: Shape(renderer, physics)
+Sphere::Sphere(Entity* parent, ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float scale, float mass, float yaw, float pitch, float roll)
+	: Shape(parent, renderer, physics)
 {
 	glm::mat4 matrix =
 		glm::translate(

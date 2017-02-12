@@ -54,9 +54,9 @@ void GameEngine::initialize() {
 
 	openScene(options.scenarioPath);
 	players.push_back((Player*)player);
-//	gameEntities.push_back(
-//		new Terrain(&renderer, physics)
-//	);
+	addEntity(
+		new Terrain(renderer, physics)
+	);
 	
 	addEntity(
 		new Zombie(players, renderer, physics, glm::vec3(0, 100, 0))
@@ -125,6 +125,25 @@ void GameEngine::draw()
 bool GameEngine::shouldExit()
 {
 	return glfwWindowShouldClose(renderer->getWindow());
+}
+
+void GameEngine::respawn(){
+	addEntity(
+		player = new Player(getGameEntities(), renderer, physics, glm::vec3(0, 2, 0))
+	);
+	players.push_back((Player*)player);
+}
+
+void GameEngine::onGarbageRemove(Entity * entity){
+	if (entity == player) {
+		for (int i = 0; i < players.size() - 1; i++)
+			if (player == players[i])
+				std::swap(players[i], players.back());
+
+		players.pop_back();
+		respawn();
+	}
+		
 }
 
 void GameEngine::updateTime() {

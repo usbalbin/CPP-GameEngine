@@ -17,14 +17,17 @@ void Entity::addConstraint(btTypedConstraint* constraint, bool disableCollisionB
 }
 
 
-Entity::~Entity(){
-	for (auto& constraint : constraints) {
-		physics->removeConstraint(constraint);
-		delete constraint;
+Entity::~Entity() {
+	if (!constraints.empty()) {
+		for (auto& constraint : constraints) {
+			physics->removeConstraint(constraint);
+			delete constraint;
+		}
 	}
-
-	for (auto& part : parts)
-		delete part;
+	if (!parts.empty()) {
+		for (auto& part : parts)
+			delete part;
+	}
 }
 
 void Entity::handleInput(const Input& input, float deltaTime)
@@ -69,6 +72,11 @@ glm::mat4 Entity::cameraMatrix(float yaw, float pitch, bool firstPerson)
 	glm::vec3 rotationPivotPos(0, 0, 0);
 
 	return cameraMatrix(yaw, pitch, relativeOffset, rotationPivotPos);
+}
+
+bool Entity::justDied()
+{
+	return false;
 }
 
 glm::mat4 Entity::cameraMatrix(float yaw, float pitch, glm::vec3 & relativeOffset, glm::vec3 & rotationPivotPos)

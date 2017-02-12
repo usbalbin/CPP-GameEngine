@@ -5,7 +5,7 @@
 
 RifleTester::RifleTester(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics, glm::vec3 position)
 : Entity(renderer, physics){
-	this->rifle = new Rifle(renderer, physics, position, 0, 0, 0);
+	this->rifle = new Rifle(this, renderer, physics, position, 0, 0, 0);
 	parts.push_back(rifle);
 }
 

@@ -1,0 +1,64 @@
+mtllib zombieHead.mtl
+g cube
+ 
+v -1.0 -1.0 -1.0
+v -1.0 -1.0 1.0
+v -1.0 1.0 -1.0
+v -1.0 1.0 1.0
+v 1.0 -1.0 -1.0
+v 1.0 -1.0 1.0
+v 1.0 1.0 -1.0
+v 1.0 1.0 1.0
+
+vn 0.0 0.0 1.0
+vn 0.0 0.0 -1.0
+vn 0.0 1.0 0.0
+vn 0.0 -1.0 0.0
+vn 1.0 0.0 0.0
+vn -1.0 0.0 0.0
+
+vt 0.0000000000 0.50 #1
+vt 0.0000000000 0.75 #2
+vt 0.3333333333 0.00 #3
+vt 0.3333333333 0.25 #4
+vt 0.3333333333 0.50 #5
+vt 0.3333333333 0.75 #6
+vt 0.3333333333 1.00 #7
+
+vt 0.6666666667 0.00 #8
+vt 0.6666666667 0.25 #9
+vt 0.6666666667 0.50 #10
+vt 0.6666666667 0.75 #11
+vt 0.6666666667 1.00 #12
+vt 1.0000000000 0.50 #13
+vt 1.0000000000 0.75 #14
+ 
+#f 1/4/2 7/8/2 5/9/2 	#vänster-ner -1, höger-upp -1, höger-ner -1
+#f 1/4/2 3/3/2 7/8/2 	#vänster-ner -1, vänster-upp -1, höger-upp -1
+#f 1/1/6 4/6/6 3/2/6 	#vänster-ner -1, vänster-upp +1, vänster-upp -1
+#f 1/1/6 2/5/6 4/6/6 	#vänster-ner -1, vänster-ner +1, vänster-upp +1
+#f 3/7/3 8/11/3 7/12/3 	#vänster-upp -1, höger-upp +1, höger-upp -1
+#f 3/7/3 4/6/3 8/11/3 	#vänster-upp -1, vänster-upp +1, höger-upp +1
+#f 5/13/5 7/14/5 8/11/5 	#höger-ner -1, höger-upp -1, höger-upp +1
+#f 5/13/5 8/11/5 6/10/5 	#höger-ner -1, höger-upp +1, höger-ner +1
+#f 1/4/4 5/9/4 6/10/4 	#vänster-ner -1, höger-ner -1, höger-ner +1
+#f 1/4/4 6/10/4 2/5/4 	#vänster-ner -1, höger-ner +1, vänster-ner +1
+#f 2/5/1 6/10/1 8/11/1 	#vänster-ner +1, höger-ner +1, höger-upp +1
+#f 2/5/1 8/11/1 4/6/1 	#vänster-ner +1, höger-upp +1, vänster-upp +1
+
+
+
+
+
+f 1/4/2 7/8/2 5/9/2 	#vänster-ner -1, höger-upp -1, höger-ner -1
+f 1/4/2 3/3/2 7/8/2 	#vänster-ner -1, vänster-upp -1, höger-upp -1
+f 1/1/6 4/6/6 3/2/6 	#vänster-ner -1, vänster-upp +1, vänster-upp -1
+f 1/1/6 2/5/6 4/6/6 	#vänster-ner -1, vänster-ner +1, vänster-upp +1
+f 3/7/3 8/11/3 7/12/3 	#vänster-upp -1, höger-upp +1, höger-upp -1
+f 3/7/3 4/6/3 8/11/3 	#vänster-upp -1, vänster-upp +1, höger-upp +1
+f 5/13/5 7/14/5 8/11/5 	#höger-ner -1, höger-upp -1, höger-upp +1
+f 5/13/5 8/11/5 6/10/5 	#höger-ner -1, höger-upp +1, höger-ner +1
+f 1/4/4 5/9/4 6/10/4 	#vänster-ner -1, höger-ner -1, höger-ner +1
+f 1/4/4 6/10/4 2/5/4 	#vänster-ner -1, höger-ner +1, vänster-ner +1
+f 2/5/1 6/10/1 8/11/1 	#vänster-ner +1, höger-ner +1, höger-upp +1
+f 2/5/1 8/11/1 4/6/1 	#vänster-ner +1, höger-upp +1, vänster-upp +1

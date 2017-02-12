@@ -46,6 +46,7 @@ GameBase::GameBase() : options("content/options.cfg") {
 
 	physics = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
 	physics->setGravity(btVector3(0, -9.82f, 0));
+	gContactProcessedCallback = (ContactProcessedCallback)collisionCallback;
 }
 
 GameBase::~GameBase() {
@@ -129,6 +130,14 @@ void GameBase::addEntity(Entity * entity)
 	entity->setArrayIndex(gameArrayIndex);
 }
 
+void GameBase::removeEntity(Entity * entity) {//Remove entity by swapping it with last entity and decreasing list size
+	int gameArrayIndex = entity->getArrayIndex();
+	gameEntities[gameArrayIndex] = gameEntities.back();
+	gameEntities[gameArrayIndex]->setArrayIndex(gameArrayIndex);
+	gameEntities.pop_back();
+	delete entity;
+}
+
 bool GameBase::shouldExit()
 {
 	return false;
@@ -139,10 +148,53 @@ void GameBase::update() {
 		entity->update(deltaTime);
 
 	physics->stepSimulation(deltaTime / 1.0f);
+	updateGarbage();
+}
+void GameBase::updateGarbage() {
+	auto garbageTimeToLive = 30.0s;
+	
+	for (auto entity : gameEntities)
+		if (entity->justDied())
+			garbageEntities.emplace_back(entity, garbageTimeToLive);
+
+	auto now = std::chrono::system_clock::now();
+	while (garbageEntities.size() && garbageEntities.front().isTimeToDie(now)) {
+		removeEntity(garbageEntities.front().entity);
+		onGarbageRemove(garbageEntities.front().entity);
+		garbageEntities.pop_front();
+	}
+		
 }
 
 void GameBase::updateTime() {
 	auto nowTime = std::chrono::high_resolution_clock::now();
 	deltaTime = std::chrono::duration<float>(nowTime - lastTime).count();
 	lastTime = nowTime;
+}
+
+bool GameBase::collisionCallback(btManifoldPoint& cp, void * body0, void * body1)
+{
+	btCollisionObject* collisionObject0 = (btCollisionObject*)body0;
+	btCollisionObject* collisionObject1 = (btCollisionObject*)body1;
+
+	Shape* shape0 = (Shape*)collisionObject0->getUserPointer();
+	Shape* shape1 = (Shape*)collisionObject1->getUserPointer();
+
+	if (shape0) {
+		shape0->calcHit(cp);
+	}
+	if (shape1) {
+		shape1->calcHit(cp);
+	}
+
+
+
+	if (shape0) {
+
+	}
+	if (shape1) {
+
+	}
+
+	return false;
 }

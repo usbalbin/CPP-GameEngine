@@ -4,7 +4,7 @@
 #include "Cube.hpp"
 #include "Utils.hpp"
 
-Rifle::Rifle(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float yaw, float pitch, float roll) : CompoundShape(renderer, physics){
+Rifle::Rifle(Entity* parent, ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float yaw, float pitch, float roll) : CompoundShape(renderer, physics){
 	btCompoundShape* rifleShape = new btCompoundShape();
 	
 	float buttMass = 0.1f;
@@ -12,7 +12,7 @@ Rifle::Rifle(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 
 	glm::vec3 buttPos = glm::vec3(0, -buttHalfExtent.y, -buttHalfExtent.z);
 	CompoundShapeChild* butt = new CompoundShapeChild(
 		renderer, physics, toTransform(buttPos),
-		new Cube(renderer, physics, buttPos, buttHalfExtent, 0),
+		new Cube(parent, renderer, physics, buttPos, buttHalfExtent, 0),
 		physicsObject
 	);
 	addChild(butt);
@@ -22,7 +22,7 @@ Rifle::Rifle(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 
 	glm::vec3 combPos = buttPos + glm::vec3(0, buttHalfExtent.y, -buttHalfExtent.z -combHalfExtent.z);
 	CompoundShapeChild* comb = new CompoundShapeChild(
 		renderer, physics, toTransform(combPos),
-		new Cube(renderer, physics, combPos, combHalfExtent, 0),
+		new Cube(parent, renderer, physics, combPos, combHalfExtent, 0),
 		physicsObject
 	);
 	addChild(comb);
@@ -32,7 +32,7 @@ Rifle::Rifle(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 
 	glm::vec3 basePos = combPos + glm::vec3(0, 0, -combHalfExtent.z -baseHalfExtent.z);
 	CompoundShapeChild* base = new CompoundShapeChild(
 		renderer, physics, toTransform(basePos),
-		new Cube(renderer, physics, basePos, baseHalfExtent, 0),
+		new Cube(parent, renderer, physics, basePos, baseHalfExtent, 0),
 		physicsObject
 	);
 	addChild(base);
@@ -42,7 +42,7 @@ Rifle::Rifle(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 
 	glm::vec3 sightLPos = basePos + glm::vec3(2*-sightHalfExtent.x, +baseHalfExtent.y + sightHalfExtent.y, 0);
 	CompoundShapeChild* sightL = new CompoundShapeChild(
 		renderer, physics, toTransform(sightLPos),
-		new Cube(renderer, physics, sightLPos, sightHalfExtent, 0),
+		new Cube(parent, renderer, physics, sightLPos, sightHalfExtent, 0),
 		physicsObject
 	);
 	addChild(sightL);
@@ -50,7 +50,7 @@ Rifle::Rifle(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 
 	glm::vec3 sightRPos = glm::vec3(-sightLPos.x, sightLPos.y, sightLPos.z);
 	CompoundShapeChild* sightR = new CompoundShapeChild(
 		renderer, physics, toTransform(sightRPos),
-		new Cube(renderer, physics, sightRPos, sightHalfExtent, 0),
+		new Cube(parent, renderer, physics, sightRPos, sightHalfExtent, 0),
 		physicsObject
 	);
 	addChild(sightR);
@@ -58,7 +58,7 @@ Rifle::Rifle(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 
 	glm::vec3 sightFPos = glm::vec3(0, sightLPos.y, basePos.z - 0.1f);
 	CompoundShapeChild* sightF = new CompoundShapeChild(
 		renderer, physics, toTransform(sightFPos),
-		new Cube(renderer, physics, sightFPos, sightHalfExtent, 0),
+		new Cube(parent, renderer, physics, sightFPos, sightHalfExtent, 0),
 		physicsObject
 	);
 	addChild(sightF);
@@ -75,7 +75,7 @@ Rifle::Rifle(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 
 	
 	barrel = new CompoundShapeChild(
 		renderer, physics, toTransform(barrelPos, 0, PI_HALF, 0),
-		new Barrel(renderer, physics, barrelPos, barrelHalfExtent, barrelMass, bulletDiameter, bulletMass, 0, PI_HALF, 0, fireRate, fireModes, "content/TankShot.wav"),
+		new Barrel(parent, renderer, physics, barrelPos, barrelHalfExtent, barrelMass, bulletDiameter, bulletMass, 0, PI_HALF, 0, fireRate, fireModes, "content/TankShot.wav"),
 		physicsObject
 	);
 	addChild(barrel);

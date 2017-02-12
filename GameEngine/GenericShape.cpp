@@ -2,10 +2,10 @@
 #include "GenericShape.hpp"
 #include "Utils.hpp"
 
-GenericShape::GenericShape(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, std::string meshPath, glm::vec3 position, float mass, float yaw, float pitch, float roll) : Shape(renderer, physics){
+GenericShape::GenericShape(Entity* parent, ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, std::string meshPath, glm::vec3 position, glm::vec3 scale, float mass, float yaw, float pitch, float roll) : Shape(parent, renderer, physics){
 
 	Instance instance = renderer->makeInstance(meshPath);
-	this->scale = glm::vec3(100);
+	this->scale = scale;
 
 	float* points;
 	int pointCount, stride;

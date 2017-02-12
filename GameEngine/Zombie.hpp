@@ -7,6 +7,7 @@ public:
 	~Zombie();
 	void update(float deltaTime) override;
 	void handleInput(const Input& input, float deltaTime) override {};
+	bool justDied() override;
 private:
 	Input input;
 	std::vector<Player*>& players;	//List of players to eat

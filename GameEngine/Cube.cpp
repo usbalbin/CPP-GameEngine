@@ -7,8 +7,8 @@
 Cube::Cube(){
 }
 
-Cube::Cube(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, glm::vec3 scale, float mass, float yaw, float pitch, float roll)
-	: Shape(renderer, physics) {
+Cube::Cube(Entity* parent, ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, glm::vec3 scale, float mass, float yaw, float pitch, float roll)
+	: Shape(parent, renderer, physics) {
 	glm::mat4 matrix = 
 		glm::translate(glm::mat4(1.0f), position)
 		

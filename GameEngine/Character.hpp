@@ -20,29 +20,35 @@ public:
 	
 	float getYaw() { return yaw; }
 	float getPitch() { return pitch; }
-
+	virtual void damage(float damage) override;
+	virtual bool justDied() override;
+	virtual bool isDead() { return health <= 0; }
 protected:
+	float health = 1.0f;
+	bool turnedIntoGarbage = false;
+
+
 	float rideHeight = 0.2f;
 	glm::vec3 bodyHalfExtents = glm::vec3(0.3f, 0.25f, 0.075f);
 	
 
-	Cube* head;
+	Shape* head = nullptr;
 	glm::vec3 headPos;
-	btHinge2Constraint* headConnection;
+	btHinge2Constraint* headConnection = nullptr;
 
-	Cube* upperTorso;
+	Shape* upperTorso = nullptr;
 	glm::vec3 upperTorsoPos;
-	btHinge2Constraint* upperTorsoConnection;
+	btHinge2Constraint* upperTorsoConnection = nullptr;
 
-	Cube* lowerTorso;
+	Shape* lowerTorso = nullptr;
 
-	Sphere* wheel;
+	Shape* wheel = nullptr;
 	glm::vec3 wheelPos = glm::vec3(0, -bodyHalfExtents.y - rideHeight, 0);
-	btHinge2Constraint* wheelConnection;
+	btHinge2Constraint* wheelConnection = nullptr;
 
-	Ak47* rifle;
+	Ak47* rifle = nullptr;
 	glm::vec3 riflePos;
-	btHinge2Constraint* rifleConnection;
+	btHinge2Constraint* rifleConnection = nullptr;
 
 
 	float pitch = 0;
