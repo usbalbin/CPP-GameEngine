@@ -175,6 +175,7 @@
     <ClInclude Include="GameBase.hpp" />
     <ClInclude Include="GameMultiplayer.hpp" />
     <ClInclude Include="GenericShape.hpp" />
+    <ClInclude Include="HMMWV.hpp" />
     <ClInclude Include="Input.hpp" />
     <ClInclude Include="NetworkDiscreteDynamicsWorld.hpp" />
     <ClInclude Include="Options.hpp" />
@@ -212,6 +213,7 @@
     <ClCompile Include="GameBase.cpp" />
     <ClCompile Include="GameMultiplayer.cpp" />
     <ClCompile Include="GenericShape.cpp" />
+    <ClCompile Include="HMMWV.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="NetworkDiscreteDynamicsWorld.cpp" />
     <ClCompile Include="Options.cpp" />

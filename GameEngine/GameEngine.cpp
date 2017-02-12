@@ -29,6 +29,7 @@
 #include "Terrain.hpp"
 #include "Cannon.hpp"
 #include "TestEntity.hpp"
+#include "HMMWV.hpp"
 
 #include "Options.hpp"
 
@@ -55,10 +56,14 @@ void GameEngine::initialize() {
 //	gameEntities.push_back(
 //		new Terrain(&renderer, physics)
 //	);
-	/*
+/*	
 	addEntity(
-		new TestEntity(renderer, physics, glm::vec3(0, 100, 0))
+		new TestEntity(renderer, physics, glm::vec3(0, 2, 5))
 	);*/
+
+	addEntity(
+		new HMMWV(renderer, physics, glm::vec3(0, 2, 5))
+	);
 }
 
 void GameEngine::openScene(std::string fileName)
@@ -100,9 +105,9 @@ void GameEngine::draw()
 		yaw = pitch = 0;
 
 
-	glm::vec3 relativeCameraPos(0, 0, 0);
+	//glm::vec3 relativeCameraPos(0, 0, 0);
 	//Character fps camera
-	glm::mat4 cameraMatrix = toMatrix(glm::vec3(0, 0.1f, -0.21f)) * glm::rotate(glm::rotate(glm::mat4(1), pitch, glm::vec3(1, 0, 0)), yaw, glm::vec3(0, 1.0f, 0)) * toMatrix(relativeCameraPos) * player->getTranslationMatrix();
+	//glm::mat4 cameraMatrix = toMatrix(glm::vec3(0, 0.1f, -0.21f)) * glm::rotate(glm::rotate(glm::mat4(1), pitch, glm::vec3(1, 0, 0)), yaw, glm::vec3(0, 1.0f, 0)) * toMatrix(relativeCameraPos) * player->getTranslationMatrix();
 
 	//Tank 3ps camera
 	//glm::mat4 cameraMatrix = toMatrix(glm::vec3(0, 0, 5)) * glm::rotate(glm::rotate(glm::mat4(1), pitch + 1.1f * PI_HALF, glm::vec3(1, 0, 0)), yaw, glm::vec3(0, 1.0f, 0)) * player->getTranslationMatrix();
@@ -112,9 +117,9 @@ void GameEngine::draw()
 
 	glm::mat4 cameraMatrix = player->cameraMatrix(yaw, pitch);
 
-	sf::Listener::setUpVector(toSfVector3(glm::vec4(0, 1, 0, 0) * cameraMatrix));
-	sf::Listener::setDirection(toSfVector3(glm::vec4(0, 0, -1.0f, 0) * cameraMatrix));
-	sf::Listener::setPosition(toSfVector3(cameraMatrix));
+	//sf::Listener::setUpVector(toSfVector3(glm::vec4(0, 1, 0, 0) * cameraMatrix));
+	//sf::Listener::setDirection(toSfVector3(glm::vec4(0, 0, -1.0f, 0) * cameraMatrix));
+	sf::Listener::setPosition(toSfVector3(glm::vec3(cameraMatrix[0][3], cameraMatrix[1][3], cameraMatrix[2][3])));
 	
 	//renderer->autoResize();
 	renderer->render(cameraMatrix);

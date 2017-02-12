@@ -16,8 +16,8 @@ MainFrame::MainFrame() :
 
 	this->GetSize(&width, &height);
 
-	Start = new wxButton(backGround, wxID_HIGHEST + 2, "Save and Start", wxPoint(width - 218, height - 80), wxSize(200, 40));
 	filbladdrarknapp = new wxButton(backGround, wxID_HIGHEST + 1, "choose scenario file", wxPoint(width - 250, 50), wxSize(200, 40));
+	Start = new wxButton(backGround, wxID_HIGHEST + 2, "Save and Start", wxPoint(width - 218, height - 80), wxSize(200, 40));
 	
 	Fullscreen = new wxCheckBox(backGround, wxID_HIGHEST + 3, "Fullscreen", wxPoint(60, 100), wxDefaultSize);
 	Fullscreen->SetValue((bool)options.fullScreen);
@@ -98,7 +98,6 @@ void MainFrame::startButton(wxCommandEvent& WXUNUSED(event))
 	options.forceCpu = Forcecpu->GetValue();
 	options.fullScreen = Fullscreen->GetValue();
 
-	//wxMessageBox(resres + std::to_string(int(Fullscreen->GetValue())), "hello2", wxOK | wxICON_INFORMATION, this, 200, 200);
 	options.save("../Game/content/options.cfg");
 	this->Close();
 	#ifdef _DEBUG

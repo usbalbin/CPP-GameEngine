@@ -138,7 +138,7 @@ void GameBase::update() {
 	for (auto entity : gameEntities)
 		entity->update(deltaTime);
 
-	physics->stepSimulation(deltaTime / 1.0f);
+	physics->stepSimulation(deltaTime);
 }
 
 void GameBase::updateTime() {

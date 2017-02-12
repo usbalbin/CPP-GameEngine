@@ -52,16 +52,16 @@ void Input::readMouse(float deltaTime){
 	glfwGetCursorPos(renderer->getWindow(), &posX, &posY);
 
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	if (glfwGetMouseButton(renderer->getWindow(), GLFW_MOUSE_BUTTON_3) == GLFW_PRESS) {
-#endif
+//#endif
 		rightStick.x -= (posX - lastPosX) * deltaTime;
 		rightStick.y += (posY - lastPosY) * deltaTime;
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	}
-#else
-	glfwSetCursorPos(renderer->getWindow(), 0, 0);
-#endif
+//#else
+	//glfwSetCursorPos(renderer->getWindow(), 0, 0);
+//#endif
 
 	lastPosX = posX;
 	lastPosY = posY;

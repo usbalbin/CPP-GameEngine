@@ -21,7 +21,7 @@ Cylinder::Cylinder(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm:
 	
 
 	
-	Instance instance = renderer->makeInstance("content/cylinder.obj");
+	Instance instance = renderer->makeInstance("content/basicObjects/cylinder.obj");
 
 	btCylinderShape* boxShape = new btCylinderShape(btVector3(scale.x, scale.y, scale.z));
 

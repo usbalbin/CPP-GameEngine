@@ -283,7 +283,7 @@ Vertex facePartToVertex(FaceElement facePart, std::vector<float3>& positions, st
 	if (std::get<1>(facePart) != -1)
 		vertex.uv = texturePositions[std::get<1>(facePart)];
 	else
-		vertex.uv = vertex.position.xz;
+		vertex.uv =glm::vec2(vertex.position.x, vertex.position.z);
 
 	if (std::get<2>(facePart) != -1)
 		vertex.normal = normals[std::get<2>(facePart)];
