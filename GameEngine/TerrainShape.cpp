@@ -7,7 +7,7 @@ btHeightfieldTerrainShape* TerrainShape::terrainShape;
 float TerrainShape::heightScale = 10;
 std::vector<float> TerrainShape::heights;
 
-TerrainShape::TerrainShape(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics){
+TerrainShape::TerrainShape(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics) : Shape(nullptr, renderer, physics){
 	this->scale = glm::vec3(1, heightScale, 1);
 	glm::mat4 matrix =
 		glm::scale(
@@ -16,10 +16,9 @@ TerrainShape::TerrainShape(ClRayTracer * renderer, btDiscreteDynamicsWorld * phy
 		)
 		;
 
-	if (!builderInitialized && renderer) {
-		initializeBuilder(renderer, physics);
-		//renderer->writeToObjectTypeBuffers();
-	}
+
+	initializeBuilder(renderer, physics);
+
 	Instance instance(matrix, glm::inverse(matrix), graphicsObjectBuilder);
 	
 	btDefaultMotionState* motionState = new btDefaultMotionState(btTransform::getIdentity());

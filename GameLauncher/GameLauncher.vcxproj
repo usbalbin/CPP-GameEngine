@@ -125,10 +125,12 @@
   <ItemGroup>
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="Options.hpp" />
+    <ClInclude Include="Utils.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrame.cpp" />
     <ClCompile Include="Options.cpp" />
+    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
