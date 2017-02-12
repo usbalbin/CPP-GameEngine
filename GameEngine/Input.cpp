@@ -35,8 +35,16 @@ void Input::readKeyBoard(){
 	leftStick.x += glfwGetKey(renderer->getWindow(), GLFW_KEY_D) - glfwGetKey(renderer->getWindow(), GLFW_KEY_A);
 	leftStick.y += glfwGetKey(renderer->getWindow(), GLFW_KEY_W) - glfwGetKey(renderer->getWindow(), GLFW_KEY_S);
 
-	leftBumper	+= glfwGetKey(renderer->getWindow(), GLFW_KEY_SPACE);
+	rightStick.x += glfwGetKey(renderer->getWindow(), GLFW_KEY_RIGHT) - glfwGetKey(renderer->getWindow(), GLFW_KEY_LEFT);
+	rightStick.y += glfwGetKey(renderer->getWindow(), GLFW_KEY_UP) - glfwGetKey(renderer->getWindow(), GLFW_KEY_DOWN);
 
+
+
+	
+	rightTrigger += glfwGetKey(renderer->getWindow(), GLFW_KEY_W);
+	leftTrigger += glfwGetKey(renderer->getWindow(), GLFW_KEY_S);
+
+	
 
 	buttonE += glfwGetKey(renderer->getWindow(), GLFW_KEY_E);
 	buttonR += glfwGetKey(renderer->getWindow(), GLFW_KEY_R);
@@ -49,16 +57,20 @@ void Input::readKeyBoard(){
 void Input::readMouse(float deltaTime){
 	static double lastPosX = 0, lastPosY = 0;
 	double posX = 0, posY = 0;
+	double mouseSense = 0.1f;
+
 	glfwGetCursorPos(renderer->getWindow(), &posX, &posY);
 
 
 //#ifdef _DEBUG
 	if (glfwGetMouseButton(renderer->getWindow(), GLFW_MOUSE_BUTTON_3) == GLFW_PRESS) {
 //#endif
-		rightStick.x -= (posX - lastPosX) * deltaTime;
-		rightStick.y += (posY - lastPosY) * deltaTime;
+		glfwSetInputMode(renderer->getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		rightStick.x -= (posX - lastPosX) * mouseSense;
+		rightStick.y += (posY - lastPosY) * mouseSense;
 //#ifdef _DEBUG
-	}
+	}else
+		glfwSetInputMode(renderer->getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 //#else
 	//glfwSetCursorPos(renderer->getWindow(), 0, 0);
 //#endif
@@ -84,9 +96,9 @@ bool Input::readGamingWheel(int joyStick) {
 		int count;
 		const float* axes = glfwGetJoystickAxes(joyStick, &count);
 
-		wheel = mapToRange(axes[0], -1.0f, +1.0f, -1.0f, +1.0f);
-		throttle = mapToRange(axes[1], +1.0f, -1.0f, 0.0f, 1.0f);
-		brake = mapToRange(axes[2], +1.0f, -1.0f, 0.0f, 1.0f);
+		wheel = axes[0];
+		throttle = 1 - axes[1];
+		brake = 1- axes[2];
 	}
 	
 	rightTrigger += throttle;

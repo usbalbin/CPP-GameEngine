@@ -30,6 +30,7 @@
 #include "Cannon.hpp"
 #include "TestEntity.hpp"
 #include "HMMWV.hpp"
+#include "Zombie.hpp"
 
 #include "Options.hpp"
 
@@ -53,6 +54,7 @@ void GameEngine::initialize() {
 	int s = sizeof(Vertex);
 
 	openScene(options.scenarioPath);
+	players.push_back((Player*)player);
 //	gameEntities.push_back(
 //		new Terrain(&renderer, physics)
 //	);
@@ -63,6 +65,9 @@ void GameEngine::initialize() {
 
 	addEntity(
 		new HMMWV(renderer, physics, glm::vec3(0, 2, 5))
+	);
+	addEntity(
+		new Zombie(players, renderer, physics, glm::vec3(0, 100, 0))
 	);
 }
 

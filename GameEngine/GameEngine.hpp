@@ -2,6 +2,7 @@
 
 #include "GameBase.hpp"
 #include "Entity.hpp"
+#include "Player.hpp"
 
 
 class GameEngine : public GameBase {
@@ -37,5 +38,6 @@ protected:
 	ClRayTracer* renderer;
 	Input input;
 	Entity* player = nullptr;
+	std::vector<Player*> players;
 };
 

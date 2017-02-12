@@ -14,7 +14,14 @@ Player::~Player()
 {
 }
 
-void Player::draw()
+glm::mat4 Player::cameraMatrix(float yaw, float pitch, bool firstPerson)
+{
+	if (isInVehicle())
+		return vehicle->cameraMatrix(yaw, pitch, firstPerson);
+	return Character::cameraMatrix(yaw, pitch, firstPerson);
+}
+
+void Player::draw() const
 {
 	if (isInVehicle())
 		return;
@@ -53,7 +60,7 @@ glm::mat4 Player::getTranslationMatrix()
 }
 
 
-bool Player::isInVehicle()
+bool Player::isInVehicle() const
 {
 	return vehicle != nullptr;
 }
@@ -80,8 +87,8 @@ void Player::enterVehicle()
 		vehicle = closestVehicle;
 		for (auto& part : parts)
 			physics->removeRigidBody(part->physicsObject);
-		physics->removeConstraint(constraints[0]);
-		physics->removeConstraint(constraints[1]);
+		for (auto& connection : constraints)
+			physics->removeConstraint(connection);
 	}
 	
 }
@@ -90,14 +97,10 @@ void Player::exitVehicle()
 {
 	glm::vec3 playerPos = glm::vec3(glm::vec4(-100, 0, 0, 1));
 
-
-	/*for (auto& part : parts) {
+	for(auto& part : parts)
 		physics->addRigidBody(part->physicsObject);
-	}*/
-	physics->addRigidBody(parts[0]->physicsObject);
-	physics->addRigidBody(parts[1]->physicsObject);
-
-	physics->addConstraint(constraints[0]);
+	for (auto& connection : constraints)
+		physics->addConstraint(connection, true);
 	
 
 	float yaw = 0;//

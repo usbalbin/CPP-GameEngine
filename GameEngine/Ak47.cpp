@@ -59,7 +59,7 @@ Ak47::Ak47(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 po
 	
 
 	float bulletDiameter = 0.1f;//0.00782;
-	float bulletMass = 0.010;
+	float bulletMass = 10 / 1000.0f;
 	auto fireRate = 60.0s / 800;
 	std::vector<FireMode> fireModes{ /*FireMode::SINGLE,*/ FireMode::FULL };
 

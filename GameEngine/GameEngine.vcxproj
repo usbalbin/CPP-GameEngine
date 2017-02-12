@@ -158,6 +158,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Zombie.hpp" />
     <ClInclude Include="Ak47.hpp" />
     <ClInclude Include="Ball.hpp" />
     <ClInclude Include="Barrel.hpp" />
@@ -197,6 +198,7 @@
     <ClInclude Include="Vehicle.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Zombie.cpp" />
     <ClCompile Include="Ak47.cpp" />
     <ClCompile Include="Ball.cpp" />
     <ClCompile Include="Barrel.cpp" />
