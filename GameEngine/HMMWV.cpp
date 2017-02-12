@@ -10,9 +10,9 @@
 HMMWV::HMMWV(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float yaw, float pitch, float roll) :
 	Vehicle(renderer, physics)
 {
-	glm::vec3 bodyHalfExtents(1.0f, 0.25f, 2.0f);
-	GenericShape* hull = new GenericShape(renderer, physics, "content/Vehicle/HMMWV/HMMWV.obj", position, 10);
 	float bodyMass = 2020;
+	glm::vec3 bodyHalfExtents(1.0f, 0.25f, 2.0f);
+	GenericShape* hull = new GenericShape(this, renderer, physics, "content/Vehicle/HMMWV/HMMWV.obj", position, glm::vec3(1.0f/100), bodyMass);
 
 	const float PI_HALF = 1.57079632679;
 	//radius, width, radius
@@ -26,10 +26,10 @@ HMMWV::HMMWV(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 
 	glm::vec3 posRL = glm::vec3(-bodyHalfExtents.x - axleLength, rideHeight, +bodyHalfExtents.z);
 	glm::vec3 posRR = glm::vec3(+bodyHalfExtents.x + axleLength, rideHeight, +bodyHalfExtents.z);
 
-	Cylinder* wheelFL = new Cylinder(renderer, physics, position + posFL, wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
-	Cylinder* wheelFR = new Cylinder(renderer, physics, position + posFR, wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
-	Cylinder* wheelRL = new Cylinder(renderer, physics, position + posRL, wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
-	Cylinder* wheelRR = new Cylinder(renderer, physics, position + posRR, wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
+	Cylinder* wheelFL = new Cylinder(this, renderer, physics, position + posFL, wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
+	Cylinder* wheelFR = new Cylinder(this, renderer, physics, position + posFR, wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
+	Cylinder* wheelRL = new Cylinder(this, renderer, physics, position + posRL, wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
+	Cylinder* wheelRR = new Cylinder(this, renderer, physics, position + posRR, wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
 	
 	for (auto part : { wheelFL, wheelFR }) {
 		part->physicsObject->setActivationState(DISABLE_DEACTIVATION);

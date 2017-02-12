@@ -33,6 +33,8 @@ public:
 
 	bool shouldExit() override;
 protected:
+	void respawn();
+	void onGarbageRemove(Entity* entity) override;
 	void updateTime();
 
 	ClRayTracer* renderer;

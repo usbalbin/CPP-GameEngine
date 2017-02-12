@@ -2,6 +2,9 @@
 
 #include "Entity.hpp"
 #include "Options.hpp"
+#include <deque>
+
+#include "Garbage.hpp"
 
 //typedef std::chrono::high_resolution_clock::time_point TimePoint;
 
@@ -17,10 +20,16 @@ public:
 
 	virtual void update();
 
+	
+
 	virtual bool shouldExit();
 protected:
 	void openScene(std::istream & sceneStream, Entity ** player = nullptr, ClRayTracer * renderer = nullptr);
 	void addEntity(Entity* entity);
+	void removeEntity(Entity* entity);
+	void updateGarbage();
+	virtual void onGarbageRemove(Entity* entity) {};
+	std::vector<Entity*>& getGameEntities() { return gameEntities; }
 	void updateTime();
 	const std::vector<Entity*> getGameEntities() const { return gameEntities; }
 
@@ -31,6 +40,8 @@ protected:
 	float deltaTime;
 	Options options;
 private:
+	static bool collisionCallback(btManifoldPoint& cp, void* body0, void* body1);
 	std::vector<Entity*> gameEntities;
+	std::deque<Garbage> garbageEntities;
 };
 

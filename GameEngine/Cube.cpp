@@ -7,8 +7,8 @@
 Cube::Cube(){
 }
 
-Cube::Cube(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, glm::vec3 scale, float mass, float yaw, float pitch, float roll)
-	: Shape(renderer, physics) {
+Cube::Cube(Entity* parent, ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, glm::vec3 scale, float mass, float yaw, float pitch, float roll)
+	: Shape(parent, renderer, physics) {
 	glm::mat4 matrix = 
 		glm::translate(glm::mat4(1.0f), position)
 		
@@ -22,7 +22,7 @@ Cube::Cube(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 po
 	this->scale = scale;
 
 	
-	Instance instance = renderer->makeInstance("content/basicObjects/cube.obj");
+	Instance instance = renderer->makeInstanceOld("content/basicObjects/cube.obj");
 
 	btBoxShape* boxShape = new btBoxShape(btVector3(scale.x, scale.y, scale.z));
 	

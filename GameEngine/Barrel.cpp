@@ -4,8 +4,8 @@
 #include "Utils.hpp"
 #include <fstream>
 
-Barrel::Barrel(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, glm::vec2 scale, float mass, float projectileRadius, float projectileMass, float yaw, float pitch, float roll, std::chrono::duration<double> fireRate, std::vector<FireMode> fireModes, std::string soundFile) :
-	Cylinder(renderer, physics, position, scale, mass, yaw, pitch, roll)
+Barrel::Barrel(Entity* parent, ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, glm::vec2 scale, float mass, float projectileRadius, float projectileMass, float yaw, float pitch, float roll, std::chrono::duration<double> fireRate, std::vector<FireMode> fireModes, std::string soundFile) :
+	Cylinder(parent, renderer, physics, position, scale, mass, yaw, pitch, roll)
 {
 	this->projectileRadius = projectileRadius;
 	this->projectileMass = projectileMass;
@@ -69,7 +69,7 @@ void Barrel::updateBarrel(const Input& input, int fireKey, btRigidBody* physicsO
 
 
 	glm::vec3 projectilePos = /*toVec3(barrelTransMatrix) + */glm::vec3(glm::vec4(0, -scale.y - projectileRadius, 0, 1) * barrelTransMatrix);
-	Sphere* projectile = new Sphere(renderer, physics, projectilePos, projectileRadius, projectileMass);
+	Sphere* projectile = new Sphere(parent, renderer, physics, projectilePos, projectileRadius, projectileMass);
 
 	
 	

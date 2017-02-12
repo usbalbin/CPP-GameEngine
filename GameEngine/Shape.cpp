@@ -12,23 +12,32 @@ Shape::Shape()
 }
 
 
-Shape::Shape(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics)
+Shape::Shape(Entity* parent, ClRayTracer * renderer, btDiscreteDynamicsWorld * physics)
 {
+	this->parent = parent;
 	this->renderer = renderer;
 	this->physics = physics;
 }
 
 
-void Shape::initialize(Instance & graphicsObject, btRigidBody * physicsObject)
+void Shape::initialize(MultiInstance & graphicsObject, btRigidBody * physicsObject)
 {
 	this->graphicsObject = graphicsObject;
 	if (!physicsObject)
 		return;
 
+	physicsObject->setUserPointer(this);
 	this->physicsObject = physicsObject;
 	this->physicsShape = physicsObject->getCollisionShape();
 
 	physics->addRigidBody(physicsObject);
+}
+
+void Shape::initialize(Instance & graphicsObject, btRigidBody * physicsObject)
+{
+	MultiInstance multiInstance;
+	multiInstance.instances.push_back(graphicsObject);
+	initialize(multiInstance, physicsObject);
 }
 
 Shape::~Shape()
@@ -53,8 +62,7 @@ void Shape::draw(){
 		throw "Tried to draw non initialized object";
 
 	glm::mat4 matrix = getMatrix();
-	graphicsObject.modelMatrix = matrix;
-	graphicsObject.invModelMatrix = glm::inverse(matrix);
+	graphicsObject.setMatrix(matrix);
 	renderer->push_back(graphicsObject);
 }
 
@@ -62,8 +70,7 @@ void Shape::draw(glm::mat4 matrix) {
 	if (!graphicsObject.isInitialized())
 		throw "Tried to draw non initialized object";
 
-	graphicsObject.modelMatrix = matrix;
-	graphicsObject.invModelMatrix = glm::inverse(matrix);
+	graphicsObject.setMatrix(matrix);
 	renderer->push_back(graphicsObject);
 }
 

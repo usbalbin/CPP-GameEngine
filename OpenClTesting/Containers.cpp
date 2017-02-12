@@ -42,6 +42,11 @@ bool operator<(Vertex thisV, Vertex other) {
 		);
 }
 
+bool operator==(const Vertex & left, const Vertex & right)
+{
+	return left.normal == right.normal && left.position == right.position && left.uv == right.uv;
+}
+
 /*bool Vertex::operator<(const Vertex other) {
 	return 
 		std::tie(this->position, this->normal, this->color) <

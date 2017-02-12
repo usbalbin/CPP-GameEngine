@@ -9,7 +9,7 @@ class Rifle :
 	public CompoundShape
 {
 public:
-	Rifle(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics, glm::vec3 position, float yaw, float pitch, float roll);
+	Rifle(Entity* parent, ClRayTracer * renderer, btDiscreteDynamicsWorld * physics, glm::vec3 position, float yaw, float pitch, float roll);
 	~Rifle();
 	void update(float deltaTime);
 

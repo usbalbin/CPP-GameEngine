@@ -11,7 +11,7 @@ Tank::Tank(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 po
 	glm::vec3 bodyHalfExtents(1.83f, 0.4f, 3.96f);
 	float bodyMass = 60000;
 
-	Cube* body = new Cube(renderer, physics, position, bodyHalfExtents, bodyMass, yaw, pitch, roll);
+	Cube* body = new Cube(this, renderer, physics, position, bodyHalfExtents, bodyMass, yaw, pitch, roll);
 	body->physicsObject->setActivationState(DISABLE_DEACTIVATION);
 	
 
@@ -48,7 +48,7 @@ Tank::Tank(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 po
 			);
 			
 
-			auto leftWheel = new Cylinder(renderer, physics, position + wheelPos, wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
+			auto leftWheel = new Cylinder(this, renderer, physics, position + wheelPos, wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
 			wheels.push_back(leftWheel);
 			btHinge2Constraint* connectionLeft = new btHinge2Constraint(*body->physicsObject, *leftWheel->physicsObject, toVector3(position + wheelPos), btVector3(0, 1, 0), btVector3(1, 0, 0));
 			addConstraint(connectionLeft, true);
@@ -61,7 +61,7 @@ Tank::Tank(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 po
 
 
 			wheelPos.x *= -1.0f;
-			auto rightWheel = new Cylinder(renderer, physics, position + wheelPos, wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
+			auto rightWheel = new Cylinder(this, renderer, physics, position + wheelPos, wheelHalfExtents, wheelMass, 0, 0, PI_HALF);
 			wheels.push_back(rightWheel);
 			btHinge2Constraint* connectionRight = new btHinge2Constraint(*body->physicsObject, *rightWheel->physicsObject, toVector3(position + wheelPos), btVector3(0, 1, 0), btVector3(1, 0, 0));
 			addConstraint(connectionRight, true);
@@ -105,7 +105,7 @@ void Tank::setupTurret(glm::vec3 position, float yaw, float pitch, float roll, C
 	float turretBaseMass = 1000.0f;
 	glm::vec3 turretBaseHalfExtents(1.3f, 0.4f, 2.0f);
 	glm::vec3 turretBasePos = glm::vec3(0.0f, bodyHalfExtents.y + turretBaseHalfExtents.y + 0.02f, +0.5f);
-	Cube* turretBase = new Cube(renderer, physics, position + turretBasePos, turretBaseHalfExtents, turretBaseMass, yaw, pitch, roll);
+	Cube* turretBase = new Cube(this, renderer, physics, position + turretBasePos, turretBaseHalfExtents, turretBaseMass, yaw, pitch, roll);
 	turretBase->physicsObject->setActivationState(DISABLE_DEACTIVATION);
 	btHinge2Constraint* turretBaseConnection = new btHinge2Constraint(*turretBase->physicsObject, *body->physicsObject, toVector3(position + glm::vec3(0.0f, turretBasePos.y, 0.0f)), btVector3(1, 0, 0), btVector3(0, 1, 0));
 
@@ -115,7 +115,7 @@ void Tank::setupTurret(glm::vec3 position, float yaw, float pitch, float roll, C
 	glm::vec3 cannonPos = glm::vec3(0.0f, 0.0f, -turretBaseHalfExtents.z - cannonHalfExtents.y);
 	float projectileMass = 20;
 	float projectileRadius = 0.120f;
-	cannon = new Barrel(renderer, physics, position + turretBasePos + cannonPos, cannonHalfExtents, cannonMass, projectileRadius, projectileMass, yaw, pitch + PI_HALF, roll, 0.1s, { FireMode::FULL }, "content/Vehicle/Tank/TankShot.wav");
+	cannon = new Barrel(this, renderer, physics, position + turretBasePos + cannonPos, cannonHalfExtents, cannonMass, projectileRadius, projectileMass, yaw, pitch + PI_HALF, roll, 0.1s, { FireMode::FULL }, "content/Vehicle/Tank/TankShot.wav");
 	cannon->physicsObject->setActivationState(DISABLE_DEACTIVATION);
 	btHinge2Constraint* cannonConnection = new btHinge2Constraint(*turretBase->physicsObject, *cannon->physicsObject, toVector3(position + turretBasePos + glm::vec3(0.0f, 0.0f, -turretBaseHalfExtents.z)), btVector3(0, 1, 0), btVector3(1, 0, 0));
 	

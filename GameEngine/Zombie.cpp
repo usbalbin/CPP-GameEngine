@@ -18,6 +18,9 @@ Zombie::~Zombie()
 void Zombie::update(float deltaTime) {
 	Character::update(deltaTime);
 
+	if (isDead())
+		return handleInput(input, deltaTime);
+
 	const float PI = 3.14159265;
 
 	std::function<bool(Player*, Player*)> isCloser = [&](Player* left, Player* right) {
@@ -60,7 +63,26 @@ void Zombie::update(float deltaTime) {
 		//input.leftBumper = glm::length2(glm::vec2(deltaYaw, deltaPitch)) < PI * 0.0002f; //Fire if meal in sight
 
 		input.leftStick.y = cosf(deltaYaw);//walk towards meal
+
+
+
+		float distance2 = glm::distance2(closestMeal->getPosition(), this->getPosition());
+		float eatRange2 = 1 * 1;
+
+		if (distance2 < eatRange2) {//Player is close enough to eat
+			float damagePerSec = 0.5f;
+			//head->calcHit(btManifoldPoint());
+			closestMeal->damage(deltaTime * damagePerSec);
+		}
 	}
 
 	Character::handleInput(input, deltaTime);
+}
+
+bool Zombie::justDied()
+{
+	input.clearInput();
+	Character::handleInput(input, 1);
+
+	return Character::justDied();
 }

@@ -4,7 +4,7 @@
 #include "Cube.hpp"
 #include "Utils.hpp"
 
-Ak47::Ak47(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float yaw, float pitch, float roll) : CompoundShape(renderer, physics)
+Ak47::Ak47(Entity* parent, ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, float yaw, float pitch, float roll) : CompoundShape(renderer, physics)
 {
 	glm::vec3 scale(1);
 	glm::mat4 matrix =
@@ -21,7 +21,7 @@ Ak47::Ak47(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 po
 
 	
 
-	Instance instance = renderer->makeInstance("content/Weapon/AK47/AK47.obj");
+	Instance instance = renderer->makeInstanceOld("content/Weapon/AK47/AK47.obj");
 
 
 	btCompoundShape* rifleShape = new btCompoundShape();
@@ -31,7 +31,7 @@ Ak47::Ak47(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 po
 	glm::vec3 buttPos = glm::vec3(0, -buttHalfExtent.y, -buttHalfExtent.z);
 	CompoundShapeChild* butt = new CompoundShapeChild(
 		renderer, physics, toTransform(buttPos),
-		new Cube(renderer, physics, buttPos, buttHalfExtent, 0),
+		new Cube(parent, renderer, physics, buttPos, buttHalfExtent, 0),
 		physicsObject
 	);
 	addChild(butt);
@@ -41,7 +41,7 @@ Ak47::Ak47(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 po
 	glm::vec3 combPos = buttPos + glm::vec3(0, buttHalfExtent.y, -buttHalfExtent.z - combHalfExtent.z);
 	CompoundShapeChild* comb = new CompoundShapeChild(
 		renderer, physics, toTransform(combPos),
-		new Cube(renderer, physics, combPos, combHalfExtent, 0),
+		new Cube(parent, renderer, physics, combPos, combHalfExtent, 0),
 		physicsObject
 	);
 	addChild(comb);
@@ -51,7 +51,7 @@ Ak47::Ak47(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 po
 	glm::vec3 basePos = combPos + glm::vec3(0, 0, -combHalfExtent.z - baseHalfExtent.z);
 	CompoundShapeChild* base = new CompoundShapeChild(
 		renderer, physics, toTransform(basePos),
-		new Cube(renderer, physics, basePos, baseHalfExtent, 0),
+		new Cube(parent, renderer, physics, basePos, baseHalfExtent, 0),
 		physicsObject
 	);
 	addChild(base);
@@ -70,7 +70,7 @@ Ak47::Ak47(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 po
 
 	barrel = new CompoundShapeChild(
 		renderer, physics, toTransform(barrelPos, 0, PI_HALF, 0),
-		new Barrel(renderer, physics, barrelPos, barrelHalfExtent, barrelMass, bulletDiameter, bulletMass, 0, PI_HALF, 0, fireRate, fireModes, "content/Weapon/AK47/AK47.wav"),
+		new Barrel(parent, renderer, physics, barrelPos, barrelHalfExtent, barrelMass, bulletDiameter, bulletMass, 0, PI_HALF, 0, fireRate, fireModes, "content/Weapon/AK47/AK47.wav"),
 		physicsObject
 	);
 	addChild(barrel);

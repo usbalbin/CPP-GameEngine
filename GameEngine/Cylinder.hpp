@@ -6,7 +6,7 @@ class Cylinder :
 {
 public:
 	Cylinder();
-	Cylinder(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics, glm::vec3 position, glm::vec2 scale, float mass, float yaw, float pitch, float roll);
+	Cylinder(Entity* parent, ClRayTracer * renderer, btDiscreteDynamicsWorld * physics, glm::vec3 position, glm::vec2 scale, float mass, float yaw, float pitch, float roll);
 	~Cylinder();
 private:
 

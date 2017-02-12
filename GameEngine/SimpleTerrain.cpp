@@ -6,7 +6,7 @@
 
 SimpleTerrain::SimpleTerrain(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics, glm::vec3 position, glm::vec3 scale) : Entity(renderer, physics) {
 	parts.push_back(
-		new Cube(renderer, physics, position, scale)
+		new Cube(this, renderer, physics, position, scale)
 	);
 }
 

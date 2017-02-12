@@ -158,6 +158,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Garbage.hpp" />
     <ClInclude Include="Zombie.hpp" />
     <ClInclude Include="Ak47.hpp" />
     <ClInclude Include="Ball.hpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="TestEntity.hpp" />
     <ClInclude Include="Utils.hpp" />
     <ClInclude Include="Vehicle.hpp" />
+    <ClInclude Include="ZombieHead.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Zombie.cpp" />
@@ -239,6 +241,7 @@
     <ClCompile Include="TestEntity.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Vehicle.cpp" />
+    <ClCompile Include="ZombieHead.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

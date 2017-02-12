@@ -132,6 +132,12 @@
     <ClInclude Include="HMMWV.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Garbage.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ZombieHead.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -237,6 +243,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Zombie.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ZombieHead.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HMMWV.cpp">

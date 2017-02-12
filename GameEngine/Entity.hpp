@@ -5,6 +5,8 @@
 #include "Shape.hpp"
 #include "Input.hpp"
 
+class Shape;
+
 class Entity
 {
 public:
@@ -23,6 +25,8 @@ public:
 	void setArrayIndex(int index) { gameArrayIndex = index; }
 	int getArrayIndex() { return gameArrayIndex; }
 	virtual glm::mat4 cameraMatrix(float yaw, float pitch, bool firstPerson = true);
+	virtual bool justDied();
+	virtual void damage(float damage) {};
 	
 protected:
 	glm::mat4 cameraMatrix(float yaw, float pitch, glm::vec3& relativeOffset, glm::vec3& rotationPivotPos = glm::vec3(0));

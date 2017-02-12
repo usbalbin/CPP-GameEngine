@@ -6,7 +6,7 @@
 Box::Box(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, glm::vec3 scale, float mass) : Entity(renderer, physics)
 {
 	parts.push_back(
-		new Cube(renderer, physics, position, scale, mass)
+		new Cube(this, renderer, physics, position, scale, mass)
 	);
 }
 

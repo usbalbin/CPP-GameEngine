@@ -5,8 +5,8 @@
 Cylinder::Cylinder() {
 }
 
-Cylinder::Cylinder(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, glm::vec2 size, float mass, float yaw, float pitch, float roll)
-	: Shape(renderer, physics) {
+Cylinder::Cylinder(Entity* parent, ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm::vec3 position, glm::vec2 size, float mass, float yaw, float pitch, float roll)
+	: Shape(parent, renderer, physics) {
 	this->scale = glm::vec3(size, size.x);
 	glm::mat4 matrix =
 		glm::translate(glm::mat4(1.0f), position)
@@ -21,7 +21,7 @@ Cylinder::Cylinder(ClRayTracer* renderer, btDiscreteDynamicsWorld* physics, glm:
 	
 
 	
-	Instance instance = renderer->makeInstance("content/basicObjects/cylinder.obj");
+	Instance instance = renderer->makeInstanceOld("content/basicObjects/cylinder.obj");
 
 	btCylinderShape* boxShape = new btCylinderShape(btVector3(scale.x, scale.y, scale.z));
 

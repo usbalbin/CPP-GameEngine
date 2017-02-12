@@ -1,10 +1,11 @@
 
 #include "stdafx.h"
-#include "TextureManager.hpp"
+#include "MaterialManager.hpp"
 
 #include "Utils.hpp"
+#include <fstream>
 
-TextureManager::TextureManager(int maxTextureCount, cl::Context& context) : maxTextureCount(maxTextureCount), context(context)
+MaterialManager::MaterialManager(int maxTextureCount, cl::Context& context) : maxTextureCount(maxTextureCount), context(context)
 {
 	currentTextureCount = 0;
 	textureBuffers.resize(maxTextureCount);
@@ -18,7 +19,7 @@ TextureManager::TextureManager(int maxTextureCount, cl::Context& context) : maxT
 		textureBuffers[i] = cl::Image2D(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, cl::ImageFormat(CL_RGBA, CL_UNORM_INT8), 2, 2, 0, dummyPixels);
 }
 
-std::string TextureManager::genOclTextureArgumentsCode()
+std::string MaterialManager::genOclTextureArgumentsCode()
 {
 	std::string res;
 
@@ -31,7 +32,7 @@ std::string TextureManager::genOclTextureArgumentsCode()
 	return res;
 }
 
-std::string TextureManager::genOclTextureBlendCode()
+std::string MaterialManager::genOclTextureBlendCode()
 {
 	std::string res =
 		"switch(TEX_ID){";
@@ -44,13 +45,16 @@ std::string TextureManager::genOclTextureBlendCode()
 	return res;
 }
 
-void TextureManager::setTextureArguments(int argCounter, cl::Kernel & kernel)
+void MaterialManager::setTextureArguments(int argCounter, cl::Kernel & kernel)
 {
 	for (auto& textureBuffer : textureBuffers)
 		kernel.setArg(argCounter++, textureBuffer);
 }
 
-size_t TextureManager::getTextureId(std::string & path) {
+size_t MaterialManager::getTextureId(const std::string & path) {
+	if (path == "")
+		return -1;
+
 	if (textureIds.find(path) != textureIds.end())
 		return textureIds[path];
 
@@ -63,4 +67,33 @@ size_t TextureManager::getTextureId(std::string & path) {
 	textureIds[path] = currentTextureCount;
 	textureBuffers[currentTextureCount]= cl::Image2D(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, cl::ImageFormat(CL_RGBA, CL_UNORM_INT8), width, height, 0, pixels.data());
 	return currentTextureCount++;
+}
+
+std::vector<std::string> MaterialManager::readMtlFileMulti(std::string& mtlFilePath) {
+	if (loadeMtlFiles.find(mtlFilePath) != loadeMtlFiles.end())
+		return std::vector<std::string>();													//Already loaded
+	
+	loadeMtlFiles.insert(mtlFilePath);
+	
+	std::vector<std::string> res;
+	std::ifstream mtlFile(mtlFilePath);
+
+	std::string directory = mtlFilePath.substr(0, mtlFilePath.find_last_of("/\\"));
+	std::string materialName = mtlFilePath;
+
+	std::string line;
+	while (getline(mtlFile, line)) {
+		if (line.find("newmtl ") != line.npos) {
+			materialName = mtlFilePath + ':' + line.substr(7);
+			materials[materialName] = Material();
+			res.push_back(line.substr(7));
+		}
+
+		else if (line.find("map_Kd ") != line.npos) {
+			std::string texturePath = directory + "/" + line.substr(7);
+			getTextureId(texturePath);
+			materials[materialName].texturePath = texturePath;
+		}
+	}
+	return res;
 }

@@ -1,7 +1,7 @@
 #pragma once
 #define NOMINMAX
 #include "Containers.hpp"
-#include <map>
+#include <unordered_map>
 #include <string>
 #include <CL/cl2.hpp>
 
@@ -20,6 +20,12 @@ struct ubyte4 {
 	ubyte r, g, b, a;
 };
 
+struct VertexHasher{
+	auto operator()(const Vertex& v) const{ 
+		return std::_Hash_seq((const unsigned char*)&v, sizeof(Vertex));
+	}
+};
+
 //inline float3 max(float3 l, float3 r);
 //inline float3 min(float3 l, float3 r);
 std::string readFileToString(std::string filePath);
@@ -33,7 +39,7 @@ void calculateNormals(std::vector<Vertex>& vertices, const std::vector<TriangleI
 
 std::vector<ubyte3> readBmpPixels(std::string& filePath, int* widthOut, int* heightOut);
 
-std::vector<ubyte4> readBmpPixels4(std::string& filePath, int* widthOut, int* heightOut);
+std::vector<ubyte4> readBmpPixels4(const std::string& filePath, int* widthOut, int* heightOut);
 
 void pixelsToMesh(int width, int length, std::vector<ubyte3> colors, std::vector<Vertex>& vertices, std::vector<TriangleIndices>& indices);
 
@@ -41,7 +47,9 @@ void readMtlFile(std::string & filePath, std::string & texturePathOut);
 
 void readObjFile(std::vector<Vertex>& vertices, std::vector<TriangleIndices>& indices, std::string & texturePathOut, std::string & filePath, float reflection = 0, float refraction = 0);
 
-void addVertex(FaceElement facePart, int * indexOut, std::map<Vertex, int>& vertexMap, std::vector<Vertex>& vertices, std::vector<float3>& positions, std::vector<float2>& texturePositions, std::vector<float3>& normals, float reflection, float refraction);
+void readObjPoints(std::vector<glm::vec3> pointsOut, std::string & filePath);
+
+void addVertex(FaceElement facePart, int * indexOut, std::unordered_map<Vertex, int, VertexHasher>& vertexMap, std::vector<Vertex>& vertices, std::vector<float3>& positions, std::vector<float2>& texturePositions, std::vector<float3>& normals, float reflection, float refraction);
 Vertex facePartToVertex(FaceElement facePart, std::vector<float3>& positions, std::vector<float2>& texturePositions, std::vector<float3>& normals);
 
 Face parseFace(std::string line);

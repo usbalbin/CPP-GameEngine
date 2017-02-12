@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <queue>
+#include <unordered_map>
 
 /*inline float3 max(float3 l, float3 r) {
 	return float3(
@@ -120,7 +121,7 @@ std::vector<ubyte3> readBmpPixels(std::string& filePath, int* widthOut, int* hei
 	return pixels;
 }
 
-std::vector<ubyte4> readBmpPixels4(std::string& filePath, int* widthOut, int* heightOut) {
+std::vector<ubyte4> readBmpPixels4(const std::string& filePath, int* widthOut, int* heightOut) {
 	std::ifstream bmpFile(filePath, std::ios_base::binary);
 	if (!bmpFile)
 		throw filePath + " not found!";
@@ -226,9 +227,11 @@ void readObjFile(std::vector<Vertex>& vertices, std::vector<TriangleIndices>& in
 	std::vector<float3> normals;
 	std::vector<Face> faces;
 
-	std::map<Vertex, int> vertexMap;
+	std::unordered_map<Vertex, int, VertexHasher> vertexMap;
 
 	while (getline(objFile, line)) {
+		line = line.substr(0, line.find("#"));
+
 		if (line.find("mtllib ") != line.npos)
 			readMtlFile(directory + "/" + line.substr(7), texturePathOut);
 
@@ -261,7 +264,21 @@ void readObjFile(std::vector<Vertex>& vertices, std::vector<TriangleIndices>& in
 	}
 }
 
-void addVertex(FaceElement facePart, int* indexOut, std::map<Vertex, int>& vertexMap, std::vector<Vertex>& vertices, std::vector<float3>& positions, std::vector<float2>& texturePositions, std::vector<float3>& normals, float reflection, float refraction) {
+void readObjPoints(std::vector<glm::vec3> pointsOut, std::string& filePath) {
+	std::ifstream objFile;
+	objFile.open(filePath);
+	if (!objFile)
+		throw "Failed to open file " + filePath;
+
+	std::string line;
+	while (getline(objFile, line)) {
+		line = line.substr(0, line.find("#"));
+		if (line.find("v ") != line.npos)
+			pointsOut.push_back(parseFloat3(line.substr(2)));
+	}
+}
+
+void addVertex(FaceElement facePart, int* indexOut, std::unordered_map<Vertex, int, VertexHasher>& vertexMap, std::vector<Vertex>& vertices, std::vector<float3>& positions, std::vector<float2>& texturePositions, std::vector<float3>& normals, float reflection, float refraction) {
 	Vertex vertex = facePartToVertex(facePart, positions, texturePositions, normals);
 	vertex.reflectFactor = reflection;
 	vertex.refractFactor = refraction;
@@ -405,7 +422,7 @@ void splitMesh(std::vector<Vertex>& vertices, std::vector<TriangleIndices>& indi
 
 	std::sort(indices.begin(), indices.end(), sortingFunction);
 
-	std::map<int, int> dictionary;
+	std::unordered_map<int, int> dictionary;
 	for (int i = 0; i < indices.size() / 2; i++) {
 		TriangleIndices triIndex = indices[i];
 		TriangleIndices translatedTriIndex;
