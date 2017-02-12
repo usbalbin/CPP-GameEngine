@@ -22,7 +22,7 @@ Cube::Cube(Entity* parent, ClRayTracer* renderer, btDiscreteDynamicsWorld* physi
 	this->scale = scale;
 
 	
-	Instance instance = renderer->makeInstance("content/cube.obj");
+	Instance instance = renderer->makeInstance("content/basicObjects/cube.obj");
 
 	btBoxShape* boxShape = new btBoxShape(btVector3(scale.x, scale.y, scale.z));
 	

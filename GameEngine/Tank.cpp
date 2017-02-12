@@ -115,7 +115,7 @@ void Tank::setupTurret(glm::vec3 position, float yaw, float pitch, float roll, C
 	glm::vec3 cannonPos = glm::vec3(0.0f, 0.0f, -turretBaseHalfExtents.z - cannonHalfExtents.y);
 	float projectileMass = 20;
 	float projectileRadius = 0.120f;
-	cannon = new Barrel(this, renderer, physics, position + turretBasePos + cannonPos, cannonHalfExtents, cannonMass, projectileRadius, projectileMass, yaw, pitch + PI_HALF, roll, 0.1s, { FireMode::FULL }, "content/TankShot.wav");
+	cannon = new Barrel(this, renderer, physics, position + turretBasePos + cannonPos, cannonHalfExtents, cannonMass, projectileRadius, projectileMass, yaw, pitch + PI_HALF, roll, 0.1s, { FireMode::FULL }, "content/Vehicle/Tank/TankShot.wav");
 	cannon->physicsObject->setActivationState(DISABLE_DEACTIVATION);
 	btHinge2Constraint* cannonConnection = new btHinge2Constraint(*turretBase->physicsObject, *cannon->physicsObject, toVector3(position + turretBasePos + glm::vec3(0.0f, 0.0f, -turretBaseHalfExtents.z)), btVector3(0, 1, 0), btVector3(1, 0, 0));
 	
