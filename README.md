@@ -3,15 +3,9 @@
 ## Survival game
 - Multiplayer?
 	- Fix shooting in multiplayer
-- Survive:
-	- Add support for dying, taking damage etc.
-- Bad guys: Zombies?
-	- Make basic AI that can hurt the player(s)
 - Loot: weapons, vehicles
-	- Add content; vehicles and weapons
 	- Add support for picking up weapons
 - Terrain:
-	- Large terrain from .bmp's
 	- Loot/zombie zones from .bmp
 	- Heightbased texture mix
 	- Terrain decoration:
@@ -20,7 +14,7 @@
 
 ##IMPORTANT
 
-- YOU MUST UNZIP THE LIB FILE IN "dependencies\libs\x64\wxWidgets\wxmsw31ud_core.zip" to be able to compile the GameLauncher.
+- YOU MUST UNZIP THE LIB FILE IN "dependencies\libs\x64\wxWidgets\wxmsw31ud_core.zip" to be able to compile the GameLauncher in debug mode.
 
 ## TODO:
 - Rename "Object" struct to "Mesh"
@@ -51,6 +45,13 @@
   - When possible/beneficial change flags for cl::Buffers to as conservative ones as possible such as CL_MEM_READ_ONLY or CL_MEM_WRITE_ONLY.
   - Remove unnecessary reads/writes to cl:Buffers
 
-  
-
 ## WIP
+
+- Survive:
+	- Add support for dying, taking damage etc.
+- Bad guys: Zombies?
+	- Make basic AI that can hurt the player(s)
+- Game Launcher
+	- Make Better UI.
+- Add content
+	- Add content; vehicles and weapons

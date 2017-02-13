@@ -40,6 +40,6 @@ protected:
 	ClRayTracer* renderer;
 	Input input;
 	Entity* player = nullptr;
-	std::vector<Player*> players;
+	
 };
 
