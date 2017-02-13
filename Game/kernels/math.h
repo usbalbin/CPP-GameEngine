@@ -100,14 +100,16 @@ Ray transformRay(float16 matrix, Ray ray){
 Vertex transformVertex(float16 matrix, Vertex vertex){
 	Vertex result = vertex;
 	result.position = mulMatVec(matrix,	(float4)(vertex.position, 1.0f)).xyz;
-	result.normal = mulMatVec(matrix,	(float4)(vertex.normal, 0.0f)).xyz;
+	result.normal = normalize(mulMatVec(matrix,	(float4)(vertex.normal, 0.0f)).xyz);
+	result.reflectFactor = vertex.reflectFactor;
+	result.refractFactor = vertex.refractFactor;
 	return result;
 }
 
 Vertex transformVertex123(float16 matrix, Vertex vertex){
 	Vertex result = vertex;
 	result.position = mulMatVec123(matrix,	(float4)(vertex.position, 1.0f)).xyz;
-	result.normal = mulMatVec123(matrix,	(float4)(vertex.normal, 0.0f)).xyz;
+	result.normal = normalize(mulMatVec123(matrix,	(float4)(vertex.normal, 0.0f)).xyz);
 	return result;
 }
 
@@ -124,10 +126,9 @@ float16 mulMat_old(float16 m1, float16 m2){
 */
 
 Ray reflect(Hit hit){
-	const float epsilon = 1e-6f;
+	const float epsilon = 1e-4f;
 	const Ray rayIn = hit.ray;
 	const Vertex poi = hit.vertex;
-	
 	
 	Ray result;
 	

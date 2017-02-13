@@ -51,6 +51,7 @@ void TerrainShape::initializeBuilder(ClRayTracer* renderer, btDiscreteDynamicsWo
 	}
 
 	graphicsObjectBuilder = renderer->push_backObjectType(indices, vertices);
+	graphicsObjectBuilder.texId = renderer->getTextureId("content/Terrain/groundTexture.bmp");
 	builderInitialized = true;
 
 	

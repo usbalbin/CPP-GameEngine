@@ -21,7 +21,7 @@
 #define GPU_DEVICE_ID 0
 #define MAX_TEXTURE_COUNT 8
 
-#define RAY_DEPTH 2
+#define RAY_DEPTH 4
 typedef std::chrono::high_resolution_clock::time_point RtTimePoint;
 typedef std::chrono::high_resolution_clock::duration RtDuration;
 
@@ -45,11 +45,11 @@ public:
 	InstanceBuilder push_backObjectType(std::vector<TriangleIndices>& objectTypeIndices, std::vector<Vertex>& objectTypeVertices);
 	InstanceBuilder push_backObjectType(std::vector<TriangleIndices>& objectTypeIndices, std::vector<Vertex>& objectTypeVertices, const InstanceBuilder & builderWithCommonVertices);
 
-	Instance makeInstanceOld(std::string meshPath, float16 initialTransform = float16(1));
-	MultiInstance makeInstance(std::string meshPath, float16 initialTransform = float16(1));
+	Instance makeInstanceSingleMaterial(std::string meshPath, float16 initialTransform = float16(1), glm::vec4 color = glm::vec4(0, 0, 0, 1), float reflection = 0, float refraction = 0);
+	MultiInstance makeInstance(std::string meshPath, float16 initialTransform = float16(1), glm::vec4 color = glm::vec4(0, 0, 0, 1), float reflection = 0, float refraction = 0);
 	
 	//The key indices is formated like "<MTL-path>:<materialName>"
-	void readObjMulti(std::vector<Vertex>& vertices, std::unordered_map<std::string, std::vector<TriangleIndices>>& indices, std::string & filePath, float reflection = 0, float refraction = 0);
+	void readObjMulti(std::vector<Vertex>& vertices, std::unordered_map<std::string, std::vector<TriangleIndices>>& indices, std::string & filePath, glm::vec4 color = glm::vec4(0, 0, 0, 1), float reflection = 0, float refraction = 0);
 	
 	void getMeshData(const Instance& instance, std::vector<TriangleIndices>& indicesOut, std::vector<Vertex>& verticesOut);
 	void getMeshVertices(const Instance & instance, std::vector<Vertex>& verticesOut);
@@ -57,6 +57,8 @@ public:
 
 	//Only use me when first instance has every vertex of all of the others combined, such as is returned by makeInstance
 	void getMeshPointsJoinedMulti(const MultiInstance & instance, float*& const vertices, int& vertexCount, int& stride);
+
+	size_t getTextureId(const std::string& path) { return materialManager.getTextureId(path); }
 
 	//ArraySlice<TriangleIndices> getTriangles(Object object);	// Doing stuff to thise object type will alter every instance of this object type once the buffers are updated
 	//ArraySlice<Vertex> getVertices(Object object);			// Not yet implemented

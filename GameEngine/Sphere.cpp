@@ -52,7 +52,7 @@ void Sphere::initializeBuilder(ClRayTracer * renderer, btDiscreteDynamicsWorld *
 		return;
 
 	float qualityFactor = 10.0f;
-	glm::vec4 color(1, 0, 0, 1);
+	glm::vec4 color(0, 0, 0, 1);
 	
 	std::vector<TriangleIndices> indices = genSphereIndices(qualityFactor);
 	std::vector<Vertex> vertices = genSphereVertices(1.0f, color, qualityFactor);

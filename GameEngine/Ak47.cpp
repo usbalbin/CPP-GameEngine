@@ -21,7 +21,7 @@ Ak47::Ak47(Entity* parent, ClRayTracer* renderer, btDiscreteDynamicsWorld* physi
 
 	
 
-	Instance instance = renderer->makeInstanceOld("content/Weapon/AK47/AK47.obj");
+	Instance instance = renderer->makeInstanceSingleMaterial("content/Weapon/AK47/AK47.obj");
 
 
 	btCompoundShape* rifleShape = new btCompoundShape();

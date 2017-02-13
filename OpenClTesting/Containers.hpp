@@ -80,6 +80,7 @@ struct Light {
 struct Vertex {
 	Vertex() {}
 	Vertex(float3 position, float4 color) : position(position), color(color), normal(0.0f), reflectFactor(0), refractFactor(0) {}
+	Vertex(float3 position, float3 normal, float2 uv) : position(position), normal(normal), uv(uv), color(0.0f), reflectFactor(0), refractFactor(0) {}
 	Vertex(float3 position, float4 color, float3 normal) : position(position), color(color), normal(normal), reflectFactor(0.5f), refractFactor(0.25f) {}
 	Vertex(float3 position, float4 color, float3 normal, float reflectFactor, float refractFactor) : position(position), color(color), normal(normal), reflectFactor(reflectFactor), refractFactor(refractFactor) {}
 	//Vertex(float3 position, unsigned char textures[TEXTURE_COUNT], float3 normal, float reflectFactor = 0, float refractFactor = 0) : position(position), normal(normal), reflectFactor(reflectFactor), refractFactor(refractFactor) { std::copy(&textures[0], &textures[TEXTURE_COUNT], this->textures); }

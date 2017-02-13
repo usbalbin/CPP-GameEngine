@@ -411,6 +411,8 @@ void kernel rayGenerator(
 #endif
 	//summarizeRaysNewer(raysOut, rayIndex, reflection, refraction, hasReflection, hasRefraction, &reflectionIndex, &refractionIndex);
 	
+	if(hasReflection)
+		rayTrees[gid].color = (float4)(0.1f);
 	rayTrees[gid].reflectIndex = reflectionIndex;
 	rayTrees[gid].refractIndex = refractionIndex;
 }
@@ -490,7 +492,6 @@ void summarizeRays120(global Ray* results, volatile global int* globalResultCoun
 		*indexOut = index;
 		results[index] = result;
 	}
-	
 }
 
 #endif
@@ -511,11 +512,11 @@ void kernel treeTraverser(
 	float4 surfaceColor = rayTrees[gid].color;
 	
 	if(reflectIndex != -1){
-		rayTrees[gid].color += surfaceColor * rayTrees[gid].reflectFactor * childRayTrees[reflectIndex].color;
+		rayTrees[gid].color += surfaceColor + rayTrees[gid].reflectFactor * childRayTrees[reflectIndex].color;
 	}
 	
 	if(refractIndex != -1){
-		rayTrees[gid].color += surfaceColor * rayTrees[gid].refractFactor * childRayTrees[refractIndex].color;
+		rayTrees[gid].color += surfaceColor + rayTrees[gid].refractFactor * childRayTrees[refractIndex].color;
 		
 	}
 	/*

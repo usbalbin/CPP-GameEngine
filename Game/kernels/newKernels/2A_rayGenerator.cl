@@ -57,6 +57,8 @@ void kernel rayGenerator(
 #endif
 	//summarizeRaysNewer(raysOut, rayIndex, reflection, refraction, hasReflection, hasRefraction, &reflectionIndex, &refractionIndex);
 	
+	if(hasReflection)
+		rayTrees[gid].color = (float4)(0.1f);
 	rayTrees[gid].reflectIndex = reflectionIndex;
 	rayTrees[gid].refractIndex = refractionIndex;
 }
@@ -136,7 +138,6 @@ void summarizeRays120(global Ray* results, volatile global int* globalResultCoun
 		*indexOut = index;
 		results[index] = result;
 	}
-	
 }
 
 #endif

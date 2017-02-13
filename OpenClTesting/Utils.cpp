@@ -79,8 +79,8 @@ void calculateNormals(std::vector<Vertex>& vertices, const std::vector<TriangleI
 		Vertex& c = vertices[triangle.c];
 
 		float3 normal = glm::cross(
-			a.position - c.position,
-			a.position - b.position
+			a.position - b.position,
+			a.position - c.position
 		);
 
 		a.normal += normal;
@@ -147,6 +147,8 @@ std::vector<ubyte4> readBmpPixels4(const std::string& filePath, int* widthOut, i
 }
 
 void pixelsToMesh(int width, int length, std::vector<ubyte3> colors, std::vector<Vertex>& vertices, std::vector<TriangleIndices>& indices) {
+	float textureScale = 10;
+
 	float highest = colors[0].r;//Use red value as height
 	float lowest = colors[0].r;
 
@@ -164,15 +166,12 @@ void pixelsToMesh(int width, int length, std::vector<ubyte3> colors, std::vector
 		for (int j = 0; j < width; j++) {
 			float z = mapToRange((float)i, 0.0f, length - 1.0f, -length / 2.0f, +length / 2.0f);
 			float x = mapToRange((float)j, 0.0f, width - 1.0f, -width / 2.0f, +width / 2.0f);
-
+		
 			auto& color = colors[i * width + j];
-
 			vertices.emplace_back(
 				glm::vec3(x, mapToRange((float)color.r, lowest, highest, -1.0f, +1.0f), z),
-				vertexColor,
 				glm::vec3(0.0f),
-				reflectFactor,
-				0.0f
+				glm::vec2(x, z) * (1.0f / textureScale)
 			);
 		}
 	}
@@ -211,7 +210,7 @@ void readMtlFile(std::string& filePath, std::string& texturePathOut) {
 	}
 }
 
-void readObjFile(std::vector<Vertex>& vertices, std::vector<TriangleIndices>& indices, std::string& texturePathOut, std::string& filePath, float reflection, float refraction) {
+void readObjFile(std::vector<Vertex>& vertices, std::vector<TriangleIndices>& indices, std::string& texturePathOut, std::string& filePath, glm::vec4& color, float reflection, float refraction) {
 	std::ifstream objFile;
 	objFile.open(filePath);
 	if (!objFile)
@@ -254,11 +253,11 @@ void readObjFile(std::vector<Vertex>& vertices, std::vector<TriangleIndices>& in
 
 		TriangleIndices triangleIndices;
 
-		addVertex(std::get<0>(face), &triangleIndices.a, vertexMap, vertices, positions, texturePositions, normals, reflection, refraction);
+		addVertex(std::get<0>(face), &triangleIndices.a, vertexMap, vertices, positions, texturePositions, normals, color, reflection, refraction);
 
-		addVertex(std::get<1>(face), &triangleIndices.b, vertexMap, vertices, positions, texturePositions, normals, reflection, refraction);
+		addVertex(std::get<1>(face), &triangleIndices.b, vertexMap, vertices, positions, texturePositions, normals, color, reflection, refraction);
 
-		addVertex(std::get<2>(face), &triangleIndices.c, vertexMap, vertices, positions, texturePositions, normals, reflection, refraction);
+		addVertex(std::get<2>(face), &triangleIndices.c, vertexMap, vertices, positions, texturePositions, normals, color, reflection, refraction);
 
 		indices.push_back(triangleIndices);
 	}
@@ -278,8 +277,9 @@ void readObjPoints(std::vector<glm::vec3> pointsOut, std::string& filePath) {
 	}
 }
 
-void addVertex(FaceElement facePart, int* indexOut, std::unordered_map<Vertex, int, VertexHasher>& vertexMap, std::vector<Vertex>& vertices, std::vector<float3>& positions, std::vector<float2>& texturePositions, std::vector<float3>& normals, float reflection, float refraction) {
+void addVertex(FaceElement facePart, int* indexOut, std::unordered_map<Vertex, int, VertexHasher>& vertexMap, std::vector<Vertex>& vertices, std::vector<float3>& positions, std::vector<float2>& texturePositions, std::vector<float3>& normals, glm::vec4& color, float reflection, float refraction) {
 	Vertex vertex = facePartToVertex(facePart, positions, texturePositions, normals);
+	vertex.color = color;
 	vertex.reflectFactor = reflection;
 	vertex.refractFactor = refraction;
 

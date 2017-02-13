@@ -45,11 +45,11 @@ void pixelsToMesh(int width, int length, std::vector<ubyte3> colors, std::vector
 
 void readMtlFile(std::string & filePath, std::string & texturePathOut);
 
-void readObjFile(std::vector<Vertex>& vertices, std::vector<TriangleIndices>& indices, std::string & texturePathOut, std::string & filePath, float reflection = 0, float refraction = 0);
+void readObjFile(std::vector<Vertex>& vertices, std::vector<TriangleIndices>& indices, std::string & texturePathOut, std::string & filePath, glm::vec4& color, float reflection = 0, float refraction = 0);
 
 void readObjPoints(std::vector<glm::vec3> pointsOut, std::string & filePath);
 
-void addVertex(FaceElement facePart, int * indexOut, std::unordered_map<Vertex, int, VertexHasher>& vertexMap, std::vector<Vertex>& vertices, std::vector<float3>& positions, std::vector<float2>& texturePositions, std::vector<float3>& normals, float reflection, float refraction);
+void addVertex(FaceElement facePart, int * indexOut, std::unordered_map<Vertex, int, VertexHasher>& vertexMap, std::vector<Vertex>& vertices, std::vector<float3>& positions, std::vector<float2>& texturePositions, std::vector<float3>& normals, glm::vec4& color, float reflection, float refraction);
 Vertex facePartToVertex(FaceElement facePart, std::vector<float3>& positions, std::vector<float2>& texturePositions, std::vector<float3>& normals);
 
 Face parseFace(std::string line);

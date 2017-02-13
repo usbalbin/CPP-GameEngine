@@ -168,7 +168,6 @@ void ClRayTracer::initialize() {
 
 }
 
-
 void ClRayTracer::clear() {
 	this->objectInstances.clear();
 	this->transformedVertexCount = 0;
@@ -188,7 +187,6 @@ void ClRayTracer::push_back(MultiInstance& multiInstance)
 	for (auto& instance : multiInstance.instances)
 		push_back(instance);
 }
-
 
 InstanceBuilder ClRayTracer::push_backObjectType(std::vector<TriangleIndices>& objectTypeIndices, std::vector<Vertex>& objectTypeVertices) {
 	Object objectType;
@@ -213,8 +211,7 @@ InstanceBuilder ClRayTracer::push_backObjectType(std::vector<TriangleIndices>& o
 	return instanceBuilder;
 }
 
-InstanceBuilder ClRayTracer::push_backObjectType(std::vector<TriangleIndices>& objectTypeIndices, std::vector<Vertex>& objectTypeVertices, const InstanceBuilder & builderWithCommonVertices)
-{
+InstanceBuilder ClRayTracer::push_backObjectType(std::vector<TriangleIndices>& objectTypeIndices, std::vector<Vertex>& objectTypeVertices, const InstanceBuilder & builderWithCommonVertices) {
 	Object objectType;
 	BvhTree bvhTree(objectTypeIndices, objectTypeVertices);
 
@@ -236,36 +233,31 @@ InstanceBuilder ClRayTracer::push_backObjectType(std::vector<TriangleIndices>& o
 	return instanceBuilder;
 }
 
-//depricated
-Instance ClRayTracer::makeInstanceOld(std::string meshPath, float16 initialTransform) {
+
+Instance ClRayTracer::makeInstanceSingleMaterial(std::string meshPath, float16 initialTransform, glm::vec4 color, float reflection, float refraction) {
 	if (builders.find(meshPath) != builders.end())
 		return Instance(initialTransform, glm::inverse(initialTransform), builders[meshPath]);
 
-	float reflection = 0;
-	float refraction = 0;
 	std::vector<Vertex> vertices;
 	std::vector<TriangleIndices> indices;
 
 	std::string texturePath;
-	readObjFile(vertices, indices, texturePath, meshPath);
+	readObjFile(vertices, indices, texturePath, meshPath, color, reflection, refraction);
 	builders[meshPath] = push_backObjectType(indices, vertices);
 	builders[meshPath].texId = texturePath.length() ? materialManager.getTextureId(texturePath) : -1;
 	
 	return Instance(initialTransform, glm::inverse(initialTransform), builders[meshPath]);
 }
 
-MultiInstance ClRayTracer::makeInstance(std::string meshPath, float16 initialTransform)
-{
+MultiInstance ClRayTracer::makeInstance(std::string meshPath, float16 initialTransform, glm::vec4 color, float reflection, float refraction) {
 	if (multiBuilders.find(meshPath) != multiBuilders.end())
 		return MultiInstance(initialTransform, multiBuilders[meshPath]);
 
-	float reflection = 0;
-	float refraction = 0;
 	std::vector<Vertex> vertices;
 	std::unordered_map<std::string, std::vector<TriangleIndices>> indices;
 	MultiInstanceBuilder multiBuilder;
 	
-	readObjMulti(vertices, indices, meshPath);
+	readObjMulti(vertices, indices, meshPath, color);
 	InstanceBuilder firstBuilder;
 	{//First builder will have all vertices
 		auto& firstP = *indices.begin();
@@ -300,7 +292,7 @@ MultiInstance ClRayTracer::makeInstance(std::string meshPath, float16 initialTra
 	return MultiInstance(initialTransform, multiBuilder);
 }
 
-void ClRayTracer::readObjMulti(std::vector<Vertex>& verticesOut, std::unordered_map<std::string, std::vector<TriangleIndices>>& indicesOut, std::string & filePath, float reflection, float refraction) {
+void ClRayTracer::readObjMulti(std::vector<Vertex>& verticesOut, std::unordered_map<std::string, std::vector<TriangleIndices>>& indicesOut, std::string & filePath, glm::vec4 color, float reflection, float refraction) {
 	std::ifstream objFile;
 	objFile.open(filePath);
 	if (!objFile)
@@ -356,9 +348,9 @@ void ClRayTracer::readObjMulti(std::vector<Vertex>& verticesOut, std::unordered_
 		for (Face& face : faceList) {
 			TriangleIndices triangleIndices;
 
-			addVertex(std::get<0>(face), &triangleIndices.a, vertexMap, verticesOut, positions, texturePositions, normals, reflection, refraction);
-			addVertex(std::get<1>(face), &triangleIndices.b, vertexMap, verticesOut, positions, texturePositions, normals, reflection, refraction);
-			addVertex(std::get<2>(face), &triangleIndices.c, vertexMap, verticesOut, positions, texturePositions, normals, reflection, refraction);
+			addVertex(std::get<0>(face), &triangleIndices.a, vertexMap, verticesOut, positions, texturePositions, normals, color, reflection, refraction);
+			addVertex(std::get<1>(face), &triangleIndices.b, vertexMap, verticesOut, positions, texturePositions, normals, color, reflection, refraction);
+			addVertex(std::get<2>(face), &triangleIndices.c, vertexMap, verticesOut, positions, texturePositions, normals, color, reflection, refraction);
 
 			indicesOut[material].push_back(triangleIndices);
 		}
