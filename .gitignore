@@ -261,3 +261,5 @@ paket-files/
 /GameEngine/content/heightmap2.bmp
 /v0.1-alpha/content
 /v0.1-alpha
+/OpenClTesting/BroadphaseBvh.cpp
+/OpenClTesting/BroadphaseBvh.hpp

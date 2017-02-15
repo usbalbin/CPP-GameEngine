@@ -94,6 +94,7 @@ typedef struct {
 typedef struct {
 	float16 modelMatrix;
 	float16 invModelMatrix;
+	int2 broadPhaseNodePtr;//Not used by GPU, cpu has a 64 bit pointer here, therefore int2 = 2*32bit = 64bit
 	int meshType;
 	int startVertex;
 	int textureId;

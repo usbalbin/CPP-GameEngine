@@ -210,11 +210,12 @@ struct Instance {
 
 	float16 modelMatrix;
 	float16 invModelMatrix;
+	void* broadPhaseNodePtr = nullptr;
 	int meshType;
 	int startVertex;
 	
 	int textureId;
-	int padding[13];// = { 0 };
+	int padding[11];// = { 0 };
 };
 
 struct MultiInstance {

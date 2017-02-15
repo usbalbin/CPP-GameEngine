@@ -4,20 +4,18 @@
 bool TerrainShape::builderInitialized = false;
 InstanceBuilder TerrainShape::graphicsObjectBuilder;
 btHeightfieldTerrainShape* TerrainShape::terrainShape;
-float TerrainShape::heightScale = 10;
+float TerrainShape::heightScale = 40;
 std::vector<float> TerrainShape::heights;
 
 TerrainShape::TerrainShape(ClRayTracer * renderer, btDiscreteDynamicsWorld * physics) : Shape(nullptr, renderer, physics){
-	this->scale = glm::vec3(1, heightScale, 1);
+	initializeBuilder(renderer, physics);
+	
+	this->scale = glm::vec3(4, heightScale, 4);
 	glm::mat4 matrix =
 		glm::scale(
 			glm::mat4(1.0f),
 			scale
-		)
-		;
-
-
-	initializeBuilder(renderer, physics);
+		);
 
 	Instance instance(matrix, glm::inverse(matrix), graphicsObjectBuilder);
 	
@@ -47,7 +45,7 @@ void TerrainShape::initializeBuilder(ClRayTracer* renderer, btDiscreteDynamicsWo
 	heights.reserve(imageHeight * imageWidth);
 	
 	for (auto& vertex : vertices) {
-		heights.push_back(vertex.position.y * heightScale);
+		heights.push_back(vertex.position.y);
 	}
 
 	graphicsObjectBuilder = renderer->push_backObjectType(indices, vertices);
@@ -55,7 +53,8 @@ void TerrainShape::initializeBuilder(ClRayTracer* renderer, btDiscreteDynamicsWo
 	builderInitialized = true;
 
 	
-	terrainShape = new btHeightfieldTerrainShape(imageWidth, imageHeight, (void*)heights.data(), heightScale, -heightScale, +heightScale, 1, PHY_ScalarType::PHY_FLOAT, false);
+	terrainShape = new btHeightfieldTerrainShape(imageWidth, imageHeight, (void*)heights.data(), 1, -1, +1, 1, PHY_ScalarType::PHY_FLOAT, false);
+	terrainShape->setLocalScaling(btVector3(4, heightScale, 4));
 }
 
 TerrainShape::~TerrainShape()

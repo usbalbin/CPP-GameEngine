@@ -12,13 +12,13 @@
 //
 //, where left out arguments will default to zero
 
-character 0 2 20		//This will be the player controlled entity
-tank 0 0.5 0				
+character -20 -1 -50		//This will be the player controlled entity
+tank -20 -5 -70				
 //car 2 1 5
-zombie 0 100 0 
-HMMWV 5 1 0
+zombie -10 100 -80 
+HMMWV -35 -2.5 -90
 
-box 0 -1 0 100 0.5 100
+//box 0 -1 0 100 0.5 100 //Ground plane
 
 box +5 0 -0 0.5 0.5 0.5 2.0
 box -5 0 -0 0.5 0.5 0.5 2.0

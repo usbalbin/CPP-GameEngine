@@ -160,6 +160,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ArraySlice.hpp" />
+    <ClInclude Include="BroadphaseBvh.hpp" />
     <ClInclude Include="BvhTree.hpp" />
     <ClInclude Include="ClRayTracer.hpp" />
     <ClInclude Include="ClReadBuffer.hpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="Utils.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BroadphaseBvh.cpp" />
     <ClCompile Include="BvhTree.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Disabled</Optimization>
       <IntrinsicFunctions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IntrinsicFunctions>

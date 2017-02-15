@@ -157,3 +157,29 @@ Ray refract(Hit hit){
 	
 	return result;
 }
+
+/*
+//TODO finish this: https://en.wikipedia.org/wiki/Snell%27s_law
+// and look into this: https://en.wikipedia.org/wiki/Fresnel_equations
+Ray refractAdvanced(Hit hit){
+	const float epsilon = 1e-6f;
+	const Ray rayIn = hit.ray;
+	const Vertex poi = hit.vertex;
+	
+	float refractiveIndex0 = 1.000277;//Air
+	float refractiveIndex1 = 1.49;//Glass
+	
+	bool insideObj = dot(rayIn.direction, poi.normal) < 0;
+	float ratio = inside ? refractiveIndex1 / refractiveIndex0 : refractiveIndex0 / refractiveIndex1;
+	float cTerm = dot()
+	float underSqrt = 1 - ratio * ratio * (1 - cTerm);
+	
+	Ray result;
+	
+	//Move position along normal slightly to prevent collision with refractor
+	result.position = poi.position - epsilon * poi.normal;
+	result.direction = rayIn.direction;
+	result.inverseDirection = rayIn.inverseDirection;
+	
+	return result;
+}*/
