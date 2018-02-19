@@ -1,0 +1,15 @@
+//Example scene
+//
+// First entity will be player
+//
+//entities are specified as follows
+//box x y z scaleX scaleY scaleZ mass
+//ball x y z radius mass
+//character x y z
+//tank x y z yaw
+//apc x y z yaw
+//car x y z yaw
+//
+//, where left out arguments will default to zero
+
+character -20 -1 -50		//This will be the player controlled entity
